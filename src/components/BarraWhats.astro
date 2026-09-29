@@ -1,14 +1,14 @@
 ---
 import IconeWhats from './IconeWhats.astro';
 import { whats, MSG } from '../data/site';
-interface Props { mensagem?: string }
-const { mensagem = MSG.geral } = Astro.props;
+interface Props { mensagem?: string; rotulo?: string }
+const { mensagem = MSG.geral, rotulo = 'Pedir orçamento no WhatsApp' } = Astro.props;
 ---
 
 <!-- Fixa só no celular. O body reserva o espaço para não cobrir conteúdo. -->
 <div class="barra-whats" data-barra-whats>
   <a class="botao" href={whats(mensagem)} target="_blank" rel="noopener">
-    <IconeWhats /> Pedir orçamento no WhatsApp
+    <IconeWhats /> {rotulo}
   </a>
 </div>
 

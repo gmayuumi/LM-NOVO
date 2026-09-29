@@ -1,0 +1,267 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import BarraWhats from '../components/BarraWhats.astro';
+import HeroInterno from '../components/HeroInterno.astro';
+import Especificacoes from '../components/Especificacoes.astro';
+import Processo from '../components/Processo.astro';
+import Comparador from '../components/Comparador.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import IconeWhats from '../components/IconeWhats.astro';
+import { whats } from '../data/site';
+
+const img = (nome: string) => `/assets/img/${nome}`;
+
+// Mensagens do WhatsApp desta página (as mesmas do site antigo)
+const msg = {
+  pagina: 'Olá! Gostaria de fazer um orçamento para Martelinho de Ouro.',
+  avaliacao: 'Olá! Gostaria de uma avaliação online grátis para o serviço de martelinho.',
+  foto: 'Olá! Quero enviar uma foto para um orçamento de Martelinho de Ouro.',
+};
+
+// Textos do site antigo (docs/conteudo-site-atual.md, 3.2)
+const beneficios = [
+  { titulo: '100% original', texto: 'Mantém a pintura e o verniz de fábrica, evitando a desvalorização do veículo causada por repinturas.' },
+  { titulo: 'Rapidez incomparável', texto: 'Reparos concluídos em poucas horas, não em dias. Você não fica sem o seu carro quando mais precisa.' },
+  { titulo: 'Custo-benefício', texto: 'Até 60% mais econômico que os serviços de funilaria e pintura tradicionais para o mesmo tipo de dano.' },
+  { titulo: 'Solução ecológica', texto: 'Não utiliza massas, lixas, solventes ou tintas, contribuindo para a preservação do meio ambiente.' },
+];
+
+// Quadros reais do vídeo do reparo (Nissan Kicks)
+const passos = [
+  {
+    titulo: 'Análise detalhada',
+    texto: 'Avaliamos o amassado com iluminação especial para definir a melhor técnica e ferramenta, garantindo acesso sem desmontagens desnecessárias.',
+    foto: 'passo-analise',
+    alt: 'Traseira de um Nissan Kicks preto sob a barra de luz; o reflexo dourado entorta onde está o amassado',
+  },
+  {
+    titulo: 'Acesso à área',
+    texto: 'Utilizamos hastes de aço e ventosas especiais para acessar a parte interna da lataria, preparando a área para a massagem do metal.',
+    foto: 'passo-reparo',
+    alt: 'Mão do técnico posicionando a ferramenta de martelinho de ouro na tampa traseira',
+  },
+  {
+    titulo: 'Reparo artesanal',
+    texto: 'Com movimentos precisos, o metal é suavemente "massageado" de volta à sua forma original, eliminando o dano de forma definitiva.',
+    foto: 'luz-lataria',
+    alt: 'Close da lataria preta com o reflexo dourado da barra de luz e a ferramenta de ponta vermelha trabalhando o metal',
+  },
+  {
+    titulo: 'Inspeção e acabamento',
+    texto: 'Uma inspeção final sob luzes de LED e um polimento técnico na área garantem que o resultado seja absolutamente imperceptível.',
+    foto: 'passo-resultado',
+    alt: 'A tampa traseira lisa, com o reflexo reto e a pintura original brilhando',
+  },
+];
+
+const perguntas = [
+  {
+    pergunta: 'Que tipo de amassado o martelinho de ouro conserta?',
+    resposta: 'A técnica é ideal para amassados onde a pintura não foi danificada (trincada ou arranhada). Isso inclui danos de chuva de granizo, batidas de porta em estacionamentos, pequenas colisões e amassados por impacto de objetos. Amassados em vincos ou em peças de alumínio podem exigir uma avaliação mais criteriosa.',
+  },
+  {
+    pergunta: 'O amassado pode voltar depois do reparo?',
+    resposta: 'Não. Uma vez que o metal é corretamente moldado de volta à sua forma original, ele ganha "memória" e o reparo é permanente. O amassado não voltará a aparecer, a menos que a área sofra um novo impacto. Oferecemos garantia total sobre nossos serviços.',
+  },
+  {
+    pergunta: 'Meu carro tem o painel de alumínio. O serviço funciona?',
+    resposta: 'Sim, trabalhamos com painéis de alumínio. No entanto, o alumínio é um material com menos "memória" que o aço e exige ferramentas e técnicas específicas. O reparo pode ser mais complexo e demorado, mas nossa equipe é qualificada para lidar com ambos os materiais com excelência.',
+  },
+  {
+    pergunta: 'Quanto tempo leva o serviço?',
+    resposta: 'O tempo varia com o tamanho, localização e complexidade do amassado. Pequenos danos podem ser resolvidos em menos de 1 hora. Casos mais complexos, como múltiplos danos de granizo, podem levar um dia inteiro. A grande vantagem é que quase sempre o serviço é concluído no mesmo dia.',
+  },
+];
+---
+
+<Base
+  titulo="Martelinho de ouro em Santo Amaro, Zona Sul de SP | LM Estética Automotiva"
+  descricao="Martelinho de ouro em Santo Amaro, Zona Sul de SP. Removemos amassados da lataria preservando 100% a pintura original. Orçamento rápido pelo WhatsApp e serviço em horas."
+  caminho="/martelinho"
+  preloadImagem={img('martelinho-tecnico-464.webp')}
+>
+  <Cabecalho atual="/martelinho" />
+
+  <main>
+    <HeroInterno
+      titulo={['Preserve a', 'originalidade.', 'Apague a', 'imperfeição.']}
+      subtitulo="A solução definitiva em martelinho de ouro"
+      texto="Nossa técnica artesanal remove amassados com precisão cirúrgica, sem danificar a pintura original do seu veículo. Recupere a aparência de novo e maximize o valor do seu patrimônio."
+      cta={{ rotulo: 'Pedir avaliação online grátis', href: whats(msg.avaliacao), whats: true }}
+      cta2={{ rotulo: 'Ver o reparo em vídeo', href: '#video' }}
+      prova="Garantia em todos os serviços. +1.000 clientes atendidos em SP."
+      foto={{
+        src: img('martelinho-tecnico-464.webp'),
+        alt: 'Técnico da LM trabalhando na tampa traseira de um Nissan Kicks preto, com a barra de luz amarela e o teto de LED hexagonal da oficina',
+        largura: 464,
+        altura: 580,
+        ambiente: 'martelinho-tecnico-ambiente.webp',
+        posicao: '40% 50%',
+      }}
+    />
+
+    <Especificacoes
+      id="por-que"
+      titulo="Por que escolher o martelinho de ouro?"
+      lead="O amassado sai sem pintura. A originalidade e o valor do seu carro ficam."
+      itens={beneficios}
+    />
+
+    <Processo id="processo" titulo="Arte e técnica em 4 passos" passos={passos}>
+      <div class="recipiente processo__fechamento">
+        <p class="lead">Pequenos danos podem ser resolvidos em menos de 1 hora. Quase sempre, o serviço é concluído no mesmo dia.</p>
+        <a class="botao" href={whats(msg.foto)} target="_blank" rel="noopener"><IconeWhats /> Enviar foto do amassado</a>
+      </div>
+    </Processo>
+
+    <!-- VÍDEO: o reparo inteiro ========================================= -->
+    <section class="filme" id="video" aria-labelledby="filme-titulo">
+      <img class="filme__ambiente" src={img('passo-amassado-ambiente.webp')} alt="" aria-hidden="true" width="96" height="172" loading="lazy" />
+      <div class="recipiente filme__grade">
+        <div class="filme__texto">
+          <h2 id="filme-titulo" data-titulo><span class="cromado" data-brilho>Veja um reparo do começo ao fim</span></h2>
+          <p class="lead">Nissan Kicks, tampa traseira. Do amassado ao reflexo reto, sob a barra de luz da LM.</p>
+          <p class="texto">Sem massa, sem lixa, sem solvente, sem tinta. O verniz de fábrica continua lá no final.</p>
+        </div>
+        <div class="filme__tela" data-varredura>
+          <video controls playsinline preload="none" width="464" height="832" poster={img('martelinho-video-poster-464.webp')}>
+            <source src="/assets/video/martelinho-completo.mp4" type="video/mp4" />
+            <p>Seu navegador não reproduz vídeo. <a href="/assets/video/martelinho-completo.mp4">Baixar o vídeo do reparo</a>.</p>
+          </video>
+          <p class="pequeno filme__legenda">50 segundos, com som.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTADOS ========================================================== -->
+    <section class="resultados" id="resultados" aria-labelledby="resultados-titulo">
+      <div class="recipiente">
+        <h2 id="resultados-titulo" data-titulo><span class="cromado" data-brilho>Resultados que falam por si</span></h2>
+        <div class="resultados__grade">
+          <div class="resultados__comparador">
+            <Comparador
+              antes={{ src: img('kicks-antes-414.webp'), alt: 'Antes: tampa traseira do Nissan Kicks com amassado; o reflexo da barra de luz aparece entortado' }}
+              depois={{ src: img('kicks-depois-414.webp'), alt: 'Depois: a mesma tampa lisa, com o reflexo reto e a pintura original' }}
+              largura={414}
+              altura={518}
+              rotulo="Comparar antes e depois do Nissan Kicks"
+            />
+            <p class="pequeno">Nissan Kicks, tampa traseira. Arraste a barra de luz.</p>
+          </div>
+
+          <div class="resultados__lado">
+            <figure class="resultados__figura" data-varredura>
+              <img
+                src={img('antes-depois-branco-lado-a-lado-720.webp')}
+                srcset={`${img('antes-depois-branco-lado-a-lado-720.webp')} 720w, ${img('antes-depois-branco-lado-a-lado-1440.webp')} 1440w`}
+                sizes="(min-width: 60rem) 40rem, 100vw"
+                width="720"
+                height="604"
+                alt="Lateral de um carro branco: à esquerda o amassado perto da roda, à direita a mesma lataria lisa depois do martelinho de ouro"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="pequeno">À esquerda, o amassado. À direita, a mesma lataria depois do martelinho de ouro.</figcaption>
+            </figure>
+
+            <blockquote class="resultados__citacao">
+              <p><span class="cromado">"Não dá pra ver onde estava o amassado."</span></p>
+              <footer class="pequeno">Maria O., Jeep Compass</footer>
+            </blockquote>
+          </div>
+        </div>
+        <div class="espaco-foto resultados__falta">[FOTO: mais pares de antes e depois do martelinho, do mesmo ângulo e com a mesma luz]</div>
+      </div>
+    </section>
+
+    <Faq itens={perguntas}>
+      <p class="texto">Pintura trincada ou arranhada? Aí o caminho é <a class="link-destaque" href="/servicos#funilaria">funilaria e pintura</a>.</p>
+    </Faq>
+
+    <CtaFinal
+      titulo="Seu carro merece o cuidado de especialistas."
+      texto="Envie uma foto do amassado e receba um pré-orçamento online, sem compromisso."
+      botao="Enviar foto para orçamento"
+      mensagem={msg.foto}
+      nota="Resposta rápida no horário comercial."
+      fundo="passo-resultado-ambiente.webp"
+    />
+  </main>
+
+  <Rodape />
+  <BarraWhats mensagem={msg.pagina} />
+</Base>
+
+<style>
+  /* =================================================================
+     VÍDEO
+     ================================================================= */
+  .filme {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--secao);
+  }
+  .filme__ambiente {
+    position: absolute;
+    inset: -10%;
+    z-index: -2;
+    width: 120%;
+    max-width: none;
+    height: 120%;
+    object-fit: cover;
+    filter: blur(34px) saturate(1.4) brightness(0.45);
+  }
+  .filme::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to bottom, var(--noite) 0%, rgba(5, 8, 13, 0.55) 22%, rgba(5, 8, 13, 0.55) 78%, var(--noite) 100%);
+  }
+  .filme__grade { display: grid; gap: 2.5rem; align-items: center; }
+  .filme__texto { display: grid; gap: 1.25rem; }
+  .filme__tela { justify-self: center; width: min(100%, 22rem); }
+  .filme__tela video {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(220, 236, 248, 0.4);
+    background: var(--noite-2);
+    box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 70px -10px rgba(77, 181, 220, 0.45);
+  }
+  .filme__legenda { margin-top: 0.75rem; text-align: center; }
+
+  @media (min-width: 60rem) {
+    .filme__grade { grid-template-columns: minmax(0, 1fr) auto; gap: 5rem; }
+    .filme__tela { width: min(24rem, calc((100svh - 10rem) * 464 / 832)); }
+  }
+
+  /* =================================================================
+     RESULTADOS
+     ================================================================= */
+  .resultados { padding-block: var(--secao) 0; }
+  .resultados__grade { display: grid; gap: 3rem; margin-block: 3rem; }
+  .resultados__comparador { display: grid; gap: 0.75rem; width: min(100%, 26rem); }
+  .resultados__comparador :global(.comparar__quadro) {
+    border-radius: 12px;
+    border: 1px solid rgba(220, 236, 248, 0.38);
+    box-shadow: 0 30px 90px -30px rgba(0, 0, 0, 0.9), 0 0 50px -12px rgba(77, 181, 220, 0.4);
+  }
+  .resultados__lado { display: grid; gap: 3rem; align-content: start; }
+  .resultados__figura { margin: 0; display: grid; gap: 0.75rem; }
+  .resultados__figura img { width: 100%; border-radius: 10px; border: 1px solid var(--linha); }
+  .resultados__citacao { display: grid; gap: 0.75rem; }
+  .resultados__citacao p {
+    font-family: var(--f-titulo);
+    font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
+    line-height: 0.95;
+  }
+  .resultados__falta { min-height: 8rem; }
+
+  @media (min-width: 60rem) {
+    .resultados__grade { grid-template-columns: auto minmax(0, 1fr); gap: 4rem; align-items: start; }
+  }
+</style>

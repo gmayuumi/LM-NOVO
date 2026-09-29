@@ -1,0 +1,87 @@
+---
+import IconeWhats from './IconeWhats.astro';
+import { whats } from '../data/site';
+// Chamada final com o selo do logo girando e o reflexo cromado passando.
+interface Props {
+  titulo: string;
+  texto: string;
+  botao: string;
+  mensagem: string;
+  nota?: string;
+  fundo?: string; // imagem minúscula e desfocada que vira luz de fundo
+}
+const { titulo, texto, botao, mensagem, nota, fundo = 'luz-lataria-ambiente.webp' } = Astro.props;
+---
+
+<section class="final" aria-labelledby="final-titulo">
+  <img class="final__fundo" src={`/assets/img/${fundo}`} alt="" aria-hidden="true" width="96" height="172" loading="lazy" />
+  <div class="recipiente final__grade">
+    <div class="final__texto">
+      <h2 id="final-titulo" data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
+      <p class="lead">{texto}</p>
+      <a class="botao" data-cta-principal href={whats(mensagem)} target="_blank" rel="noopener"><IconeWhats /> {botao}</a>
+      {nota && <p class="pequeno">{nota}</p>}
+    </div>
+    <div class="final__selo" data-selo>
+      <img src="/assets/img/logo-lm-480.webp" width="480" height="479" alt="" loading="lazy" decoding="async" />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+     CTA FINAL
+     ================================================================= */
+  .final {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--secao);
+    border-top: 1px solid var(--linha);
+  }
+  .final__fundo {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    max-width: none;
+    height: 120%;
+    object-fit: cover;
+    z-index: -2;
+    filter: blur(34px) saturate(1.4) brightness(0.55);
+  }
+  .final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(90% 90% at 80% 50%, rgba(15, 33, 51, 0.2) 0%, rgba(5, 8, 13, 0.85) 75%);
+  }
+  .final__grade { display: grid; gap: 3rem; align-items: center; }
+  .final__texto { display: grid; gap: 1.25rem; justify-items: start; }
+  .final h2 { font-size: clamp(3.5rem, 2rem + 6vw, 8rem); }
+  .final .botao { margin-top: 0.5rem; }
+  .final__selo {
+    position: relative;
+    width: min(66vw, 22rem);
+    justify-self: center;
+    border-radius: 50%;
+    filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 40px rgba(77, 181, 220, 0.3));
+  }
+  .final__selo img { width: 100%; height: auto; }
+  .final__selo::after {
+    content: '';
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%);
+    background-size: 300% 100%;
+    background-position: var(--brilho, 100%) 0;
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+
+  @media (min-width: 60rem) {
+    .final__grade { grid-template-columns: minmax(0, 1fr) auto; gap: 4rem; }
+    .final__selo { width: 26rem; }
+  }
+</style>

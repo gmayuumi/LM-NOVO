@@ -26,7 +26,7 @@ npm run preview  # serve a pasta dist/
 | `docs/pendencias.md` | O que falta confirmar com o cliente e fotos que faltam |
 | `src/data/site.ts` | Telefone, WhatsApp, mensagens, endereços, horário |
 | `src/pages/` | Uma página por arquivo |
-| `src/components/` | Cabeçalho, rodapé, antes/depois, barra do WhatsApp |
+| `src/components/` | Cabeçalho, rodapé, hero das páginas internas, antes/depois, processo, FAQ, avaliações, CTA final, barra do WhatsApp |
 | `src/scripts/site.ts` | Interações e animações |
 | `src/styles/global.css` | Cores, fontes e estilos gerais |
 | `public/assets/` | Fotos (WebP), vídeos, fontes |

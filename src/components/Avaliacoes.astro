@@ -1,0 +1,62 @@
+---
+import { SITE } from '../data/site';
+// Avaliações do site antigo. Quando houver avaliações do Google,
+// preencher `link` com o perfil de quem avaliou.
+export interface Avaliacao { nome: string; carro: string; texto: string; link?: string }
+interface Props { titulo?: string; itens: Avaliacao[] }
+const { titulo = 'Quem já trouxe o carro', itens } = Astro.props;
+---
+
+<section class="avaliacoes" aria-labelledby="avaliacoes-titulo">
+  <div class="recipiente">
+    <h2 id="avaliacoes-titulo" data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
+    <ul role="list" class:list={['avaliacoes__lista', { 'avaliacoes__lista--4': itens.length === 4 }]}>
+      {itens.map((a) => (
+        <li class="avaliacao">
+          <blockquote><p>{a.texto}</p></blockquote>
+          <p class="avaliacao__autor">
+            {a.link ? <a href={a.link} target="_blank" rel="noopener"><strong>{a.nome}</strong></a> : <strong>{a.nome}</strong>}
+            <span>{a.carro}</span>
+          </p>
+        </li>
+      ))}
+    </ul>
+    <a class="botao botao--vidro" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver avaliações no Google</a>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+     AVALIAÇÕES
+     ================================================================= */
+  .avaliacoes { padding-block: 0 var(--secao); }
+  .avaliacoes__lista { display: grid; gap: 2.5rem; margin-block: 3rem; }
+  .avaliacao {
+    position: relative;
+    padding: 0.25rem 0 0.25rem 1.5rem;
+  }
+  .avaliacao::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--azul-led), rgba(77, 181, 220, 0));
+    box-shadow: 0 0 10px rgba(77, 181, 220, 0.6);
+  }
+  .avaliacao blockquote p { font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem); line-height: 1.55; }
+  .avaliacao__autor { margin-top: 1.25rem; font-family: var(--f-apoio); }
+  .avaliacao__autor strong { display: block; font-weight: 700; font-size: 1.0625rem; }
+  .avaliacao__autor span { color: var(--texto-2); }
+
+  @media (min-width: 60rem) {
+    .avaliacoes__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3.5rem; margin-block: 4rem; }
+  }
+  @media (min-width: 60rem) {
+    .avaliacoes__lista--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 80rem) {
+    .avaliacoes__lista--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5rem; }
+  }
+</style>

@@ -130,6 +130,41 @@ function iniciarVideo() {
   }).observe(video);
 }
 
+/* ---------- vídeos curtos que tocam sozinhos quando aparecem ---------- */
+function iniciarVideosLoop() {
+  document.querySelectorAll<HTMLElement>('[data-video-auto]').forEach((caixa) => {
+    const video = caixa.querySelector('video');
+    const botao = caixa.querySelector<HTMLButtonElement>('button');
+    if (!video || !botao) return;
+    // Menos movimento ou economia de dados: fica com os controles do navegador.
+    if (reduzMovimento || economiaDados) return;
+    video.controls = false;
+    botao.hidden = false;
+    const rotulo = botao.querySelector('[data-rotulo]');
+    let pausadoPeloUsuario = false;
+    const mostrar = (tocando: boolean) => {
+      botao.toggleAttribute('data-pausado', !tocando);
+      if (rotulo) rotulo.textContent = tocando ? 'Pausar vídeo' : 'Tocar vídeo';
+    };
+    botao.addEventListener('click', () => {
+      pausadoPeloUsuario = !video.paused;
+      if (video.paused) video.play().then(() => mostrar(true)).catch(() => mostrar(false));
+      else {
+        video.pause();
+        mostrar(false);
+      }
+    });
+    new IntersectionObserver(
+      ([entrada]) => {
+        if (pausadoPeloUsuario) return;
+        if (entrada.isIntersecting) video.play().then(() => mostrar(true)).catch(() => mostrar(false));
+        else video.pause();
+      },
+      { rootMargin: '120px 0px' },
+    ).observe(caixa);
+  });
+}
+
 /* ---------- barra fixa do WhatsApp (celular) ---------- */
 function iniciarBarraWhats() {
   const barra = document.querySelector<HTMLElement>('[data-barra-whats]');
@@ -248,30 +283,41 @@ async function iniciarMovimento(comparadores: Comparador[]) {
         0,
       );
     }
-    intro.fromTo(
-      '[data-hero-vitrine]',
-      { autoAlpha: 0, scale: telaGrande() ? 0.94 : 1.08 },
-      { autoAlpha: 1, scale: 1, duration: 1.5, ease: 'power3.out' },
-      0.35,
-    );
+    const vitrine = hero.querySelector('[data-hero-vitrine]');
+    if (vitrine) {
+      intro.fromTo(
+        vitrine,
+        { autoAlpha: 0, scale: telaGrande() ? 0.94 : 1.08 },
+        { autoAlpha: 1, scale: 1, duration: 1.5, ease: 'power3.out' },
+        tubos.length ? 0.35 : 0,
+      );
+    }
     if (linhas.length) {
       gsap.set(linhas, { yPercent: 110, visibility: 'visible' });
       intro
-        .to(linhas, { yPercent: 0, duration: 1.1, stagger: 0.1, ease: 'power4.out' }, 0.6)
-        .fromTo(linhas, { '--brilho': '100%' }, { '--brilho': '0%', duration: 1.5, stagger: 0.15, ease: 'power2.inOut' }, 1.05);
+        .to(linhas, { yPercent: 0, duration: 1.1, stagger: 0.1, ease: 'power4.out' }, tubos.length ? 0.6 : 0.25)
+        .fromTo(linhas, { '--brilho': '100%' }, { '--brilho': '0%', duration: 1.5, stagger: 0.15, ease: 'power2.inOut' }, tubos.length ? 1.05 : 0.7);
     }
-    intro.fromTo(
-      '.hero__lead, .hero__acoes, .hero__prova',
-      { y: 24, autoAlpha: 0 },
-      { y: 0, autoAlpha: 1, duration: 0.9, stagger: 0.08, ease: 'power3.out' },
-      1.0,
-    );
+    const textos = hero.querySelectorAll('.hero__subtitulo, .hero__lead, .hero__acoes, .hero__prova');
+    if (textos.length) {
+      intro.fromTo(
+        textos,
+        { y: 24, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.9, stagger: 0.08, ease: 'power3.out' },
+        tubos.length ? 1.0 : 0.65,
+      );
+    }
 
-    // Ao rolar: o texto sobe mais rápido que a vitrine (parallax) e o teto se afasta
+    // Ao rolar: o texto sobe mais rápido que a imagem (parallax) e o teto se afasta
     const saida = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true };
-    gsap.to('[data-hero-conteudo]', { yPercent: -20, opacity: 0.1, ease: 'none', scrollTrigger: saida });
-    gsap.to('.hero__video', { scale: 1.08, yPercent: 5, ease: 'none', scrollTrigger: saida });
-    gsap.to('.hero__teto', { yPercent: -30, opacity: 0.15, ease: 'none', scrollTrigger: saida });
+    const rolar = (seletor: string, vars: object) => {
+      const el = hero.querySelector(seletor);
+      if (el) gsap.to(el, { ...vars, ease: 'none', scrollTrigger: saida });
+    };
+    rolar('[data-hero-conteudo]', { yPercent: -20, opacity: 0.1 });
+    rolar('.hero__video', { scale: 1.08, yPercent: 5 });
+    rolar('[data-hero-midia]', { scale: 1.1, yPercent: 6 }); // páginas internas
+    rolar('.hero__teto', { yPercent: -30, opacity: 0.15 });
   }
 
   /* ---- Títulos: sobem e a luz passa pelo cromado ---- */
@@ -419,7 +465,8 @@ async function iniciarMovimento(comparadores: Comparador[]) {
   /* ---- Varredura de luz genérica (páginas internas) ---- */
   gsap.utils.toArray<HTMLElement>('[data-varredura]').forEach((el) => {
     gsap
-      .timeline({ scrollTrigger: { trigger: el, start: 'top 88%', once: true } })
+      // no fim, solta o recorte para não cortar sombras e brilhos
+      .timeline({ scrollTrigger: { trigger: el, start: 'top 88%', once: true }, onComplete: () => (el.style.clipPath = 'none') })
       .fromTo(el, { '--rev': '0%', '--luz': 1 }, { '--rev': '100%', duration: 1.05, ease: 'power2.inOut' })
       .to(el, { '--luz': 0, duration: 0.4, ease: 'power1.in' }, 0.62);
   });
@@ -450,6 +497,7 @@ async function iniciarMovimento(comparadores: Comparador[]) {
 iniciarTopo();
 iniciarMenu();
 iniciarVideo();
+iniciarVideosLoop();
 iniciarBarraWhats();
 const comparadores = iniciarComparadores();
 if (!reduzMovimento) {

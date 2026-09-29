@@ -1,0 +1,330 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import BarraWhats from '../components/BarraWhats.astro';
+import HeroInterno from '../components/HeroInterno.astro';
+import Especificacoes from '../components/Especificacoes.astro';
+import Avaliacoes, { type Avaliacao } from '../components/Avaliacoes.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import VideoLoop from '../components/VideoLoop.astro';
+import IconeWhats from '../components/IconeWhats.astro';
+import { whats, MSG } from '../data/site';
+
+const img = (nome: string) => `/assets/img/${nome}`;
+const msgPagina = 'Olá! Gostaria de um orçamento para os serviços.';
+
+interface Foto { src: string; srcset?: string; largura: number; altura: number; alt: string; posicao?: string }
+interface Especialidade {
+  id: string;
+  titulo: string;
+  texto: string;
+  itens: string[];
+  cta: { rotulo: string; mensagem: string };
+  link?: { rotulo: string; href: string };
+  nota?: string;
+  foto: Foto;
+  detalhe?: Foto & { legenda: string };
+  acender?: boolean; // luzes da cabine acendendo
+}
+
+// Textos do site antigo (docs/conteudo-site-atual.md, 3.3)
+const especialidades: Especialidade[] = [
+  {
+    id: 'martelinho',
+    titulo: 'Martelinho de ouro',
+    texto: 'A arte de desamassar sem pintar. Nossa técnica remove amassados, desde os mais sutis até os mais complexos como danos de granizo, preservando a pintura e a originalidade do seu veículo.',
+    itens: ['Reparo rápido, em horas', 'Pintura 100% original mantida', 'Máxima valorização do veículo'],
+    cta: { rotulo: 'Orçamento de martelinho', mensagem: MSG.martelinho },
+    link: { rotulo: 'Ver como funciona o martelinho de ouro', href: '/martelinho' },
+    foto: {
+      src: img('antes-depois-branco-lado-a-lado-720.webp'),
+      srcset: `${img('antes-depois-branco-lado-a-lado-720.webp')} 720w, ${img('antes-depois-branco-lado-a-lado-1440.webp')} 1440w`,
+      largura: 720,
+      altura: 604,
+      alt: 'Lateral de um carro branco: à esquerda o amassado perto da roda, à direita a lataria lisa depois do martelinho de ouro',
+    },
+    detalhe: {
+      src: img('martelinho-tecnico-464.webp'),
+      largura: 464,
+      altura: 580,
+      alt: 'Técnico da LM trabalhando com a barra de luz na tampa traseira de um carro preto',
+      legenda: 'Barra de luz de inspeção',
+    },
+  },
+  {
+    id: 'funilaria',
+    titulo: 'Funilaria especializada',
+    texto: 'Para danos mais severos, nossa funilaria utiliza técnicas de reparo avançadas e equipamentos de ponta, como solda MIG/MAG e spotter, para restaurar a estrutura e as linhas originais do seu carro com precisão.',
+    itens: ['Reparo de peças plásticas e metálicas', 'Alinhamento técnico de carroceria', 'Segurança e integridade estrutural'],
+    cta: { rotulo: 'Orçamento de funilaria', mensagem: MSG.funilaria },
+    foto: {
+      src: img('funilaria-yaris-traseira-720.webp'),
+      srcset: `${img('funilaria-yaris-traseira-720.webp')} 720w, ${img('funilaria-yaris-traseira-1280.webp')} 1280w`,
+      largura: 720,
+      altura: 405,
+      alt: 'Traseira de um Toyota Yaris prata com o para-choque removido para funilaria',
+      posicao: '30% 50%',
+    },
+    detalhe: {
+      src: img('antes-depois-prata-lado-a-lado-720.webp'),
+      largura: 720,
+      altura: 604,
+      alt: 'Lateral de um carro prata: à esquerda amassada, à direita reparada',
+      legenda: 'Antes e depois',
+    },
+  },
+  {
+    id: 'pintura',
+    titulo: 'Pintura premium',
+    texto: 'Em nossa cabine de pintura italiana, garantimos um acabamento livre de impurezas. Utilizamos espectrofotômetro para uma colorimetria perfeita e tintas de alta performance para um resultado espelhado e duradouro.',
+    itens: ['Colorimetria computadorizada', 'Pintura localizada (retoques) ou completa', 'Acabamento com padrão de concessionária'],
+    cta: { rotulo: 'Orçamento de pintura', mensagem: MSG.pintura },
+    nota: 'A cabine exclusiva de pintura fica na unidade Brooklin.',
+    // [CONFIRMAR se a cabine das fotos é a do Brooklin]
+    foto: {
+      src: img('cabine-yaris-ampla-720.webp'),
+      srcset: `${img('cabine-yaris-ampla-720.webp')} 720w, ${img('cabine-yaris-ampla-1280.webp')} 1280w`,
+      largura: 720,
+      altura: 405,
+      alt: 'Cabine de pintura com paredes de vidro, teto de LED e um Toyota Yaris prata dentro',
+    },
+    detalhe: {
+      src: img('pintura-porsche-branco-720.webp'),
+      largura: 720,
+      altura: 540,
+      alt: 'Porsche 911 branco com a pintura brilhando sob as luzes da oficina',
+      legenda: 'Acabamento espelhado',
+    },
+    acender: true,
+  },
+  {
+    id: 'estetica',
+    titulo: 'Estética completa',
+    texto: 'Elevamos o conceito de "carro limpo". Nossos serviços de estética vão do detalhamento minucioso à aplicação de proteções cerâmicas (vitrificação), que garantem brilho intenso e durabilidade contra as agressões do dia a dia.',
+    itens: ['Polimento técnico e correção de pintura', 'Vitrificação (revestimento cerâmico)', 'Higienização interna e detalhamento'],
+    cta: { rotulo: 'Orçamento de estética', mensagem: MSG.estetica },
+    foto: {
+      src: img('estetica-interior-porsche-720.webp'),
+      srcset: `${img('estetica-interior-porsche-720.webp')} 720w, ${img('estetica-interior-porsche-1280.webp')} 1280w`,
+      largura: 720,
+      altura: 540,
+      alt: 'Interior de couro vermelho de um Porsche depois da higienização',
+    },
+  },
+];
+
+const diferenciais = [
+  { titulo: 'Técnicos certificados', texto: 'Nossa equipe passa por treinamentos constantes para estar sempre atualizada com as melhores técnicas e produtos do mercado.' },
+  { titulo: 'Tecnologia de ponta', texto: 'Investimos em equipamentos de última geração para garantir diagnósticos precisos e reparos com acabamento perfeito.' },
+  { titulo: 'Garantia de qualidade', texto: 'Confiamos tanto em nosso trabalho que todos os nossos serviços possuem garantia, assegurando sua total satisfação.' },
+  { titulo: 'Transparência total', texto: 'Você é informado sobre cada etapa do processo. Nossos orçamentos são detalhados, sem surpresas ou custos escondidos.' },
+];
+
+const avaliacoes: Avaliacao[] = [
+  { nome: 'Maria O.', carro: 'Jeep Compass', texto: 'Levei para fazer martelinho de ouro e fiquei impressionada. Não dá pra ver onde estava o amassado. Recomendo de olhos fechados!' },
+  { nome: 'Ana C.', carro: 'Hyundai Creta', texto: 'Fizeram a funilaria e pintura do meu para-choque. A cor ficou idêntica, serviço rápido e com um preço justo. Profissionais de verdade.' },
+  { nome: 'João S.', carro: 'BMW 320i', texto: 'Serviço impecável. Meu carro saiu melhor do que quando tirei da concessionária. O atendimento é outro nível, muito atenciosos.' },
+  { nome: 'Carlos P.', carro: 'Honda Civic', texto: 'A vitrificação que fizeram ficou sensacional. O brilho é incrível e a facilidade pra limpar agora é outra. Valeu cada centavo.' },
+];
+---
+
+<Base
+  titulo="Funilaria, pintura e estética automotiva na Zona Sul de SP | LM Estética Automotiva"
+  descricao="Martelinho de ouro, funilaria especializada, pintura premium em cabine com estufa e estética completa (polimento, vitrificação e higienização) em Santo Amaro e no Brooklin, Zona Sul de SP."
+  caminho="/servicos"
+  preloadImagem={img('estetica-espuma-mercedes-600.webp')}
+>
+  <Cabecalho atual="/servicos" />
+
+  <main>
+    <HeroInterno
+      titulo={['Do reparo', 'à perfeição.']}
+      subtitulo="Nossos serviços completos para o seu veículo"
+      texto="Combinamos técnica, paixão e tecnologia de ponta para oferecer um leque completo de serviços que restauram, protegem e valorizam seu carro."
+      cta={{ rotulo: 'Pedir orçamento no WhatsApp', href: whats(msgPagina), whats: true }}
+      cta2={{ rotulo: 'Ver endereços das unidades', href: '/localizacao' }}
+      prova="Garantia em todos os serviços."
+      foto={{
+        src: img('estetica-espuma-mercedes-600.webp'),
+        srcset: `${img('estetica-espuma-mercedes-600.webp')} 600w, ${img('estetica-espuma-mercedes-1200.webp')} 1200w`,
+        alt: 'Mercedes-Benz coberta de espuma no estúdio da LM, com piso quadriculado azul',
+        largura: 600,
+        altura: 800,
+        ambiente: 'estetica-espuma-mercedes-ambiente.webp',
+      }}
+    />
+
+    <!-- ESPECIALIDADES ===================================================== -->
+    <section class="especialidades" aria-labelledby="especialidades-titulo">
+      <div class="recipiente especialidades__cabeca">
+        <h2 id="especialidades-titulo" data-titulo><span class="cromado" data-brilho>Nossas especialidades</span></h2>
+        <nav aria-label="Especialidades">
+          <ul role="list" class="especialidades__atalhos">
+            {especialidades.map((e) => <li><a href={`#${e.id}`}>{e.titulo}</a></li>)}
+          </ul>
+        </nav>
+      </div>
+
+      {especialidades.map((e, i) => (
+        <article class:list={['especialidade', { 'especialidade--invertida': i % 2 === 1 }]} id={e.id} aria-labelledby={`${e.id}-titulo`}>
+          <div class="recipiente especialidade__grade">
+            <div class="especialidade__midia">
+              <div class="especialidade__foto" data-parallax data-acender={e.acender ? '' : undefined}>
+                <img
+                  src={e.foto.src}
+                  srcset={e.foto.srcset}
+                  sizes="(min-width: 60rem) 44rem, 100vw"
+                  width={e.foto.largura}
+                  height={e.foto.altura}
+                  alt={e.foto.alt}
+                  loading="lazy"
+                  decoding="async"
+                  style={e.foto.posicao ? `object-position: ${e.foto.posicao}` : undefined}
+                />
+              </div>
+              {e.detalhe && (
+                <figure class="especialidade__detalhe">
+                  <div data-varredura><img src={e.detalhe.src} width={e.detalhe.largura} height={e.detalhe.altura} alt={e.detalhe.alt} loading="lazy" decoding="async" /></div>
+                  <figcaption class="pequeno">{e.detalhe.legenda}</figcaption>
+                </figure>
+              )}
+              {e.id === 'estetica' && (
+                <figure class="especialidade__detalhe especialidade__detalhe--video">
+                  <div data-varredura><VideoLoop
+                    src="/assets/video/estetica-moto-loop.mp4"
+                    poster={img('estetica-moto-loop-poster.webp')}
+                    largura={576}
+                    altura={1024}
+                    rotulo="Moto vermelha recebendo estética completa no estúdio da LM"
+                  /></div>
+                  <figcaption class="pequeno">Também para motos</figcaption>
+                </figure>
+              )}
+            </div>
+
+            <div class="especialidade__texto">
+              <h3 id={`${e.id}-titulo`}><span class="cromado">{e.titulo}</span></h3>
+              <p>{e.texto}</p>
+              <ul role="list" class="especialidade__itens">
+                {e.itens.map((item) => <li>{item}</li>)}
+              </ul>
+              {e.nota && <p class="pequeno">{e.nota}</p>}
+              <div class="especialidade__acoes">
+                <a class="botao" href={whats(e.cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {e.cta.rotulo}</a>
+                {e.link && <a class="link-destaque" href={e.link.href}>{e.link.rotulo}</a>}
+                {e.id === 'estetica' && (
+                  <a class="link-whats" href={whats(MSG.moto)} target="_blank" rel="noopener"><IconeWhats /> Orçamento para moto</a>
+                )}
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <Especificacoes id="diferenciais" titulo="Por que escolher a LM Estética?" itens={diferenciais} />
+
+    <Avaliacoes titulo="Quem já confiou, recomenda" itens={avaliacoes} />
+
+    <CtaFinal
+      titulo="Pronto para dar ao seu carro o tratamento que ele merece?"
+      texto="Fale com nossa equipe de especialistas e agende uma avaliação completa para o seu veículo."
+      botao="Agendar avaliação no WhatsApp"
+      mensagem="Olá! Gostaria de agendar uma avaliação para o meu carro."
+      nota="Resposta rápida no horário comercial."
+      fundo="estetica-espuma-mercedes-ambiente.webp"
+    />
+  </main>
+
+  <Rodape />
+  <BarraWhats mensagem={msgPagina} />
+</Base>
+
+<style>
+  /* =================================================================
+     ESPECIALIDADES: blocos alternados, foto grande + detalhe sobreposto
+     ================================================================= */
+  .especialidades { padding-top: var(--secao); }
+  .especialidades__cabeca { display: grid; gap: 1.5rem; margin-bottom: 1rem; }
+  .especialidades__atalhos { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+  .especialidades__atalhos a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    color: var(--texto-2);
+    text-decoration: none;
+    background: linear-gradient(var(--azul-led), var(--azul-led)) 0 calc(100% - 0.5rem) / 0 2px no-repeat;
+    transition: background-size 0.35s var(--curva), color 0.2s;
+  }
+  .especialidades__atalhos a:hover { color: var(--branco); background-size: 100% 2px; }
+
+  .especialidade { padding-block: clamp(4rem, 2.5rem + 5vw, 8rem); scroll-margin-top: var(--altura-topo); }
+  .especialidade + .especialidade { border-top: 1px solid var(--linha); }
+  .especialidade__grade { display: grid; gap: 2.5rem; }
+
+  .especialidade__midia { position: relative; padding-bottom: 3.5rem; }
+  .especialidade__foto {
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    border: 1px solid rgba(220, 236, 248, 0.3);
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.9);
+  }
+  .especialidade__foto img { width: 100%; height: 100%; object-fit: cover; }
+  /* a foto de detalhe fica por cima do canto, como uma segunda placa na vitrine */
+  .especialidade__detalhe {
+    position: absolute;
+    right: -0.5rem;
+    bottom: 0;
+    width: 44%;
+    margin: 0;
+  }
+  .especialidade__detalhe img,
+  .especialidade__detalhe :global(video) {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(220, 236, 248, 0.5);
+    box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.95), 0 0 40px -12px rgba(77, 181, 220, 0.5);
+  }
+  .especialidade__detalhe figcaption {
+    margin-top: 0.5rem;
+    color: var(--branco);
+  }
+  .especialidade__detalhe--video { width: 34%; bottom: -1rem; }
+  .especialidade--invertida .especialidade__detalhe { right: auto; left: -0.5rem; }
+
+  .especialidade__texto { display: grid; gap: 1.25rem; justify-items: start; align-content: center; }
+  .especialidade__texto h3 { font-size: var(--t-h2); }
+  .especialidade__texto > p:not(.pequeno) { color: var(--texto-2); max-width: 52ch; }
+  .especialidade__itens { display: grid; gap: 0.625rem; }
+  .especialidade__itens li {
+    position: relative;
+    padding-left: 1.75rem;
+    font-family: var(--f-apoio);
+    font-size: 1.125rem;
+  }
+  /* visto de LED */
+  .especialidade__itens li::before {
+    content: '';
+    position: absolute;
+    left: 0.125rem;
+    top: 0.3em;
+    width: 0.8rem;
+    height: 0.45rem;
+    border-left: 2px solid var(--azul-led);
+    border-bottom: 2px solid var(--azul-led);
+    transform: rotate(-45deg);
+    filter: drop-shadow(0 0 4px rgba(77, 181, 220, 0.9));
+  }
+  .especialidade__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.5rem; }
+
+  @media (min-width: 60rem) {
+    .especialidade__grade { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 5rem; align-items: center; }
+    .especialidade--invertida .especialidade__midia { order: 2; }
+    .especialidade__detalhe { right: -2.5rem; width: 38%; }
+    .especialidade--invertida .especialidade__detalhe { left: -2.5rem; }
+    .especialidade__detalhe--video { width: 28%; bottom: -2rem; }
+  }
+</style>

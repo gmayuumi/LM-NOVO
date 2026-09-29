@@ -2,8 +2,9 @@
 import IconeWhats from './IconeWhats.astro';
 import { SITE, PAGINAS, CURSOS, HORARIO, whats, MSG } from '../data/site';
 
-interface Props { atual?: string }
-const { atual = '/' } = Astro.props;
+// `cta` troca o botão do topo (a página de Cursos fala com um consultor, não pede orçamento).
+interface Props { atual?: string; cta?: { rotulo: string; rotuloLongo: string; mensagem: string } }
+const { atual = '/', cta = { rotulo: 'Pedir orçamento', rotuloLongo: 'Pedir orçamento no WhatsApp', mensagem: MSG.geral } } = Astro.props;
 const atualSe = (href: string) => (atual === href ? 'page' : undefined);
 ---
 
@@ -21,7 +22,7 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
       </ul>
     </nav>
 
-    <a class="botao topo__cta" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento</a>
+    <a class="botao topo__cta" href={whats(cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {cta.rotulo}</a>
 
     <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-celular" data-menu-botao>
       <span class="menu-botao__icone" aria-hidden="true"><span></span><span></span></span>
@@ -37,10 +38,10 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
         {PAGINAS.map((p) => <li><a href={p.href} aria-current={atualSe(p.href)}><span class="cromado">{p.rotulo}</span></a></li>)}
       </ul>
       <ul role="list" class="menu__secundario">
-        <li><a href={CURSOS.href}>{CURSOS.rotulo}</a></li>
+        <li><a href={CURSOS.href} aria-current={atualSe(CURSOS.href)}>{CURSOS.rotulo}</a></li>
         <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram {SITE.instagramUsuario}</a></li>
       </ul>
-      <a class="botao menu__cta" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
+      <a class="botao menu__cta" href={whats(cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {cta.rotuloLongo}</a>
       <p class="pequeno menu__rodape">
         WhatsApp {SITE.telefoneExibicao}<br />
         {HORARIO.map((h) => `${h.dias}: ${h.texto}`).join('. ')}.

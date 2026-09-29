@@ -1,0 +1,155 @@
+---
+import IconeWhats from './IconeWhats.astro';
+// Hero das páginas internas. Celular: foto em tela cheia com o texto por cima.
+// Desktop: texto à esquerda e a foto num "display" de vitrine à direita, com
+// uma cópia minúscula e desfocada enchendo a tela de luz ambiente.
+// Usa os mesmos ganchos de animação do hero da home (src/scripts/site.ts).
+interface Botao { rotulo: string; href: string; whats?: boolean }
+interface Props {
+  titulo: string[]; // uma linha por item
+  subtitulo?: string;
+  texto: string;
+  cta: Botao;
+  cta2?: Botao;
+  prova?: string;
+  foto: { src: string; srcset?: string; alt: string; largura: number; altura: number; ambiente: string; posicao?: string };
+}
+const { titulo, subtitulo, texto, cta, cta2, prova, foto } = Astro.props;
+const razao = (foto.largura / foto.altura).toFixed(4);
+const longo = titulo.length >= 4; // título de 4 linhas: letra menor para o botão caber na 1ª tela
+const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {});
+---
+
+<section class="hero-int" data-hero aria-labelledby="hero-titulo" style={`--razao: ${razao}`}>
+  <img class="hero-int__ambiente" src={`/assets/img/${foto.ambiente}`} alt="" aria-hidden="true" width="96" height="128" />
+  <div class="hero-int__vitrine" data-hero-vitrine>
+    <img
+      data-hero-midia
+      src={foto.src}
+      srcset={foto.srcset}
+      sizes="(min-width: 60rem) 30rem, 100vw"
+      width={foto.largura}
+      height={foto.altura}
+      alt={foto.alt}
+      fetchpriority="high"
+      style={foto.posicao ? `object-position: ${foto.posicao}` : undefined}
+    />
+  </div>
+
+  <div class="recipiente hero-int__conteudo" data-hero-conteudo>
+    <h1 id="hero-titulo" class:list={['hero-int__titulo', { 'hero-int__titulo--longo': longo }]}>
+      {titulo.map((linha) => <span class="hero__linha"><span class="cromado">{linha}</span></span>)}
+    </h1>
+    {subtitulo && <p class="hero__subtitulo">{subtitulo}</p>}
+    <p class="lead hero__lead">{texto}</p>
+    <div class="hero__acoes">
+      <a class="botao" data-cta-principal href={cta.href} {...externo(cta)}>{cta.whats && <IconeWhats />} {cta.rotulo}</a>
+      {cta2 && <a class="botao botao--vidro" href={cta2.href} {...externo(cta2)}>{cta2.whats && <IconeWhats />} {cta2.rotulo}</a>}
+    </div>
+    {prova && <p class="pequeno hero__prova">{prova}</p>}
+  </div>
+</section>
+
+<style>
+  /* celular: a foto é uma faixa alta no topo e o título entra por cima da borda dela */
+  .hero-int {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 2.5rem;
+    overflow: hidden;
+  }
+  .hero-int__ambiente { display: none; }
+  .hero-int__vitrine {
+    position: relative;
+    z-index: -1;
+    height: max(24rem, 60svh);
+    overflow: hidden;
+  }
+  .hero-int__vitrine img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-int__vitrine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(5, 8, 13, 0.7) 0%, rgba(5, 8, 13, 0) 22%),
+      linear-gradient(to top, var(--noite) 0%, rgba(5, 8, 13, 0.75) 22%, rgba(5, 8, 13, 0) 55%);
+  }
+  .hero-int__conteudo { position: relative; margin-top: -7rem; }
+
+  .hero-int__titulo { font-size: clamp(3.25rem, 1.4rem + 6.4vw, 7.5rem); line-height: 0.9; }
+  .hero-int__titulo--longo { font-size: clamp(3.25rem, 1.6rem + 4.8vw, 6rem); }
+  /* folga em cima para acentos (Ã, É): o cromado só pinta dentro da caixa do span */
+  .hero__linha { display: block; overflow: hidden; padding-bottom: 0.06em; margin-top: -0.16em; }
+  .hero__linha > span { display: inline-block; padding-top: 0.16em; }
+  .hero__subtitulo {
+    margin-top: 1rem;
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: clamp(1.1875rem, 1.05rem + 0.6vw, 1.5rem);
+    color: var(--azul-led-claro);
+    max-width: 36ch;
+  }
+  .hero__lead { margin-top: 1rem; }
+  .hero__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  .hero__acoes .botao { flex: 1 1 100%; }
+  .hero__prova { margin-top: 0.875rem; }
+
+  :global(.mov) .hero__linha > span,
+  :global(.mov) .hero__subtitulo,
+  :global(.mov) .hero__lead,
+  :global(.mov) .hero__acoes,
+  :global(.mov) .hero__prova { visibility: hidden; }
+  :global(.mov) .hero-int__vitrine { opacity: 0; }
+
+  @media (min-width: 40rem) {
+    .hero__acoes .botao { flex: 0 0 auto; }
+  }
+
+  @media (min-width: 60rem) {
+    .hero-int {
+      /* largura da foto: pela altura da tela, sem passar de 36% da largura */
+      --midia-l: min(calc(min(100svh - var(--altura-topo) - 14vh, 44rem) * var(--razao)), 36vw);
+      display: grid;
+      align-items: center;
+      min-height: min(100svh, 60rem);
+      padding-block: calc(var(--altura-topo) + 3rem) 3rem;
+    }
+    .hero-int__ambiente {
+      display: block;
+      position: absolute;
+      inset: -12%;
+      z-index: -2;
+      width: 124%;
+      max-width: none;
+      height: 124%;
+      object-fit: cover;
+      filter: blur(30px) saturate(1.45) brightness(0.55);
+    }
+    .hero-int::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(90deg, rgba(5, 8, 13, 0.94) 0%, rgba(5, 8, 13, 0.6) 48%, rgba(5, 8, 13, 0.25) 100%);
+    }
+    /* centralizada na vertical sem transform (a animação usa o transform) */
+    .hero-int__vitrine {
+      position: absolute;
+      overflow: visible;
+      inset: var(--altura-topo) auto 0 auto;
+      right: max(var(--gutter), calc((100vw - var(--largura)) / 2));
+      width: var(--midia-l);
+      height: calc(var(--midia-l) / var(--razao));
+      margin-block: auto;
+      z-index: 0;
+    }
+    .hero-int__vitrine::after { content: none; }
+    .hero-int__vitrine img {
+      border-radius: 12px;
+      border: 1px solid rgba(220, 236, 248, 0.4);
+      box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 70px -10px rgba(77, 181, 220, 0.45);
+      -webkit-box-reflect: below 14px linear-gradient(transparent 74%, rgba(255, 255, 255, 0.2));
+    }
+    .hero-int__conteudo { margin-top: 0; padding-right: calc(var(--midia-l) + 4rem); }
+  }
+</style>

@@ -1,0 +1,314 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import BarraWhats from '../components/BarraWhats.astro';
+import HeroInterno from '../components/HeroInterno.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import IconeWhats from '../components/IconeWhats.astro';
+import { SITE, UNIDADES, HORARIO, whats } from '../data/site';
+
+const img = (nome: string) => `/assets/img/${nome}`;
+const msg = {
+  chegar: 'Olá! Gostaria de saber como chegar.',
+  visita: 'Olá! Gostaria de agendar uma visita para avaliar meu carro.',
+};
+const mapa = (endereco: string) => `https://maps.google.com/maps?q=${encodeURIComponent(endereco)}&z=16&output=embed`;
+const sa = UNIDADES.santoAmaro;
+const br = UNIDADES.brooklin;
+
+// Textos do site antigo (docs/conteudo-site-atual.md, 1 e 3.5)
+const cabine = [
+  { titulo: 'Isolamento total', texto: 'Ambiente 100% livre de poeira e impurezas.' },
+  { titulo: 'Estufa controlada', texto: 'Secagem ideal na temperatura correta para durabilidade superior.' },
+  { titulo: 'Acabamento premium', texto: 'Textura e cor fiéis ao padrão original da montadora.' },
+];
+
+const perguntas = [
+  {
+    pergunta: 'Preciso agendar para fazer um orçamento?',
+    resposta: 'Não é obrigatório, mas é altamente recomendado. Agendando pelo WhatsApp, você garante que um de nossos especialistas estará disponível para te atender imediatamente, evitando qualquer espera. Para serviços rápidos de martelinho, muitas vezes conseguimos avaliar e executar no mesmo dia.',
+  },
+  {
+    pergunta: 'A oficina possui estacionamento?',
+    resposta: 'Sim! Oferecemos estacionamento gratuito e seguro no local para todos os nossos clientes, tanto para quem vem para um orçamento rápido quanto para quem deixará o carro para um serviço mais longo.',
+  },
+  {
+    pergunta: 'Posso aguardar no local enquanto o serviço é feito?',
+    resposta: 'Claro! Temos uma sala de espera climatizada, com Wi-Fi, TV e um café sempre fresco para você aguardar com conforto. Para serviços mais demorados, como funilaria e pintura, informaremos o prazo e você não precisa esperar no local.',
+  },
+  {
+    pergunta: 'Quais formas de pagamento vocês aceitam?',
+    resposta: 'Aceitamos as principais formas de pagamento para sua conveniência: cartões de crédito (parcelamos, consulte condições), cartões de débito, PIX e transferência bancária.',
+  },
+];
+---
+
+<Base
+  titulo="Endereço e horário em Santo Amaro e no Brooklin, Zona Sul de SP | LM Estética Automotiva"
+  descricao="LM Estética Automotiva na Rua Padre José de Anchieta, 735, Santo Amaro, e na Av. Roque Petroni Júnior, 118, Brooklin, Zona Sul de SP. Mapa, horário, estacionamento gratuito e sala de espera com café."
+  caminho="/localizacao"
+  preloadImagem={img('unidade-santo-amaro-480.webp')}
+>
+  <Cabecalho atual="/localizacao" />
+
+  <main>
+    <HeroInterno
+      titulo={['Estamos', 'te esperando.']}
+      subtitulo="Venha tomar um café e cuidar do seu carro"
+      texto="Nossa oficina foi pensada para oferecer a melhor experiência para você e a máxima tecnologia para o seu veículo. Veja como é fácil nos encontrar em São Paulo."
+      cta={{ rotulo: 'Criar rota para Santo Amaro', href: sa.rota }}
+      cta2={{ rotulo: 'Perguntar como chegar', href: whats(msg.chegar), whats: true }}
+      prova={HORARIO.map((h) => `${h.dias}, ${h.texto}`).join('. ') + '.'}
+      foto={{
+        src: img('unidade-santo-amaro-480.webp'),
+        srcset: `${img('unidade-santo-amaro-480.webp')} 480w, ${img('unidade-santo-amaro-960.webp')} 960w`,
+        alt: 'Fachada da LM Estética Automotiva, com a placa de martelinho de ouro e a oficina iluminada ao fundo',
+        largura: 480,
+        altura: 600,
+        ambiente: 'unidade-santo-amaro-ambiente.webp',
+      }}
+    />
+
+    <!-- UNIDADES =========================================================== -->
+    <section class="local" id="santo-amaro" aria-labelledby="sa-titulo">
+      <div class="recipiente local__grade">
+        <div class="local__texto">
+          <p class="local__papel">Unidade matriz</p>
+          <h2 id="sa-titulo" data-titulo><span class="cromado" data-brilho>{sa.nome}</span></h2>
+          <p class="texto">Nossa oficina em Santo Amaro foi projetada para oferecer a melhor experiência. Contamos com equipamentos de última geração e uma sala de espera climatizada para você aguardar com conforto.</p>
+          <dl class="local__dados">
+            <div>
+              <dt>Endereço</dt>
+              <dd><address>{sa.rua}<br />{sa.bairro}, {sa.cidade} - {sa.uf}<br />CEP {sa.cep}</address></dd>
+            </div>
+            <div>
+              <dt>Horário</dt>
+              <dd>{HORARIO.map((h) => <>{h.dias}: {h.texto}<br /></>)}</dd>
+            </div>
+            <div>
+              <dt>Contato</dt>
+              <dd>
+                <a href={whats(msg.chegar)} target="_blank" rel="noopener">WhatsApp {SITE.telefoneExibicao}</a><br />
+                <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+              </dd>
+            </div>
+          </dl>
+          <ul role="list" class="local__itens">
+            <li>Estacionamento gratuito e seguro</li>
+            <li>Sala de espera climatizada, com Wi-Fi, TV e café</li>
+          </ul>
+          <a class="botao botao--vidro" href={sa.rota} target="_blank" rel="noopener">Criar rota no mapa</a>
+        </div>
+        <div class="mapa" data-varredura>
+          <iframe
+            src={mapa(`${sa.rua}, ${sa.bairro}, ${sa.cidade} - ${sa.uf}`)}
+            title={`Mapa da unidade ${sa.nome}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="local local--invertido" id="brooklin" aria-labelledby="br-titulo">
+      <div class="recipiente local__grade">
+        <div class="local__texto">
+          <p class="local__papel">Unidade especializada em pintura</p>
+          <h2 id="br-titulo" data-titulo><span class="cromado" data-brilho>{br.nome}</span></h2>
+          <p class="texto">Nossa segunda unidade possui o melhor da tecnologia automotiva, abrigando nosso Sistema de Cabine Exclusiva para Pintura, desenhado para alcançar resultados absolutamente imaculados.</p>
+          <dl class="local__dados">
+            <div>
+              <dt>Endereço</dt>
+              <!-- [CONFIRMAR CEP do Brooklin] -->
+              <dd><address>{br.rua}<br />{br.bairro}, {br.cidade} - {br.uf}</address></dd>
+            </div>
+            <div>
+              <dt>Horário</dt>
+              <dd>{HORARIO.map((h) => <>{h.dias}: {h.texto}<br /></>)}</dd>
+            </div>
+          </dl>
+          <dl class="local__cabine" aria-label="Cabine exclusiva de pintura">
+            {cabine.map((c) => (
+              <div>
+                <dt>{c.titulo}</dt>
+                <dd>{c.texto}</dd>
+              </div>
+            ))}
+          </dl>
+          <a class="botao botao--vidro" href={br.rota} target="_blank" rel="noopener">Criar rota no mapa</a>
+        </div>
+        <div class="mapa" data-varredura>
+          <iframe
+            src={mapa(`${br.rua}, ${br.bairro}, ${br.cidade} - ${br.uf}`)}
+            title={`Mapa da unidade ${br.nome}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTRUTURA ========================================================== -->
+    <section class="estrutura" aria-labelledby="estrutura-titulo">
+      <div class="recipiente">
+        <h2 id="estrutura-titulo" data-titulo><span class="cromado" data-brilho>Conheça nossa estrutura</span></h2>
+        <ul role="list" class="estrutura__mosaico">
+          <!-- [CONFIRMAR se a cabine das fotos é a do Brooklin] -->
+          <li class="estrutura__item estrutura__item--largo">
+            <figure>
+              <div class="estrutura__foto" data-varredura data-acender>
+                <img
+                  src={img('cabine-yaris-ampla-720.webp')}
+                  srcset={`${img('cabine-yaris-ampla-720.webp')} 720w, ${img('cabine-yaris-ampla-1280.webp')} 1280w`}
+                  sizes="(min-width: 60rem) 46rem, 100vw"
+                  width="720"
+                  height="405"
+                  alt="Cabine de pintura com paredes de vidro e teto de LED, com um Toyota Yaris prata dentro"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="pequeno">Cabine de pintura com estufa</figcaption>
+            </figure>
+          </li>
+          <li class="estrutura__item">
+            <figure>
+              <div class="estrutura__foto" data-varredura>
+                <img src={img('oficina-interior-483.webp')} width="483" height="365" alt="Visão geral da oficina, limpa e organizada, com carros sendo atendidos" loading="lazy" decoding="async" />
+              </div>
+              <figcaption class="pequeno">Oficina</figcaption>
+            </figure>
+          </li>
+          <li class="estrutura__item">
+            <figure>
+              <div class="estrutura__foto" data-varredura>
+                <img src={img('estetica-glc-preto-456.webp')} width="456" height="364" alt="Mercedes GLC preta brilhando no estúdio de estética, sob o teto de LED" loading="lazy" decoding="async" />
+              </div>
+              <figcaption class="pequeno">Estúdio de estética</figcaption>
+            </figure>
+          </li>
+          <li class="estrutura__item">
+            <figure>
+              <!-- [CONFIRMAR de qual unidade é esta fachada] -->
+              <div class="estrutura__foto" data-varredura>
+                <img src={img('fachada-3-618.webp')} width="618" height="381" alt="Fachada da LM Estética Automotiva, com o logo e a oficina aberta para a rua" loading="lazy" decoding="async" />
+              </div>
+              <figcaption class="pequeno">Fachada</figcaption>
+            </figure>
+          </li>
+          <li class="estrutura__item">
+            <div class="espaco-foto estrutura__falta">[FOTO: sala de espera climatizada, com Wi-Fi, TV e café]</div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <Faq titulo="Dúvidas sobre a visita?" itens={perguntas} />
+
+    <CtaFinal
+      titulo="Agende e seja atendido na hora"
+      texto="Agendando pelo WhatsApp, você garante que um de nossos especialistas estará disponível para te atender, sem espera."
+      botao="Agendar visita no WhatsApp"
+      mensagem={msg.visita}
+      nota="Resposta em menos de 2 minutos no horário comercial."
+      fundo="unidade-santo-amaro-ambiente.webp"
+    />
+  </main>
+
+  <Rodape />
+  <BarraWhats mensagem={msg.visita} rotulo="Agendar visita no WhatsApp" />
+</Base>
+
+<style>
+  /* =================================================================
+     UNIDADES
+     ================================================================= */
+  .local { padding-block: var(--secao) 0; scroll-margin-top: var(--altura-topo); }
+  .local__grade { display: grid; gap: 2.5rem; }
+  .local__texto { display: grid; gap: 1.25rem; justify-items: start; align-content: start; }
+  .local__papel {
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    color: var(--azul-led-claro);
+  }
+  .local__texto h2 { margin-top: -0.5rem; }
+
+  .local__dados { display: grid; gap: 1rem; width: 100%; border-top: 1px solid var(--linha); padding-top: 1.25rem; }
+  .local__dados div { display: grid; gap: 0.125rem; }
+  .local__dados dt { font-family: var(--f-apoio); font-weight: 700; color: var(--texto-2); font-size: var(--t-pequeno); }
+  .local__dados dd { margin: 0; }
+  .local__dados address { font-style: normal; }
+  .local__dados a { text-decoration: none; }
+  .local__dados a:hover { color: var(--azul-led-claro); text-decoration: underline; }
+
+  .local__itens { display: grid; gap: 0.5rem; }
+  .local__itens li { position: relative; padding-left: 1.75rem; font-family: var(--f-apoio); font-size: 1.125rem; }
+  .local__itens li::before {
+    content: '';
+    position: absolute;
+    left: 0.125rem;
+    top: 0.3em;
+    width: 0.8rem;
+    height: 0.45rem;
+    border-left: 2px solid var(--azul-led);
+    border-bottom: 2px solid var(--azul-led);
+    transform: rotate(-45deg);
+    filter: drop-shadow(0 0 4px rgba(77, 181, 220, 0.9));
+  }
+
+  /* os três benefícios da cabine, como leitura de painel */
+  .local__cabine { display: grid; gap: 0; width: 100%; border-top: 1px solid var(--linha); }
+  .local__cabine div { display: grid; gap: 0.25rem; padding-block: 1rem; border-bottom: 1px solid var(--linha); }
+  .local__cabine dt { font-family: var(--f-titulo); font-size: 1.875rem; line-height: 1; color: var(--branco); }
+  .local__cabine dd { margin: 0; color: var(--texto-2); }
+
+  .mapa {
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(220, 236, 248, 0.3);
+    background: var(--noite-2);
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.9), 0 0 60px -20px rgba(77, 181, 220, 0.35);
+  }
+  /* mapa claro do Google, escurecido para combinar com o site */
+  .mapa iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    filter: invert(0.92) hue-rotate(180deg) saturate(0.7) brightness(0.95) contrast(0.95);
+  }
+  /* a rolagem suave desliga cliques em iframes; o mapa precisa deles */
+  :global(.lenis.lenis-smooth) .mapa iframe { pointer-events: auto; }
+
+  @media (min-width: 60rem) {
+    .local__grade { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 5rem; align-items: center; }
+    .local--invertido .mapa { order: -1; }
+    .local__dados { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1.5rem; }
+    .mapa { aspect-ratio: 5 / 4; }
+  }
+
+  /* =================================================================
+     ESTRUTURA
+     ================================================================= */
+  .estrutura { padding-block: var(--secao) 0; }
+  .estrutura__mosaico { display: grid; gap: 1.25rem; margin-top: 3rem; }
+  .estrutura__item figure { margin: 0; display: grid; gap: 0.5rem; }
+  .estrutura__foto { aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; border: 1px solid var(--linha); }
+  .estrutura__foto img { width: 100%; height: 100%; object-fit: cover; }
+  .estrutura__falta { height: 100%; min-height: 12rem; border-radius: 10px; }
+
+  @media (min-width: 40rem) {
+    .estrutura__mosaico { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .estrutura__item--largo { grid-column: 1 / -1; }
+  }
+  @media (min-width: 60rem) {
+    .estrutura__mosaico { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; }
+    .estrutura__item { grid-column: span 4; }
+    .estrutura__item--largo { grid-column: span 8; grid-row: span 2; }
+    .estrutura__item--largo .estrutura__foto { aspect-ratio: auto; height: calc(100% - 2rem); }
+    .estrutura__item--largo figure { height: 100%; grid-template-rows: 1fr auto; }
+    .estrutura__item:nth-child(n + 4) { grid-column: span 6; }
+  }
+</style>

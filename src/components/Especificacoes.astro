@@ -1,0 +1,58 @@
+---
+// Lista de benefícios em formato de ficha técnica: título à esquerda,
+// explicação à direita, linhas finas entre os itens. Cada linha é revelada
+// pela barra de luz ([data-varredura]).
+interface Item { titulo: string; texto: string }
+interface Props {
+  id: string;
+  titulo: string;
+  lead?: string;
+  itens: Item[];
+}
+const { id, titulo, lead, itens } = Astro.props;
+---
+
+<section class="ficha" id={id} aria-labelledby={`${id}-titulo`}>
+  <div class="recipiente ficha__grade">
+    <div class="ficha__cabeca">
+      <h2 id={`${id}-titulo`} data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
+      {lead && <p class="lead">{lead}</p>}
+      <slot name="cabeca" />
+    </div>
+    <dl class="ficha__lista">
+      {itens.map((item) => (
+        <div class="ficha__item" data-varredura>
+          <dt><span class="cromado">{item.titulo}</span></dt>
+          <dd>{item.texto}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .ficha { padding-block: var(--secao); }
+  .ficha__grade { display: grid; gap: 2.5rem; }
+  .ficha__cabeca { display: grid; gap: 1.25rem; align-content: start; justify-items: start; }
+  .ficha__lista { border-top: 1px solid var(--linha); }
+  .ficha__item {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--linha);
+  }
+  .ficha__item dt {
+    font-family: var(--f-titulo);
+    font-size: clamp(2rem, 1.6rem + 1.6vw, 3rem);
+    line-height: 0.95;
+  }
+  .ficha__item dd { margin: 0; color: var(--texto-2); max-width: 44ch; }
+
+  @media (min-width: 48rem) {
+    .ficha__item { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2rem; align-items: baseline; }
+  }
+  @media (min-width: 64rem) {
+    .ficha__grade { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 5rem; }
+    .ficha__cabeca { position: sticky; top: calc(var(--altura-topo) + 2.5rem); }
+  }
+</style>

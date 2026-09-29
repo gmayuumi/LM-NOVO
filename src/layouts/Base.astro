@@ -8,9 +8,11 @@ interface Props {
   caminho?: string; // '/' ou '/martelinho'
   imagem?: string;
   preloadImagem?: string;
+  jsonLdExtra?: object[]; // entra no @graph junto com as duas unidades
+  semIndice?: boolean; // 404: fora do Google e sem canonical
 }
 
-const { titulo, descricao, caminho = '/', imagem = '/assets/img/og-lm.jpg', preloadImagem } = Astro.props;
+const { titulo, descricao, caminho = '/', imagem = '/assets/img/og-lm.jpg', preloadImagem, jsonLdExtra = [], semIndice = false } = Astro.props;
 const canonical = new URL(caminho === '/' ? '/' : caminho, SITE.url).href;
 const imagemAbs = new URL(imagem, SITE.url).href;
 
@@ -44,7 +46,7 @@ const unidade = (u: (typeof UNIDADES)[keyof typeof UNIDADES], id: string) => ({
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@graph': [unidade(UNIDADES.santoAmaro, 'santo-amaro'), unidade(UNIDADES.brooklin, 'brooklin')],
+  '@graph': [unidade(UNIDADES.santoAmaro, 'santo-amaro'), unidade(UNIDADES.brooklin, 'brooklin'), ...jsonLdExtra],
 };
 ---
 
@@ -73,7 +75,7 @@ const jsonLd = {
 
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
-    <link rel="canonical" href={canonical} />
+    {semIndice ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#0b0d10" />
 
     <meta property="og:type" content="website" />
