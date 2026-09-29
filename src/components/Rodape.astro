@@ -20,7 +20,6 @@ const ano = new Date().getFullYear();
 
     <div>
       <h2 class="rodape__titulo">Horário</h2>
-      <!-- [CONFIRMAR se vale para as duas unidades e se abre domingo] -->
       <dl class="rodape__horario">
         {HORARIO.map((h) => (<div><dt>{h.dias}</dt><dd>{h.texto}</dd></div>))}
       </dl>

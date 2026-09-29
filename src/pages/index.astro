@@ -32,13 +32,13 @@ const passos = [
   },
 ];
 
-// Vitrine de serviços. [CONFIRMAR] motos como serviço oficial.
+// Vitrine de serviços. Textos do site antigo; motos confirmadas pelo cliente (vídeo da Ducati).
 const servicos = [
   { titulo: 'Funilaria especializada', texto: 'Para danos maiores: peças plásticas e metálicas, solda MIG/MAG, spotter e alinhamento técnico da carroceria.', cta: 'Orçamento de funilaria', msg: MSG.funilaria, foto: 'funilaria-yaris-traseira', alt: 'Traseira de um Toyota Yaris prata com o para-choque removido para funilaria', pos: '30% 50%' },
   { titulo: 'Pintura premium', texto: 'Cabine com estufa e colorimetria computadorizada. Retoque ou pintura completa, com acabamento de concessionária.', cta: 'Orçamento de pintura', msg: MSG.pintura, foto: 'pintura-picape-preta', alt: 'Picape preta com a pintura espelhada refletindo as luzes da oficina', pos: '62% 50%' },
   { titulo: 'Polimento e vitrificação', texto: 'Polimento técnico, correção de pintura e revestimento cerâmico: brilho intenso e proteção contra as agressões do dia a dia.', cta: 'Orçamento de polimento', msg: MSG.polimento, foto: 'pintura-porsche-branco', alt: 'Porsche 911 branco com a pintura brilhando sob as luzes da oficina', pos: '35% 50%' },
   { titulo: 'Higienização interna', texto: 'Limpeza profunda por dentro: extração de sujeira, hidratação do couro e oxi-sanitização.', cta: 'Orçamento de higienização', msg: MSG.higienizacao, foto: 'estetica-interior-porsche', alt: 'Interior de couro vermelho de um Porsche depois da higienização', pos: '45% 50%' },
-  { titulo: 'Lavagem detalhada', texto: 'Detalhamento minucioso, por dentro e por fora, para o carro sair com cara de concessionária.', cta: 'Orçamento de lavagem', msg: MSG.detalhamento, foto: 'estetica-espuma-defender', alt: 'Land Rover Defender coberto de espuma na lavagem detalhada', pos: '50% 45%' },
+  { titulo: 'Estética completa', texto: 'Do polimento técnico à vitrificação, cuidamos de cada detalhe para um visual impecável.', cta: 'Orçamento de estética', msg: MSG.estetica, foto: 'estetica-espuma-defender', alt: 'Land Rover Defender coberto de espuma durante a estética completa', pos: '50% 45%' },
   { titulo: 'Motos', texto: 'Estética completa também para motos.', cta: 'Orçamento para moto', msg: MSG.moto, foto: 'estetica-moto-harley', alt: 'Harley-Davidson preta brilhando no estúdio da LM', pos: '40% 60%' },
 ];
 const larguras: Record<string, number[]> = {
@@ -51,7 +51,7 @@ const larguras: Record<string, number[]> = {
 };
 const srcset = (nome: string) => larguras[nome].map((w) => `${img(`${nome}-${w}.webp`)} ${w}w`).join(', ');
 
-// [CONFIRMAR se são reais] Vieram do site antigo, sem fonte.
+// Avaliações do site antigo. Quando houver avaliações do Google, preencher `link` com o perfil de quem avaliou.
 const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[] = [
   { nome: 'Maria O.', carro: 'Jeep Compass', texto: 'Levei para fazer martelinho de ouro e fiquei impressionada. Não dá pra ver onde estava o amassado. Recomendo de olhos fechados!' },
   { nome: 'João S.', carro: 'BMW 320i', texto: 'Serviço impecável. Meu carro saiu melhor do que quando tirei da concessionária. O atendimento é outro nível, muito atenciosos.' },
@@ -110,7 +110,6 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
           <a class="botao" data-cta-principal href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
           <a class="botao botao--vidro" href="#antes-e-depois">Ver o antes e depois</a>
         </div>
-        <!-- [CONFIRMAR se o número continua valendo] -->
         <p class="pequeno hero__prova">+1.000 clientes atendidos em SP</p>
       </div>
       <a class="hero__rolar" href="#martelinho" aria-label="Rolar até o martelinho de ouro"><span aria-hidden="true"></span></a>
@@ -147,8 +146,7 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
       </div>
 
       <div class="recipiente processo__fechamento">
-        <!-- [CONFIRMAR "até 60%"] -->
-        <p class="lead">Até 60% mais barato que funilaria e pintura tradicionais, para o mesmo tipo de dano.</p>
+        <p class="lead">Até 60% mais barato que funilaria e pintura tradicionais, para o mesmo tipo de dano. E com garantia em todos os serviços.</p>
         <a class="botao" href={whats(MSG.martelinho)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento de martelinho</a>
       </div>
     </section>
@@ -277,7 +275,6 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
         </article>
       </div>
 
-      <!-- [CONFIRMAR horário do Brooklin] -->
       <p class="recipiente pequeno unidades__horario">Segunda a sexta, das 8h às 18h. Sábado, das 8h às 16h.</p>
     </section>
 
@@ -308,7 +305,6 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
           <h2 id="final-titulo" data-titulo><span class="cromado" data-brilho>Mande a foto do amassado</span></h2>
           <p class="lead">Receba um pré-orçamento pelo WhatsApp, sem compromisso.</p>
           <a class="botao" data-cta-principal href={whats(MSG.foto)} target="_blank" rel="noopener"><IconeWhats /> Enviar foto pelo WhatsApp</a>
-          <!-- [CONFIRMAR se continua valendo] -->
           <p class="pequeno">Resposta em menos de 2 minutos no horário comercial.</p>
         </div>
         <div class="final__selo" data-selo>

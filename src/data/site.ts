@@ -7,7 +7,7 @@ export const SITE = {
   posicionamento: 'A arte de restaurar a perfeição.',
   telefoneExibicao: '(11) 99174-0995',
   telefoneE164: '+5511991740995',
-  email: 'contato@lmestetica.com.br', // [CONFIRMAR se ainda é esse]
+  email: 'contato@lmestetica.com.br',
   instagram: 'https://www.instagram.com/lmesteticautomotivasp/',
   instagramUsuario: '@lmesteticautomotivasp',
   gtm: 'GTM-TBDKS699',
@@ -28,12 +28,11 @@ export const MSG = {
   estetica: 'Olá! Gostaria de um orçamento para estética automotiva.',
   polimento: 'Olá! Gostaria de um orçamento de polimento e vitrificação.',
   higienizacao: 'Olá! Gostaria de um orçamento de higienização interna.',
-  detalhamento: 'Olá! Gostaria de um orçamento de lavagem detalhada.',
   moto: 'Olá! Gostaria de um orçamento de estética para a minha moto.',
   foto: 'Olá! Quero enviar a foto do amassado para um pré-orçamento.',
 };
 
-// Horário do site antigo. [CONFIRMAR se vale também para o Brooklin]
+// Horário do site antigo, vale para as duas unidades.
 export const HORARIO = [
   { dias: 'Segunda a sexta', abre: '08:00', fecha: '18:00', texto: '8h às 18h', schema: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] },
   { dias: 'Sábado', abre: '08:00', fecha: '16:00', texto: '8h às 16h', schema: ['Saturday'] },

@@ -4,23 +4,19 @@ Atualizado a cada página entregue. Última atualização: home na versão "vitr
 
 ## Confirmar com o cliente
 
+Decisão do cliente: **tudo o que está no site antigo vale** (e-mail, "+1.000 clientes", "resposta em menos de 2 minutos", "até 60% mais barato", garantia, horário para as duas unidades, depoimentos, textos de serviços e cursos). Motos confirmadas pelo próprio cliente. Continua em aberto só o que não está no site antigo:
+
 | # | O quê | Onde aparece | Situação hoje |
 |---|---|---|---|
-| 1 | E-mail `contato@lmestetica.com.br` ainda funciona? | Rodapé, dados estruturados | Mantido do site antigo |
-| 2 | "+1.000 clientes atendidos em SP" continua valendo? | Hero da home | Mantido do site antigo |
-| 3 | "Resposta em menos de 2 minutos no horário comercial" continua valendo? | CTA final da home | Mantido do site antigo |
-| 4 | "Até 60% mais barato que funilaria e pintura" continua valendo? | Seção martelinho da home | Mantido do site antigo |
-| 5 | As avaliações de Maria O., João S. e Carlos P. são reais? | Seção de avaliações | Mantidas sem fonte. O ideal é trocar por avaliações do Google com link do perfil de quem avaliou |
-| 6 | Link do perfil da LM no Google | Botão "Ver avaliações no Google" | Hoje abre uma busca no Google Maps |
-| 7 | A fachada usada como Santo Amaro é mesmo a de Santo Amaro? | Unidades | Foto `hero2.jpg` do site antigo |
-| 8 | A cabine das fotos (paredes de vidro, teto de LED hexagonal) é a do Brooklin? | Unidades, imagem de compartilhamento | Assumido que sim |
-| 9 | Horário do Brooklin é o mesmo da matriz? Abre domingo? | Unidades, rodapé, dados estruturados | Usado o mesmo horário para as duas |
-| 10 | CEP do Brooklin | Rodapé, dados estruturados | Em branco |
-| 11 | Motos entram oficialmente em "Estética completa"? | Serviços da home | Escrito "para carros e motos" por causa do vídeo da Ducati |
-| 12 | Vídeo do hero | Home | Corte de 12s do vídeo real do martelinho (Nissan Kicks). Se for gerado outro vídeo, é só trocar `public/assets/video/hero.mp4` |
-| 13 | `video2.mp4` (animação genérica de carro) | Não usado | Não mostra o trabalho da LM e tem qualidade baixa |
-| 14 | "Lavagem detalhada" é um serviço que a LM oferece com esse nome? | Vitrine de serviços da home | Baseado em "detalhamento minucioso" do site antigo e nas fotos com espuma |
-| 15 | Higienização interna inclui extração de sujeira, hidratação de couro e oxi-sanitização? | Vitrine de serviços da home | Texto tirado da descrição do curso de higienização do site antigo |
+| 1 | Link do perfil da LM no Google | Botão "Ver avaliações no Google" | Hoje abre uma busca no Google Maps |
+| 2 | CEP do Brooklin | Rodapé, dados estruturados | Em branco |
+| 3 | A fachada usada como Santo Amaro é mesmo a de Santo Amaro? | Unidades | Foto `hero2.jpg` do site antigo, sem indicação de unidade |
+| 4 | A cabine das fotos (paredes de vidro, teto de LED hexagonal) é a do Brooklin? | Unidades, imagem de compartilhamento | Assumido que sim, porque o site antigo diz que a cabine fica no Brooklin |
+
+Informativo, sem pendência:
+- Vídeo do hero: corte de 12s do vídeo real do martelinho (Nissan Kicks). Se for gerado outro vídeo, é só trocar `public/assets/video/hero.mp4`.
+- `video2.mp4` (animação genérica de carro) não foi usado: não mostra o trabalho da LM e tem qualidade baixa.
+- O cartão "Lavagem detalhada" virou "Estética completa", com o texto literal do site antigo.
 
 ## Fotos que faltam
 

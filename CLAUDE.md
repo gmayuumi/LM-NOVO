@@ -13,7 +13,7 @@ Duas unidades, e isso é um diferencial real que o site atual subaproveita:
 Horário: seg a sex 8h–18h, sáb 8h–16h.
 WhatsApp: (11) 99174-0995 → https://wa.me/5511991740995
 Instagram: https://www.instagram.com/lmesteticautomotivasp/
-E-mail: contato@lmestetica.com.br [CONFIRMAR se ainda é esse]
+E-mail: contato@lmestetica.com.br
 Também oferece **cursos** (página própria no site atual).
 
 ## Público
@@ -53,13 +53,13 @@ Mantenha as páginas: Home, Martelinho de Ouro, Serviços, Cursos, Localização
 - Português do Brasil, direto, frases curtas, voz ativa. Fale de resultado para o dono do carro, não de técnica pela técnica.
 - CTAs dizem o que acontece: "Pedir orçamento no WhatsApp", não "Saiba mais".
 - Reaproveite o conteúdo real do site atual. Não invente números, prazos, garantias ou prêmios.
-- "+1.000 clientes atendidos" e "resposta em menos de 2 minutos" estão no site atual. [CONFIRMAR se continuam valendo]
+- **Tudo o que está no site antigo vale e pode ser usado à risca** (decisão do cliente): "+1.000 clientes atendidos", "resposta em menos de 2 minutos", "até 60% mais barato", garantia em todos os serviços, horário, e-mail, depoimentos e textos de serviços e cursos. Só o que não estiver no site antigo precisa de [CONFIRMAR].
 
 ## Provas e imagens
 
 - **Proibido foto de banco de imagem** (Pexels, Unsplash etc.). Use só os arquivos que já existem em `assets/` do site atual e os que eu adicionar.
 - Onde faltar foto real, deixe um placeholder visível e nomeado (ex.: `[FOTO: fachada Santo Amaro]`) e liste todas no fim, para eu pedir ao cliente.
-- Avaliações: as do site atual (João S., Maria O., Carlos P.) não têm fonte. Não crie depoimentos novos. Monte a seção pronta para receber avaliações reais do Google, com nome e link para o perfil. [CONFIRMAR se as atuais são reais]
+- Avaliações: use as do site atual (João S., Maria O., Carlos P., Ana C.). Não crie depoimentos novos. A seção fica pronta para receber avaliações do Google, com nome e link para o perfil.
 
 ## Técnico e SEO (bugs do site atual para corrigir)
 
