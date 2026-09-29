@@ -5,38 +5,53 @@ import Rodape from '../components/Rodape.astro';
 import BarraWhats from '../components/BarraWhats.astro';
 import Comparador from '../components/Comparador.astro';
 import IconeWhats from '../components/IconeWhats.astro';
+import TetoHex from '../components/TetoHex.astro';
 import { SITE, UNIDADES, whats, MSG } from '../data/site';
 
-const servicos = [
+const img = (nome: string) => `/assets/img/${nome}`;
+
+// Martelinho em 3 passos: quadros reais do vídeo do reparo (Nissan Kicks)
+const passos = [
   {
-    titulo: 'Funilaria especializada',
-    texto: 'Para danos maiores: reparo de peças plásticas e metálicas, solda MIG/MAG, spotter e alinhamento técnico da carroceria.',
-    cta: 'Pedir orçamento de funilaria',
-    msg: MSG.funilaria,
-    foto: 'servico-funilaria',
-    alt: 'Traseira de um Toyota Yaris prata com o para-choque removido para funilaria',
+    titulo: 'O amassado',
+    texto: 'A barra de luz reflete na lataria. Onde as faixas entortam, está o amassado.',
+    foto: 'passo-amassado',
+    alt: 'Tampa traseira preta de um Nissan Kicks com o reflexo dourado da barra de luz todo entortado pelo amassado',
   },
   {
-    titulo: 'Pintura premium',
-    texto: 'Cabine com estufa, colorimetria computadorizada e acabamento com padrão de concessionária. Retoque ou pintura completa.',
-    cta: 'Pedir orçamento de pintura',
-    msg: MSG.pintura,
-    foto: 'servico-pintura',
-    alt: 'Porsche 911 branco com a pintura refletindo as luzes da oficina',
+    titulo: 'O reparo',
+    texto: 'Por dentro da lataria, com hastes e ventosas, o metal volta ao formato original. Sem massa, lixa, solvente ou tinta.',
+    foto: 'passo-reparo',
+    alt: 'Mão do técnico puxando o amassado com a ferramenta de martelinho de ouro',
   },
   {
-    titulo: 'Estética completa',
-    // [CONFIRMAR se motos entram oficialmente como serviço]
-    texto: 'Polimento técnico, vitrificação e higienização interna, para carros e motos.',
-    cta: 'Pedir orçamento de estética',
-    msg: MSG.estetica,
-    foto: 'servico-estetica',
-    alt: 'Mercedes coberto de espuma durante a lavagem detalhada',
+    titulo: 'O resultado',
+    texto: 'Pintura e verniz de fábrica intactos. Pequenos amassados saem em menos de 1 hora.',
+    foto: 'passo-resultado',
+    alt: 'A mesma tampa traseira lisa, com o reflexo reto e a pintura original brilhando',
   },
 ];
 
+// Vitrine de serviços. [CONFIRMAR] motos como serviço oficial.
+const servicos = [
+  { titulo: 'Funilaria especializada', texto: 'Para danos maiores: peças plásticas e metálicas, solda MIG/MAG, spotter e alinhamento técnico da carroceria.', cta: 'Orçamento de funilaria', msg: MSG.funilaria, foto: 'funilaria-yaris-traseira', alt: 'Traseira de um Toyota Yaris prata com o para-choque removido para funilaria', pos: '30% 50%' },
+  { titulo: 'Pintura premium', texto: 'Cabine com estufa e colorimetria computadorizada. Retoque ou pintura completa, com acabamento de concessionária.', cta: 'Orçamento de pintura', msg: MSG.pintura, foto: 'pintura-picape-preta', alt: 'Picape preta com a pintura espelhada refletindo as luzes da oficina', pos: '62% 50%' },
+  { titulo: 'Polimento e vitrificação', texto: 'Polimento técnico, correção de pintura e revestimento cerâmico: brilho intenso e proteção contra as agressões do dia a dia.', cta: 'Orçamento de polimento', msg: MSG.polimento, foto: 'pintura-porsche-branco', alt: 'Porsche 911 branco com a pintura brilhando sob as luzes da oficina', pos: '35% 50%' },
+  { titulo: 'Higienização interna', texto: 'Limpeza profunda por dentro: extração de sujeira, hidratação do couro e oxi-sanitização.', cta: 'Orçamento de higienização', msg: MSG.higienizacao, foto: 'estetica-interior-porsche', alt: 'Interior de couro vermelho de um Porsche depois da higienização', pos: '45% 50%' },
+  { titulo: 'Lavagem detalhada', texto: 'Detalhamento minucioso, por dentro e por fora, para o carro sair com cara de concessionária.', cta: 'Orçamento de lavagem', msg: MSG.detalhamento, foto: 'estetica-espuma-defender', alt: 'Land Rover Defender coberto de espuma na lavagem detalhada', pos: '50% 45%' },
+  { titulo: 'Motos', texto: 'Estética completa também para motos.', cta: 'Orçamento para moto', msg: MSG.moto, foto: 'estetica-moto-harley', alt: 'Harley-Davidson preta brilhando no estúdio da LM', pos: '40% 60%' },
+];
+const larguras: Record<string, number[]> = {
+  'funilaria-yaris-traseira': [720, 1280],
+  'pintura-picape-preta': [720, 1280],
+  'pintura-porsche-branco': [720, 1280],
+  'estetica-interior-porsche': [720, 1280],
+  'estetica-espuma-defender': [600, 1200],
+  'estetica-moto-harley': [720, 1280],
+};
+const srcset = (nome: string) => larguras[nome].map((w) => `${img(`${nome}-${w}.webp`)} ${w}w`).join(', ');
+
 // [CONFIRMAR se são reais] Vieram do site antigo, sem fonte.
-// Quando houver avaliações do Google, preencher `link` com o perfil de quem avaliou.
 const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[] = [
   { nome: 'Maria O.', carro: 'Jeep Compass', texto: 'Levei para fazer martelinho de ouro e fiquei impressionada. Não dá pra ver onde estava o amassado. Recomendo de olhos fechados!' },
   { nome: 'João S.', carro: 'BMW 320i', texto: 'Serviço impecável. Meu carro saiu melhor do que quando tirei da concessionária. O atendimento é outro nível, muito atenciosos.' },
@@ -53,9 +68,15 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
   <Cabecalho atual="/" />
 
   <main>
-    <!-- HERO ======================================================= -->
-    <section class="hero" aria-labelledby="hero-titulo">
-      <div class="hero__midia">
+    <!-- HERO: as luzes da oficina acendem ================================= -->
+    <section class="hero" data-hero aria-labelledby="hero-titulo">
+      <div class="hero__ambiente" aria-hidden="true">
+        <video data-hero-ambiente muted playsinline loop preload="none" poster={img('passo-amassado-ambiente.webp')} tabindex="-1">
+          <source data-src="/assets/video/hero-ambiente.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <TetoHex class="hero__teto" />
+      <div class="hero__vitrine" data-hero-vitrine>
         <video
           class="hero__video"
           data-hero-video
@@ -65,7 +86,7 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
           preload="none"
           width="464"
           height="832"
-          poster="/assets/img/hero-poster-464.webp"
+          poster={img('hero-poster-464.webp')}
           aria-hidden="true"
           tabindex="-1"
         >
@@ -78,184 +99,192 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
         <span class="visualmente-oculto" data-rotulo>Pausar vídeo</span>
       </button>
 
-      <div class="hero__conteudo">
+      <div class="recipiente hero__conteudo" data-hero-conteudo>
         <h1 id="hero-titulo" class="hero__titulo">
-          <span class="hero__linha"><span>O amassado sai.</span></span>
-          <span class="hero__linha"><span>A pintura original fica.</span></span>
+          <span class="hero__linha"><span class="cromado">O amassado sai.</span></span>
+          <span class="hero__linha"><span class="cromado">A pintura</span></span>
+          <span class="hero__linha"><span class="cromado">original fica.</span></span>
         </h1>
         <p class="lead hero__lead">Martelinho de ouro em Santo Amaro e no Brooklin, Zona Sul de SP. Reparo em horas, não em dias.</p>
         <div class="hero__acoes">
-          <a class="botao hero__cta" data-cta-principal href={whats(MSG.geral)} target="_blank" rel="noopener">
-            <IconeWhats /> Pedir orçamento no WhatsApp
-          </a>
+          <a class="botao" data-cta-principal href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
+          <a class="botao botao--vidro" href="#antes-e-depois">Ver o antes e depois</a>
         </div>
         <!-- [CONFIRMAR se o número continua valendo] -->
         <p class="pequeno hero__prova">+1.000 clientes atendidos em SP</p>
       </div>
+      <a class="hero__rolar" href="#martelinho" aria-label="Rolar até o martelinho de ouro"><span aria-hidden="true"></span></a>
     </section>
 
-    <!-- MARTELINHO ================================================= -->
-    <section class="secao martelinho" id="martelinho" aria-labelledby="martelinho-titulo">
-      <div class="recipiente martelinho__grade">
-        <div class="martelinho__texto">
-          <h2 id="martelinho-titulo" data-varredura>Pintura de fábrica vale mais</h2>
-          <p class="lead martelinho__lead">Carro repintado perde valor na revenda.</p>
-          <p class="texto">
-            No martelinho de ouro, devolvemos o metal ao formato original por dentro da lataria, com hastes e
-            ventosas. Sem massa, lixa, solvente ou tinta: a pintura e o verniz de fábrica continuam lá.
-          </p>
-          <ul role="list" class="fatos">
-            <li data-varredura><strong>Pintura e verniz de fábrica</strong><span>O carro não passa por repintura.</span></li>
-            <li data-varredura><strong>Em horas, não em dias</strong><span>Pequenos amassados saem em menos de 1 hora. Quase sempre o carro sai no mesmo dia.</span></li>
-            <li data-varredura><strong>Até 60% mais barato</strong><span>Comparado a funilaria e pintura tradicionais, para o mesmo tipo de dano.</span></li>
-          </ul>
-          <a class="botao" href={whats(MSG.martelinho)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento de martelinho</a>
-        </div>
+    <!-- MARTELINHO: o amassado some em 3 passos ========================== -->
+    <section class="processo" id="martelinho" aria-labelledby="processo-titulo">
+      <div class="recipiente processo__intro">
+        <h2 id="processo-titulo" data-titulo><span class="cromado" data-brilho>Pintura de fábrica vale mais</span></h2>
+        <p class="lead">Carro repintado perde valor na revenda. O martelinho de ouro tira o amassado sem repintar.</p>
+      </div>
 
-        <figure class="martelinho__figura">
-          <div class="martelinho__foto" data-parallax>
-            <img
-              src="/assets/img/martelinho-tecnico-464.webp"
-              width="464"
-              height="580"
-              alt="Técnico da LM segurando a barra de luz sobre a tampa traseira de um Nissan Kicks preto, sob o teto de LED hexagonal"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <figcaption class="pequeno">A barra de luz reflete na lataria. Onde as faixas entortam, está o amassado.</figcaption>
-        </figure>
+      <div class="processo__palco" data-processo-palco>
+        <div class="processo__ambiente" aria-hidden="true">
+          {passos.map((p) => <img src={img(`${p.foto}-ambiente.webp`)} alt="" width="96" height="172" loading="lazy" decoding="async" />)}
+        </div>
+        <div class="recipiente processo__grade">
+          <div class="processo__contador" aria-hidden="true"><span></span><span></span><span></span></div>
+          <ol role="list" class="processo__passos">
+            {passos.map((p, i) => (
+              <li class="passo">
+                <figure class="passo__figura">
+                  <img src={img(`${p.foto}-464.webp`)} width="464" height="832" alt={p.alt} loading="lazy" decoding="async" />
+                </figure>
+                <div class="passo__texto">
+                  <span class="passo__num">0{i + 1}</span>
+                  <h3><span class="cromado">{p.titulo}</span></h3>
+                  <p>{p.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div class="recipiente processo__fechamento">
+        <!-- [CONFIRMAR "até 60%"] -->
+        <p class="lead">Até 60% mais barato que funilaria e pintura tradicionais, para o mesmo tipo de dano.</p>
+        <a class="botao" href={whats(MSG.martelinho)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento de martelinho</a>
       </div>
     </section>
 
-    <!-- ANTES E DEPOIS (fixa na tela enquanto a luz passa) ========= -->
-    <section class="antes-depois" id="antes-e-depois" aria-labelledby="ad-titulo">
-      <div class="antes-depois__palco" data-palco>
-        <div class="recipiente antes-depois__grade">
-          <div class="antes-depois__texto">
-            <h2 id="ad-titulo">Antes e depois</h2>
-            <p class="lead">Nissan Kicks com amassado na tampa traseira.</p>
-            <p class="texto antes-depois__instrucao">Arraste a barra de luz para comparar.</p>
-            <p class="pequeno antes-depois__fonte">Quadros do vídeo do reparo, feito com martelinho de ouro.</p>
-          </div>
-          <div class="antes-depois__visual">
-            <Comparador
-              antes={{ src: '/assets/img/kicks-antes-414.webp', alt: 'Antes: tampa traseira do Nissan Kicks com amassado; o reflexo da barra de luz aparece entortado' }}
-              depois={{ src: '/assets/img/kicks-depois-414.webp', alt: 'Depois: a mesma tampa lisa, com o reflexo reto e a pintura original' }}
-              largura={414}
-              altura={518}
-              rotulo="Comparar antes e depois do Nissan Kicks"
-            />
-          </div>
+    <!-- ANTES E DEPOIS: a luz atravessa o carro =========================== -->
+    <section class="ad" id="antes-e-depois" aria-labelledby="ad-titulo">
+      <div class="ad__palco" data-palco style="--ad: 0.5">
+        <img class="ad__ambiente" src={img('kicks-ambiente.webp')} alt="" aria-hidden="true" width="96" height="120" loading="lazy" />
+        <h2 id="ad-titulo" class="ad__titulo">
+          <span class="ad__antes cromado">Antes</span><span class="visualmente-oculto"> e </span><span class="ad__depois cromado">Depois</span>
+        </h2>
+        <div class="ad__visual">
+          <Comparador
+            antes={{ src: img('kicks-antes-414.webp'), alt: 'Antes: tampa traseira do Nissan Kicks com amassado; o reflexo da barra de luz aparece entortado' }}
+            depois={{ src: img('kicks-depois-414.webp'), alt: 'Depois: a mesma tampa lisa, com o reflexo reto e a pintura original' }}
+            largura={414}
+            altura={518}
+            rotulo="Comparar antes e depois do Nissan Kicks"
+          />
         </div>
+        <p class="pequeno ad__legenda">Nissan Kicks, tampa traseira. Martelinho de ouro, quadros do vídeo do reparo.</p>
       </div>
-      <div class="recipiente antes-depois__mais">
+      <div class="recipiente ad__mais">
         <div class="espaco-foto">[FOTO: mais pares de antes e depois, do mesmo ângulo e com a mesma luz]</div>
       </div>
     </section>
 
-    <!-- OUTROS SERVIÇOS ============================================ -->
-    <section class="secao servicos" id="servicos" aria-labelledby="servicos-titulo">
-      <div class="recipiente servicos__grade">
-        <div class="servicos__intro">
-          <h2 id="servicos-titulo" data-varredura>Outros serviços</h2>
-          <p class="texto">Quando o dano pede mais que o martelinho, a LM resolve também.</p>
-          <a class="link-destaque" href="/servicos">Ver todos os serviços</a>
+    <!-- VITRINE DE SERVIÇOS ============================================== -->
+    <section class="vitrine" id="servicos" aria-labelledby="vitrine-titulo">
+      <div class="vitrine__palco" data-vitrine>
+        <div class="recipiente vitrine__cabeca">
+          <h2 id="vitrine-titulo" data-titulo><span class="cromado" data-brilho>Além do martelinho</span></h2>
+          <p class="lead">Funilaria, pintura em cabine com estufa e estética completa, com o mesmo cuidado.</p>
         </div>
-        <ul role="list" class="servicos__lista">
-          {servicos.map((s) => (
-            <li class="servico">
-              <div class="servico__foto" data-varredura>
+        <div class="vitrine__trilho" data-trilho>
+          <ul role="list" class="vitrine__lista" data-lista>
+            {servicos.map((s) => (
+              <li class="cartao">
                 <img
-                  src={`/assets/img/${s.foto}-240.webp`}
-                  srcset={`/assets/img/${s.foto}-240.webp 240w, /assets/img/${s.foto}-480.webp 480w`}
-                  sizes="(min-width: 60rem) 11rem, 5.5rem"
-                  width="240"
-                  height="240"
+                  src={img(`${s.foto}-${larguras[s.foto][0]}.webp`)}
+                  srcset={srcset(s.foto)}
+                  sizes="(min-width: 60rem) 30rem, 82vw"
+                  width={larguras[s.foto][0]}
                   alt={s.alt}
                   loading="lazy"
                   decoding="async"
+                  style={`object-position: ${s.pos}`}
                 />
-              </div>
-              <div class="servico__texto">
-                <h3>{s.titulo}</h3>
-                <p class="texto">{s.texto}</p>
-                <a class="link-whats" href={whats(s.msg)} target="_blank" rel="noopener"><IconeWhats /> {s.cta}</a>
-              </div>
+                <div class="cartao__texto">
+                  <h3><span class="cromado">{s.titulo}</span></h3>
+                  <p>{s.texto}</p>
+                  <a class="link-whats" href={whats(s.msg)} target="_blank" rel="noopener"><IconeWhats /> {s.cta}</a>
+                </div>
+              </li>
+            ))}
+            <li class="cartao cartao--todos">
+              <a href="/servicos" class="cartao__todos">
+                <span class="cromado">Ver todos os serviços</span>
+                <span class="pequeno">Detalhes de cada serviço e como agendar</span>
+              </a>
             </li>
-          ))}
-        </ul>
+          </ul>
+        </div>
+        <div class="recipiente vitrine__rodape" aria-hidden="true">
+          <div class="vitrine__progresso"><span data-vitrine-progresso></span></div>
+          <p class="pequeno vitrine__dica">Deslize para ver os serviços</p>
+        </div>
       </div>
     </section>
 
-    <!-- UNIDADES =================================================== -->
-    <section class="secao unidades" id="unidades" aria-labelledby="unidades-titulo">
-      <div class="recipiente">
-        <div class="unidades__cabeca">
-          <h2 id="unidades-titulo" data-varredura>Duas unidades na Zona Sul</h2>
-          <p class="lead">A matriz fica em Santo Amaro. No Brooklin fica a cabine exclusiva de pintura.</p>
-        </div>
-
-        <div class="unidades__grade">
-          <article class="unidade unidade--santo-amaro" aria-labelledby="ua-sa">
-            <!-- [CONFIRMAR se esta fachada é a de Santo Amaro] -->
-            <div class="unidade__foto" data-parallax>
-              <img
-                src="/assets/img/unidade-santo-amaro-480.webp"
-                srcset="/assets/img/unidade-santo-amaro-480.webp 480w, /assets/img/unidade-santo-amaro-960.webp 960w"
-                sizes="(min-width: 60rem) 30vw, 100vw"
-                width="480"
-                height="600"
-                alt="Fachada da LM Estética Automotiva, com a placa de martelinho de ouro e a oficina iluminada ao fundo"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="unidade__texto">
-              <p class="unidade__papel">{UNIDADES.santoAmaro.papel}</p>
-              <h3 id="ua-sa">{UNIDADES.santoAmaro.nome}</h3>
-              <address>{UNIDADES.santoAmaro.rua}<br />Santo Amaro, São Paulo, CEP {UNIDADES.santoAmaro.cep}</address>
-              <ul role="list" class="unidade__itens">
-                <li>Estacionamento gratuito</li>
-                <li>Sala de espera climatizada, com Wi-Fi, TV e café</li>
-              </ul>
-              <a class="botao botao--contorno" href={UNIDADES.santoAmaro.rota} target="_blank" rel="noopener">Abrir rota no Google Maps</a>
-            </div>
-          </article>
-
-          <article class="unidade unidade--brooklin" aria-labelledby="ua-br">
-            <!-- [CONFIRMAR se a cabine das fotos é a do Brooklin] -->
-            <div class="unidade__foto" data-parallax data-acender>
-              <img
-                src="/assets/img/unidade-brooklin-640.webp"
-                srcset="/assets/img/unidade-brooklin-640.webp 640w, /assets/img/unidade-brooklin-1152.webp 1152w"
-                sizes="(min-width: 60rem) 45vw, 100vw"
-                width="640"
-                height="400"
-                alt="Cabine de pintura com paredes de vidro, luzes de LED e um Toyota Yaris prata dentro"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="unidade__texto">
-              <p class="unidade__papel">{UNIDADES.brooklin.papel}</p>
-              <h3 id="ua-br">{UNIDADES.brooklin.nome}</h3>
-              <p class="texto">Cabine fechada com estufa: ambiente sem poeira, secagem na temperatura certa e cor fiel ao padrão de fábrica.</p>
-              <address>{UNIDADES.brooklin.rua}<br />Brooklin, São Paulo</address>
-              <a class="botao botao--contorno" href={UNIDADES.brooklin.rota} target="_blank" rel="noopener">Abrir rota no Google Maps</a>
-            </div>
-          </article>
-        </div>
-
-        <!-- [CONFIRMAR horário do Brooklin] -->
-        <p class="pequeno unidades__horario">Segunda a sexta, das 8h às 18h. Sábado, das 8h às 16h.</p>
+    <!-- DUAS UNIDADES ===================================================== -->
+    <section class="unidades" id="unidades" aria-labelledby="unidades-titulo">
+      <div class="recipiente unidades__cabeca">
+        <h2 id="unidades-titulo" data-titulo><span class="cromado" data-brilho>Duas unidades na Zona Sul</span></h2>
+        <p class="lead">A matriz fica em Santo Amaro. No Brooklin fica a cabine exclusiva de pintura.</p>
       </div>
+
+      <div class="unidades__painel">
+        <article class="unidade" aria-labelledby="ua-sa">
+          <!-- [CONFIRMAR se esta fachada é a de Santo Amaro] -->
+          <div class="unidade__foto" data-parallax>
+            <img
+              src={img('unidade-santo-amaro-480.webp')}
+              srcset={`${img('unidade-santo-amaro-480.webp')} 480w, ${img('unidade-santo-amaro-960.webp')} 960w`}
+              sizes="(min-width: 60rem) 50vw, 100vw"
+              width="480"
+              height="600"
+              alt="Fachada da LM Estética Automotiva, com a placa de martelinho de ouro e a oficina iluminada ao fundo"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="unidade__texto">
+            <p class="unidade__papel">{UNIDADES.santoAmaro.papel}</p>
+            <h3 id="ua-sa"><span class="cromado">{UNIDADES.santoAmaro.nome}</span></h3>
+            <address>{UNIDADES.santoAmaro.rua}<br />Santo Amaro, São Paulo, CEP {UNIDADES.santoAmaro.cep}</address>
+            <ul role="list" class="unidade__itens">
+              <li>Estacionamento gratuito</li>
+              <li>Sala de espera climatizada, com Wi-Fi, TV e café</li>
+            </ul>
+            <a class="botao botao--vidro" href={UNIDADES.santoAmaro.rota} target="_blank" rel="noopener">Abrir rota no Google Maps</a>
+          </div>
+        </article>
+
+        <article class="unidade unidade--brooklin" aria-labelledby="ua-br">
+          <!-- [CONFIRMAR se a cabine das fotos é a do Brooklin] -->
+          <div class="unidade__foto" data-parallax data-acender>
+            <img
+              src={img('cabine-yaris-retrato-600.webp')}
+              srcset={`${img('cabine-yaris-retrato-600.webp')} 600w, ${img('cabine-yaris-retrato-960.webp')} 960w`}
+              sizes="(min-width: 60rem) 50vw, 100vw"
+              width="600"
+              height="800"
+              alt="Cabine de pintura com paredes de vidro, luzes de LED e um Toyota Yaris prata dentro"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="unidade__texto">
+            <p class="unidade__papel">{UNIDADES.brooklin.papel}</p>
+            <h3 id="ua-br"><span class="cromado">{UNIDADES.brooklin.nome}</span></h3>
+            <p class="unidade__descricao">Cabine fechada com estufa: ambiente sem poeira, secagem na temperatura certa e cor fiel ao padrão de fábrica.</p>
+            <address>{UNIDADES.brooklin.rua}<br />Brooklin, São Paulo</address>
+            <a class="botao botao--vidro" href={UNIDADES.brooklin.rota} target="_blank" rel="noopener">Abrir rota no Google Maps</a>
+          </div>
+        </article>
+      </div>
+
+      <!-- [CONFIRMAR horário do Brooklin] -->
+      <p class="recipiente pequeno unidades__horario">Segunda a sexta, das 8h às 18h. Sábado, das 8h às 16h.</p>
     </section>
 
-    <!-- AVALIAÇÕES ================================================= -->
-    <section class="secao avaliacoes" aria-labelledby="avaliacoes-titulo">
+    <!-- AVALIAÇÕES ======================================================== -->
+    <section class="avaliacoes" aria-labelledby="avaliacoes-titulo">
       <div class="recipiente">
-        <h2 id="avaliacoes-titulo" data-varredura>Quem já trouxe o carro</h2>
+        <h2 id="avaliacoes-titulo" data-titulo><span class="cromado" data-brilho>Quem já trouxe o carro</span></h2>
         <ul role="list" class="avaliacoes__lista">
           {avaliacoes.map((a) => (
             <li class="avaliacao">
@@ -267,22 +296,23 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
             </li>
           ))}
         </ul>
-        <a class="botao botao--contorno" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver avaliações no Google</a>
+        <a class="botao botao--vidro" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver avaliações no Google</a>
       </div>
     </section>
 
-    <!-- CTA FINAL ================================================== -->
-    <section class="cta-final" aria-labelledby="cta-titulo">
-      <div class="recipiente cta-final__grade">
-        <div class="cta-final__texto">
-          <h2 id="cta-titulo">Mande a foto do amassado</h2>
+    <!-- CTA FINAL ========================================================= -->
+    <section class="final" aria-labelledby="final-titulo">
+      <img class="final__fundo" src={img('luz-lataria-ambiente.webp')} alt="" aria-hidden="true" width="96" height="172" loading="lazy" />
+      <div class="recipiente final__grade">
+        <div class="final__texto">
+          <h2 id="final-titulo" data-titulo><span class="cromado" data-brilho>Mande a foto do amassado</span></h2>
           <p class="lead">Receba um pré-orçamento pelo WhatsApp, sem compromisso.</p>
           <a class="botao" data-cta-principal href={whats(MSG.foto)} target="_blank" rel="noopener"><IconeWhats /> Enviar foto pelo WhatsApp</a>
           <!-- [CONFIRMAR se continua valendo] -->
           <p class="pequeno">Resposta em menos de 2 minutos no horário comercial.</p>
         </div>
-        <div class="cta-final__selo" data-selo>
-          <img src="/assets/img/logo-lm-480.webp" width="480" height="479" alt="" loading="lazy" decoding="async" />
+        <div class="final__selo" data-selo>
+          <img src={img('logo-lm-480.webp')} width="480" height="479" alt="" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -293,62 +323,52 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
 </Base>
 
 <style>
-  /* ---------- hero ---------- */
+  /* =================================================================
+     HERO
+     ================================================================= */
   .hero {
     position: relative;
     isolation: isolate;
     display: grid;
     align-items: end;
     min-height: 100svh;
-    padding-block: 7rem 2.25rem;
+    padding-block: calc(var(--altura-topo) + 2rem) 2.5rem;
     overflow: hidden;
-    background: var(--preto);
   }
-  .hero__midia {
+  .hero__ambiente { display: none; }
+  .hero__vitrine {
     position: absolute;
     inset: 0;
-    z-index: -1;
-    overflow: hidden;
+    z-index: -2;
   }
-  .hero__video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .hero__midia::after {
+  .hero__video { width: 100%; height: 100%; object-fit: cover; }
+  .hero__vitrine::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(11, 13, 16, 0.98) 0%,
-      rgba(11, 13, 16, 0.86) 36%,
-      rgba(11, 13, 16, 0.2) 68%,
-      rgba(11, 13, 16, 0.55) 100%
-    );
+    background:
+      linear-gradient(to top, rgba(5, 8, 13, 0.98) 0%, rgba(5, 8, 13, 0.82) 34%, rgba(5, 8, 13, 0.15) 64%, rgba(5, 8, 13, 0.6) 100%);
   }
-  .hero__conteudo { width: min(100% - 2 * var(--gutter), var(--largura)); margin-inline: auto; }
-  .hero__titulo { font-size: var(--t-h1); line-height: 0.9; }
-  .hero__linha { display: block; overflow: hidden; padding-bottom: 0.05em; }
-  .hero__linha > span { display: block; }
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .hero__linha > span {
-      background-image: linear-gradient(100deg, var(--branco) 0 40%, #cdeeff 46%, #ffffff 50%, #cdeeff 54%, var(--branco) 60% 100%);
-      background-size: 250% 100%;
-      background-position: var(--brilho, 100%) 0;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
+  .hero :global(.hero__teto) {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 44svh;
+    z-index: -1;
+    opacity: 0.6;
+    mix-blend-mode: screen;
   }
+
+  .hero__titulo { font-size: var(--t-hero); line-height: 0.9; }
+  .hero__linha { display: block; overflow: hidden; padding-bottom: 0.06em; }
+  .hero__linha > span { display: inline-block; }
   .hero__lead { margin-top: 1.25rem; }
-  .hero__acoes { margin-top: 1.75rem; }
-  .hero__cta { width: 100%; }
+  .hero__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  .hero__acoes .botao { flex: 1 1 100%; }
   .hero__prova { margin-top: 0.875rem; }
 
   .hero__pausa {
     position: absolute;
-    top: 5.25rem;
+    top: calc(var(--altura-topo) + 0.75rem);
     right: var(--gutter);
     z-index: 2;
     display: grid;
@@ -357,148 +377,512 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
     height: 2.75rem;
     border: 1px solid rgba(242, 245, 248, 0.35);
     border-radius: 50%;
-    background: rgba(11, 13, 16, 0.55);
+    background: rgba(5, 8, 13, 0.5);
     color: var(--branco);
     cursor: pointer;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
   .hero__pausa svg { width: 1.125rem; height: 1.125rem; }
   .hero__pausa .icone-tocar { display: none; }
   .hero__pausa[data-pausado] .icone-pausa { display: none; }
   .hero__pausa[data-pausado] .icone-tocar { display: block; }
 
+  .hero__rolar { display: none; }
+
   :global(.mov) .hero__linha > span,
   :global(.mov) .hero__lead,
   :global(.mov) .hero__acoes,
   :global(.mov) .hero__prova { visibility: hidden; }
+  :global(.mov) .hero__vitrine { opacity: 0; }
+
+  @media (min-width: 40rem) {
+    .hero__acoes .botao { flex: 0 0 auto; }
+  }
 
   @media (min-width: 60rem) {
     .hero {
-      grid-template-columns: minmax(0, 1fr) min(36vw, 31rem);
-      align-items: stretch;
-      min-height: calc(100svh - var(--altura-topo));
-      padding: 0;
+      align-items: center;
+      padding-block: var(--altura-topo) 0;
     }
-    .hero__midia {
-      position: relative;
+    /* luz ambiente: o próprio vídeo, minúsculo e desfocado, enchendo a tela */
+    .hero__ambiente {
+      display: block;
+      position: absolute;
+      inset: -12%;
+      z-index: -3;
+      opacity: 0.75;
+    }
+    .hero__ambiente video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(26px) saturate(1.5) brightness(0.62);
+    }
+    .hero__ambiente::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5, 8, 13, 0.92) 0%, rgba(5, 8, 13, 0.55) 45%, rgba(5, 8, 13, 0.2) 100%);
+    }
+    .hero :global(.hero__teto) { height: 58vh; opacity: 0.95; }
+
+    /* o vídeo vira um "display" de vitrine, com reflexo no chão */
+    .hero__vitrine {
       inset: auto;
-      grid-column: 2;
-      grid-row: 1;
+      top: calc(var(--altura-topo) + 3.5vh);
+      right: max(var(--gutter), calc((100vw - var(--largura)) / 2));
+      height: calc(100svh - var(--altura-topo) - 16vh);
+      aspect-ratio: 464 / 832;
       z-index: 0;
     }
-    .hero__midia::after {
-      background: linear-gradient(to right, var(--preto) 0%, rgba(11, 13, 16, 0) 22%);
+    .hero__vitrine::after { content: none; }
+    .hero__video {
+      border-radius: 12px;
+      border: 1px solid rgba(220, 236, 248, 0.4);
+      box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 70px -10px rgba(77, 181, 220, 0.45);
+      -webkit-box-reflect: below 14px linear-gradient(transparent 72%, rgba(255, 255, 255, 0.22));
     }
-    .hero__conteudo {
-      grid-column: 1;
-      grid-row: 1;
-      align-self: center;
-      width: auto;
-      margin: 0;
-      padding-inline: max(var(--gutter), calc((100vw - var(--largura)) / 2)) 3rem;
-      padding-block: 4rem;
+    .hero__conteudo { padding-block: 4rem; }
+    .hero__titulo,
+    .hero__lead { max-width: calc(100% - 25rem); }
+    .hero__pausa { top: auto; bottom: 2rem; right: calc(max(var(--gutter), calc((100vw - var(--largura)) / 2)) + 1rem); }
+
+    .hero__rolar {
+      position: absolute;
+      left: 50%;
+      bottom: 1.5rem;
+      display: block;
+      width: 1.5rem;
+      height: 2.75rem;
+      transform: translateX(-50%);
+      border: 1px solid rgba(220, 236, 248, 0.45);
+      border-radius: 999px;
     }
-    .hero__titulo { font-size: clamp(4rem, 1rem + 5.2vw, 6.25rem); }
-    .hero__cta { width: auto; }
-    .hero__pausa { top: auto; bottom: 1.5rem; right: 1.5rem; }
+    .hero__rolar span {
+      position: absolute;
+      left: 50%;
+      top: 0.45rem;
+      width: 3px;
+      height: 0.6rem;
+      margin-left: -1.5px;
+      border-radius: 3px;
+      background: var(--azul-led);
+      box-shadow: 0 0 8px var(--azul-led);
+      animation: rolar 2.2s var(--curva) infinite;
+    }
+  }
+  @keyframes rolar {
+    0% { transform: translateY(0); opacity: 0; }
+    25% { opacity: 1; }
+    80% { transform: translateY(1.1rem); opacity: 0; }
+    100% { opacity: 0; }
   }
 
-  /* ---------- martelinho ---------- */
-  .martelinho { background: var(--grafite); }
-  .martelinho__grade { display: grid; gap: 3rem; }
-  .martelinho__lead { margin-block: 1.5rem 1rem; }
-  .fatos { margin-block: 2rem 2.25rem; border-top: 1px solid var(--aco); }
-  .fatos li {
-    display: grid;
-    gap: 0.2rem;
-    padding-block: 1rem;
-    border-bottom: 1px solid var(--aco);
-  }
-  .fatos strong { font-family: var(--f-apoio); font-weight: 700; font-size: 1.25rem; line-height: 1.2; }
-  .fatos span { color: var(--aco-claro); }
-  .martelinho__foto { aspect-ratio: 4 / 5; }
-  .martelinho__foto img { width: 100%; height: 100%; object-fit: cover; }
-  .martelinho__figura figcaption { margin-top: 0.875rem; max-width: 36ch; }
+  /* =================================================================
+     PROCESSO (martelinho em 3 passos)
+     ================================================================= */
+  .processo { padding-top: var(--secao); }
+  .processo__intro { display: grid; gap: 1.25rem; margin-bottom: 3rem; }
+  .processo__ambiente,
+  .processo__contador { display: none; }
 
-  @media (min-width: 60rem) {
-    .martelinho__grade { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 6rem; align-items: center; }
-  }
-
-  /* ---------- antes e depois ---------- */
-  .antes-depois { background: var(--preto); }
-  .antes-depois__palco {
-    display: grid;
-    align-items: center;
-    min-height: 100svh;
-    /* embaixo: espaço da barra fixa do WhatsApp no celular */
-    padding-block: 2.5rem calc(6rem + env(safe-area-inset-bottom));
-  }
-  .antes-depois__grade { display: grid; gap: 1.5rem; }
-  .antes-depois__texto h2 { font-size: var(--t-h2); }
-  .antes-depois__texto .lead { margin-top: 0.75rem; }
-  .antes-depois__instrucao { margin-top: 0.5rem; }
-  .antes-depois__fonte { margin-top: 1rem; }
-  .antes-depois__visual {
-    width: 100%;
-    /* altura do comparador = tela - textos - barra fixa */
-    max-width: min(30rem, calc((100svh - 17rem - env(safe-area-inset-bottom)) * 414 / 518));
-    justify-self: center;
-  }
-  .antes-depois__mais { padding-bottom: var(--secao); }
-  .antes-depois__mais .espaco-foto { max-width: 30rem; margin-inline: auto; }
-
-  @media (max-width: 59.99rem) {
-    .antes-depois__instrucao,
-    .antes-depois__fonte { display: none; }
-  }
-  @media (min-width: 60rem) {
-    .antes-depois__palco { padding-block: 4.5rem 2rem; }
-    .antes-depois__grade { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); gap: 6rem; align-items: center; }
-    .antes-depois__texto h2 { font-size: clamp(4rem, 2rem + 5vw, 7rem); }
-    .antes-depois__visual { max-width: min(30rem, calc((100svh - 8rem) * 414 / 518)); }
-    .antes-depois__mais .espaco-foto { margin-inline: auto 0; }
-  }
-
-  /* ---------- serviços ---------- */
-  .servicos { background: var(--grafite); }
-  .servicos__grade { display: grid; gap: 2.5rem; }
-  .servicos__intro .texto { margin-block: 1rem 1.25rem; }
-  .servicos__lista { border-top: 1px solid var(--aco); }
-  .servico {
-    display: grid;
-    grid-template-columns: 5.5rem minmax(0, 1fr);
-    gap: 1.25rem;
-    padding-block: 1.75rem;
-    border-bottom: 1px solid var(--aco);
-  }
-  .servico__foto img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-  .servico__texto .texto { margin-block: 0.5rem 0.875rem; }
-  .link-whats {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 2.75rem;
-    font-family: var(--f-apoio);
-    font-weight: 700;
+  /* sem animação: lista simples, foto e texto de cada passo */
+  .processo__passos { display: grid; gap: 3rem; }
+  .passo { display: grid; gap: 1.25rem; }
+  .passo__figura { position: relative; margin: 0; max-width: 22rem; }
+  .passo__figura img { width: 100%; border-radius: 10px; border: 1px solid var(--linha); }
+  .passo__texto { display: grid; gap: 0.5rem; max-width: 30rem; }
+  .passo__num {
+    font-family: var(--f-titulo);
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
     color: var(--azul-led);
+    text-shadow: 0 0 12px rgba(77, 181, 220, 0.8);
+  }
+  .passo__texto h3 { font-size: clamp(2.5rem, 1.8rem + 3vw, 4.5rem); }
+  .passo__texto p { color: var(--texto-2); font-size: 1.0625rem; }
+
+  .processo__fechamento {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    padding-block: 4rem var(--secao);
+  }
+
+  @media (min-width: 60rem) {
+    .passo { grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); align-items: center; gap: 4rem; }
+    .passo__figura { order: 2; }
+    .processo__fechamento { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  }
+
+  /* com animação: a tela fica parada e os passos trocam com a luz */
+  :global(.mov) .processo__palco {
+    position: relative;
+    isolation: isolate;
+    height: 100svh;
+    overflow: hidden;
+  }
+  :global(.mov) .passo__figura {
+    --corte: 0%;
+    --luz: 0;
+    clip-path: inset(0 0 0 var(--corte));
+  }
+  :global(.mov) .passo:nth-child(2) .passo__figura,
+  :global(.mov) .passo:nth-child(3) .passo__figura { --corte: 100%; }
+  :global(.mov) .passo__figura::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--corte) - 1px);
+    width: 3px;
+    background: #fff;
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.95), 0 0 34px 8px rgba(77, 181, 220, 0.8);
+    opacity: var(--luz);
+  }
+  :global(.mov) .passo:nth-child(1) .passo__figura { z-index: 1; }
+  :global(.mov) .passo:nth-child(2) .passo__figura { z-index: 2; }
+  :global(.mov) .passo:nth-child(3) .passo__figura { z-index: 3; }
+  :global(.mov) .processo__contador {
+    display: flex;
+    gap: 0.375rem;
+    z-index: 6;
+  }
+  :global(.mov) .processo__contador span {
+    position: relative;
+    width: 2.25rem;
+    height: 3px;
+    overflow: hidden;
+    background: rgba(242, 245, 248, 0.2);
+  }
+  :global(.mov) .processo__contador span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--azul-led);
+    box-shadow: 0 0 8px var(--azul-led);
+    transform: scaleX(var(--cheio, 0));
+    transform-origin: 0 50%;
+  }
+  :global(.mov) .processo__contador span:first-child { --cheio: 1; }
+
+  /* celular: foto em tela cheia, texto por cima */
+  @media (max-width: 59.99rem) {
+    :global(.mov) .processo__grade,
+    :global(.mov) .processo__passos,
+    :global(.mov) .passo { position: static; display: block; }
+    :global(.mov) .passo__figura {
+      position: absolute;
+      inset: 0;
+      max-width: none;
+    }
+    :global(.mov) .passo__figura img { width: 100%; height: 100%; object-fit: cover; border: 0; border-radius: 0; }
+    :global(.mov) .passo__figura::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5, 8, 13, 0.97) 0%, rgba(5, 8, 13, 0.7) 32%, rgba(5, 8, 13, 0) 60%);
+    }
+    :global(.mov) .passo__texto {
+      position: absolute;
+      left: var(--gutter);
+      right: var(--gutter);
+      bottom: calc(6rem + env(safe-area-inset-bottom));
+      z-index: 5;
+    }
+    :global(.mov) .passo:nth-child(2) .passo__texto,
+    :global(.mov) .passo:nth-child(3) .passo__texto { opacity: 0; visibility: hidden; }
+    :global(.mov) .passo__texto p { color: rgba(242, 245, 248, 0.88); }
+    :global(.mov) .processo__contador {
+      position: absolute;
+      top: calc(var(--altura-topo) + 1rem);
+      left: var(--gutter);
+    }
+  }
+
+  /* desktop: textos à esquerda, "display" alto à direita, luz ambiente atrás */
+  @media (min-width: 60rem) {
+    :global(.mov) .processo__ambiente {
+      display: block;
+      position: absolute;
+      inset: -10%;
+      z-index: -1;
+    }
+    :global(.mov) .processo__ambiente img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(34px) saturate(1.4) brightness(0.5);
+      opacity: 0;
+    }
+    :global(.mov) .processo__ambiente img:first-child { opacity: 1; }
+    :global(.mov) .processo__ambiente::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5, 8, 13, 0.94) 0%, rgba(5, 8, 13, 0.6) 50%, rgba(5, 8, 13, 0.25) 100%);
+    }
+    :global(.mov) .processo__grade {
+      position: relative;
+      height: 100%;
+      display: grid;
+      align-content: center;
+      padding-top: var(--altura-topo);
+    }
+    :global(.mov) .processo__passos { position: static; display: grid; gap: 2.25rem; max-width: 44%; margin-left: 2.5rem; }
+    :global(.mov) .passo { display: block; }
+    :global(.mov) .passo__figura {
+      position: absolute;
+      top: calc(50% + var(--altura-topo) / 2);
+      right: 0;
+      height: min(76svh, 48rem);
+      aspect-ratio: 464 / 832;
+      max-width: none;
+      transform: translateY(-50%);
+    }
+    :global(.mov) .passo__figura img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(220, 236, 248, 0.38);
+      box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 60px -12px rgba(77, 181, 220, 0.4);
+    }
+    :global(.mov) .passo:nth-child(2) .passo__texto,
+    :global(.mov) .passo:nth-child(3) .passo__texto { opacity: 0.26; }
+    :global(.mov) .processo__contador {
+      position: absolute;
+      left: 0;
+      top: calc(50% + var(--altura-topo) / 2);
+      flex-direction: column;
+      transform: translateY(-50%);
+    }
+    :global(.mov) .processo__contador span { width: 3px; height: 4.5rem; }
+    :global(.mov) .processo__contador span::after { transform: scaleY(var(--cheio, 0)); transform-origin: 50% 0; }
+  }
+
+  /* =================================================================
+     ANTES E DEPOIS
+     ================================================================= */
+  .ad__palco {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 1.25rem;
+    min-height: 100svh;
+    padding: calc(var(--altura-topo) + 1rem) var(--gutter) calc(6rem + env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+  .ad__ambiente {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    max-width: none;
+    height: 120%;
+    object-fit: cover;
+    z-index: -1;
+    filter: blur(38px) saturate(1.35) brightness(0.42);
+  }
+  .ad__titulo {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 30rem;
+    font-size: clamp(3rem, 2rem + 6vw, 5rem);
+  }
+  .ad__antes { opacity: calc(0.18 + 0.82 * var(--ad, 0.5)); }
+  .ad__depois { opacity: calc(0.18 + 0.82 * (1 - var(--ad, 0.5))); }
+  .ad__visual {
+    width: 100%;
+    max-width: min(30rem, calc((100svh - 18rem - env(safe-area-inset-bottom)) * 414 / 518));
+  }
+  .ad__visual :global(.comparar__quadro) {
+    border-radius: 12px;
+    border: 1px solid rgba(220, 236, 248, 0.38);
+    box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 60px -12px rgba(77, 181, 220, 0.45);
+  }
+  .ad__legenda { text-align: center; max-width: 30rem; }
+  .ad__mais { padding-block: 2rem var(--secao); }
+  .ad__mais .espaco-foto { max-width: 30rem; margin-inline: auto; }
+
+  @media (min-width: 60rem) {
+    .ad__palco { padding: calc(var(--altura-topo) + 2rem) var(--gutter) 2.5rem; }
+    .ad__titulo {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      max-width: none;
+      align-items: center;
+      padding: var(--altura-topo) max(var(--gutter), calc((100vw - var(--largura)) / 2)) 0;
+      font-size: clamp(5rem, 1rem + 8vw, 11rem);
+      pointer-events: none;
+    }
+    .ad__visual { max-width: min(30rem, calc((100svh - 12rem) * 414 / 518)); }
+  }
+
+  /* =================================================================
+     VITRINE DE SERVIÇOS
+     ================================================================= */
+  .vitrine__palco { padding-top: var(--secao); }
+  .vitrine__cabeca { display: grid; gap: 1.25rem; margin-bottom: 2.5rem; }
+  .vitrine__trilho {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    padding-inline: var(--gutter);
+  }
+  .vitrine__trilho::-webkit-scrollbar { display: none; }
+  .vitrine__lista { display: flex; gap: 1rem; width: max-content; padding-bottom: 0.5rem; }
+
+  .cartao {
+    position: relative;
+    isolation: isolate;
+    flex: none;
+    width: min(82vw, 24rem);
+    height: min(66svh, 34rem);
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--linha);
+    background: var(--noite-2);
+    scroll-snap-align: start;
+  }
+  .cartao > img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--curva);
+  }
+  .cartao::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(5, 8, 13, 0.97) 0%, rgba(5, 8, 13, 0.7) 38%, rgba(5, 8, 13, 0) 68%);
+  }
+  .cartao__texto {
+    position: absolute;
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1rem;
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+  }
+  .cartao__texto h3 { font-size: clamp(2.125rem, 1.7rem + 1.4vw, 3rem); }
+  .cartao__texto p { font-size: 0.9375rem; line-height: 1.5; color: rgba(242, 245, 248, 0.86); }
+
+  .cartao--todos {
+    background:
+      radial-gradient(90% 70% at 80% 10%, rgba(35, 120, 179, 0.5), transparent 70%),
+      linear-gradient(160deg, var(--azul-profundo), var(--noite-2));
+  }
+  .cartao--todos::after { content: none; }
+  .cartao__todos {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: end;
+    gap: 0.75rem;
+    padding: 1.5rem;
     text-decoration: none;
   }
-  .link-whats:hover { color: var(--azul-led-claro); text-decoration: underline; text-underline-offset: 0.25em; }
-  .link-whats :global(svg) { width: 1.125rem; height: 1.125rem; }
+  .cartao__todos .cromado { font-family: var(--f-titulo); font-size: clamp(2.75rem, 2rem + 2vw, 4rem); line-height: 0.95; }
 
-  @media (min-width: 60rem) {
-    .servicos__grade { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 5rem; align-items: start; }
-    .servicos__intro { position: sticky; top: calc(var(--altura-topo) + 3rem); }
-    .servico { grid-template-columns: 11rem minmax(0, 1fr); gap: 2rem; padding-block: 2.25rem; }
+  .vitrine__rodape { display: flex; align-items: center; gap: 1rem; padding-top: 1.25rem; }
+  .vitrine__progresso { display: none; }
+
+  @media (hover: hover) {
+    .cartao:hover > img { transform: scale(1.05); }
   }
 
-  /* ---------- unidades ---------- */
-  .unidades__cabeca { display: grid; gap: 1rem; margin-bottom: 3rem; }
-  .unidades__grade { display: grid; gap: 3.5rem; }
-  .unidade__foto img { width: 100%; height: auto; }
-  .unidade__texto { display: grid; gap: 0.75rem; justify-items: start; padding-top: 1.5rem; }
-  .unidade__papel { font-family: var(--f-apoio); font-weight: 700; color: var(--azul-led); }
+  @media (min-width: 60rem) {
+    .cartao { width: clamp(22rem, 30vw, 30rem); height: min(62svh, 40rem); }
+    .cartao__texto { left: 1.75rem; right: 1.75rem; bottom: 1.5rem; }
+    .vitrine__trilho {
+      padding-inline: max(var(--gutter), calc((100vw - var(--largura)) / 2));
+      scroll-padding-inline: max(var(--gutter), calc((100vw - var(--largura)) / 2));
+    }
+
+    /* com animação: a seção fica parada e a vitrine desliza para o lado */
+    :global(.mov) .vitrine__palco {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr auto;
+      height: 100svh;
+      padding-block: calc(var(--altura-topo) + 2.5rem) 2rem;
+    }
+    :global(.mov) .vitrine__cabeca { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: end; margin-bottom: 2rem; }
+    :global(.mov) .vitrine__trilho { overflow: visible; align-self: center; min-width: 0; }
+    :global(.mov) .cartao > img { width: 116%; left: -8%; transition: none; }
+    :global(.mov) .vitrine__progresso {
+      display: block;
+      flex: 1;
+      height: 2px;
+      overflow: hidden;
+      background: rgba(242, 245, 248, 0.14);
+    }
+    :global(.mov) .vitrine__progresso span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--azul), var(--azul-led));
+      box-shadow: 0 0 10px var(--azul-led);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+    }
+    :global(.mov) .vitrine__dica { display: none; }
+  }
+
+  /* =================================================================
+     UNIDADES
+     ================================================================= */
+  .unidades { padding-top: var(--secao); }
+  .unidades__cabeca { display: grid; gap: 1.25rem; margin-bottom: 2.5rem; }
+  .unidades__painel { display: grid; gap: 2px; }
+  .unidade {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    min-height: 86svh;
+    overflow: hidden;
+  }
+  .unidade__foto { position: absolute; inset: 0; z-index: -2; }
+  .unidade__foto img { width: 100%; height: 100%; object-fit: cover; }
+  .unidade::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(5, 8, 13, 0.97) 0%, rgba(5, 8, 13, 0.75) 35%, rgba(5, 8, 13, 0.05) 70%);
+  }
+  .unidade__texto {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    width: 100%;
+    max-width: 34rem;
+    padding: 2rem var(--gutter);
+  }
+  .unidade__papel {
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    color: var(--azul-led-claro);
+    letter-spacing: 0.02em;
+  }
+  .unidade h3 { font-size: clamp(3rem, 2rem + 4vw, 5.5rem); }
+  .unidade__descricao { color: rgba(242, 245, 248, 0.88); max-width: 40ch; }
   .unidade address { font-style: normal; font-family: var(--f-apoio); font-size: 1.125rem; line-height: 1.4; }
-  .unidade__itens { display: grid; gap: 0.25rem; color: var(--aco-claro); }
+  .unidade__itens { display: grid; gap: 0.25rem; color: rgba(242, 245, 248, 0.86); }
   .unidade__itens li { position: relative; padding-left: 1.125rem; }
   .unidade__itens li::before {
     content: '';
@@ -508,60 +892,94 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
     width: 0.625rem;
     height: 2px;
     background: var(--azul-led);
+    box-shadow: 0 0 6px var(--azul-led);
   }
   .unidade .botao { margin-top: 0.5rem; }
-  .unidades__horario { margin-top: 3rem; }
+  .unidades__horario { padding-block: 1.5rem var(--secao); }
 
   @media (min-width: 60rem) {
-    .unidades__cabeca { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: end; gap: 4rem; margin-bottom: 4.5rem; }
-    .unidades__grade { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4rem; align-items: start; }
-    .unidade--santo-amaro { margin-top: 7rem; }
+    .unidades__cabeca { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: end; gap: 4rem; margin-bottom: 3.5rem; }
+    .unidades__painel { display: flex; height: 92svh; }
+    .unidade { flex: 1 1 0; min-height: 0; transition: flex-grow 0.9s var(--curva); }
+    .unidade__texto { padding: 3rem max(var(--gutter), 3rem); }
+  }
+  @media (min-width: 60rem) and (hover: hover) {
+    .unidade:hover { flex-grow: 1.4; }
   }
 
-  /* ---------- avaliações ---------- */
-  .avaliacoes { background: var(--grafite); }
-  .avaliacoes__lista {
-    display: grid;
-    gap: 2rem;
-    margin-block: 2.5rem;
-  }
+  /* =================================================================
+     AVALIAÇÕES
+     ================================================================= */
+  .avaliacoes { padding-block: 0 var(--secao); }
+  .avaliacoes__lista { display: grid; gap: 2.5rem; margin-block: 3rem; }
   .avaliacao {
-    padding: 0.25rem 0 0.25rem 1.25rem;
-    border-left: 2px solid var(--azul-led);
+    position: relative;
+    padding: 0.25rem 0 0.25rem 1.5rem;
   }
-  .avaliacao blockquote p { font-size: 1.0625rem; line-height: 1.6; }
-  .avaliacao__autor { margin-top: 1rem; font-family: var(--f-apoio); }
-  .avaliacao__autor strong { display: block; font-weight: 700; }
-  .avaliacao__autor span { color: var(--aco-claro); }
+  .avaliacao::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--azul-led), rgba(77, 181, 220, 0));
+    box-shadow: 0 0 10px rgba(77, 181, 220, 0.6);
+  }
+  .avaliacao blockquote p { font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem); line-height: 1.55; }
+  .avaliacao__autor { margin-top: 1.25rem; font-family: var(--f-apoio); }
+  .avaliacao__autor strong { display: block; font-weight: 700; font-size: 1.0625rem; }
+  .avaliacao__autor span { color: var(--texto-2); }
 
   @media (min-width: 60rem) {
-    .avaliacoes__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem; }
+    .avaliacoes__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3.5rem; margin-block: 4rem; }
   }
 
-  /* ---------- CTA final ---------- */
-  .cta-final {
-    padding-block: var(--secao);
-    overflow: hidden;
-    background: radial-gradient(120% 90% at 85% 45%, #183c5a 0%, var(--marinho) 46%, #0a1621 100%);
-  }
-  .cta-final__grade { display: grid; gap: 3rem; align-items: center; }
-  .cta-final__texto { display: grid; gap: 1.25rem; justify-items: start; }
-  .cta-final h2 { font-size: clamp(3.25rem, 2rem + 5vw, 6.5rem); }
-  .cta-final .botao { margin-top: 0.5rem; }
-  .cta-final__selo {
+  /* =================================================================
+     CTA FINAL
+     ================================================================= */
+  .final {
     position: relative;
-    width: min(64vw, 22rem);
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--secao);
+    border-top: 1px solid var(--linha);
+  }
+  .final__fundo {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    max-width: none;
+    height: 120%;
+    object-fit: cover;
+    z-index: -2;
+    filter: blur(34px) saturate(1.4) brightness(0.55);
+  }
+  .final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(90% 90% at 80% 50%, rgba(15, 33, 51, 0.2) 0%, rgba(5, 8, 13, 0.85) 75%);
+  }
+  .final__grade { display: grid; gap: 3rem; align-items: center; }
+  .final__texto { display: grid; gap: 1.25rem; justify-items: start; }
+  .final h2 { font-size: clamp(3.5rem, 2rem + 6vw, 8rem); }
+  .final .botao { margin-top: 0.5rem; }
+  .final__selo {
+    position: relative;
+    width: min(66vw, 22rem);
     justify-self: center;
     border-radius: 50%;
-    filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.55));
+    filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 40px rgba(77, 181, 220, 0.3));
   }
-  .cta-final__selo img { width: 100%; height: auto; }
-  .cta-final__selo::after {
+  .final__selo img { width: 100%; height: auto; }
+  .final__selo::after {
     content: '';
     position: absolute;
     inset: 4%;
     border-radius: 50%;
-    background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.5) 50%, transparent 62%);
+    background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%);
     background-size: 300% 100%;
     background-position: var(--brilho, 100%) 0;
     mix-blend-mode: soft-light;
@@ -569,7 +987,7 @@ const avaliacoes: { nome: string; carro: string; texto: string; link?: string }[
   }
 
   @media (min-width: 60rem) {
-    .cta-final__grade { grid-template-columns: minmax(0, 1fr) auto; gap: 4rem; }
-    .cta-final__selo { width: 24rem; }
+    .final__grade { grid-template-columns: minmax(0, 1fr) auto; gap: 4rem; }
+    .final__selo { width: 26rem; }
   }
 </style>

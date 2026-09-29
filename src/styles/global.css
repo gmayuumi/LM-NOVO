@@ -1,7 +1,7 @@
 /* ============================================================
    LM Estética Automotiva: tokens e base
-   Paleta tirada do logo novo: azul-marinho do selo, azul do
-   anel luminoso e cromado. Base preta/grafite.
+   Direção: vitrine de luxo à noite + acabamento metálico do logo
+   (azul-marinho do selo, cromado das letras LM, anel de luz azul).
    ============================================================ */
 
 @font-face {
@@ -37,35 +37,40 @@
 
 :root {
   /* cor */
-  --preto: #0b0d10;          /* fundo: preto verniz */
-  --grafite: #131a23;        /* superfícies, puxado para o marinho do selo */
+  --noite: #05080d;          /* fundo: showroom à noite */
+  --noite-2: #0a121c;        /* superfícies */
   --marinho: #0f2133;        /* fundo do selo do logo */
-  --aco: #2a3643;            /* linhas e bordas */
-  --aco-claro: #a8b3bf;      /* texto secundário (8,7:1 no preto) */
-  --branco: #f2f5f8;         /* texto principal, luz de LED */
-  --azul: #2f7fb5;           /* azul médio do selo */
-  --azul-led: #4db5dc;       /* anel luminoso do logo: CTAs e destaques */
-  --azul-led-claro: #82cfec;
+  --azul-profundo: #123a5c;
+  --azul: #2378b3;           /* azul do selo */
+  --azul-led: #4db5dc;       /* anel de luz do logo */
+  --azul-led-claro: #8fd4ef;
+  --branco: #f2f5f8;
+  --texto-2: #a9b6c3;        /* texto secundário (≈9:1 no fundo) */
+  --linha: rgba(169, 196, 222, 0.16);
+  --cromo: linear-gradient(180deg, #ffffff 0%, #eef3f7 30%, #b3bec9 46%, #66737f 51%, #c9d3dc 66%, #ffffff 100%);
 
   /* tipo */
   --f-titulo: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
   --f-apoio: 'Roboto Condensed', 'Arial Narrow', sans-serif;
   --f-texto: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  --t-h1: clamp(3.5rem, 2.2rem + 6vw, 6.75rem);
-  --t-h2: clamp(2.5rem, 1.8rem + 3vw, 4.25rem);
-  --t-h3: clamp(1.75rem, 1.45rem + 1.1vw, 2.375rem);
-  --t-lead: clamp(1.1875rem, 1.1rem + 0.45vw, 1.4375rem);
+  --t-hero: clamp(3.5rem, 1.4rem + 7.4vw, 8.75rem);
+  --t-h2: clamp(2.75rem, 1.6rem + 4.6vw, 6.25rem);
+  --t-h3: clamp(1.875rem, 1.5rem + 1.4vw, 2.75rem);
+  --t-lead: clamp(1.1875rem, 1.08rem + 0.5vw, 1.5rem);
   --t-texto: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
   --t-pequeno: 0.875rem;
 
   /* espaço */
-  --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
-  --largura: 76rem;
-  --secao: clamp(4.5rem, 3rem + 6vw, 9rem);
-  --altura-topo: 4.5rem;
+  --gutter: clamp(1rem, 0.6rem + 1.8vw, 2.5rem);
+  --largura: 80rem;
+  --secao: clamp(5rem, 3rem + 7vw, 10rem);
+  --altura-topo: 4.25rem;
 
   --curva: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+@media (min-width: 60rem) {
+  :root { --altura-topo: 4.75rem; }
 }
 
 *,
@@ -75,19 +80,41 @@
 * { margin: 0; }
 
 html {
+  background: var(--noite);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-padding-top: var(--altura-topo);
 }
 
 body {
-  background: var(--preto);
+  position: relative;
+  z-index: 0;
   color: var(--branco);
   font-family: var(--f-texto);
   font-size: var(--t-texto);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+}
+
+/* Fundo fixo: poças de luz azul, como um showroom iluminado, e grão fino */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+body::before {
+  background:
+    radial-gradient(70% 55% at 10% -5%, rgba(35, 120, 179, 0.24), transparent 70%),
+    radial-gradient(55% 50% at 105% 45%, rgba(77, 181, 220, 0.12), transparent 70%),
+    radial-gradient(90% 70% at 35% 110%, rgba(18, 58, 92, 0.6), transparent 70%);
+}
+body::after {
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 img, video, svg { display: block; max-width: 100%; }
@@ -98,23 +125,24 @@ a { color: inherit; }
 h1, h2, h3 {
   font-family: var(--f-titulo);
   font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: 0.01em;
+  line-height: 0.92;
+  letter-spacing: 0.012em;
   text-wrap: balance;
 }
 h2 { font-size: var(--t-h2); }
-h3 { font-size: var(--t-h3); line-height: 1; }
+h3 { font-size: var(--t-h3); line-height: 0.95; }
 
 p { text-wrap: pretty; }
 
-ul[role='list'] { list-style: none; padding: 0; }
+ul[role='list'],
+ol[role='list'] { list-style: none; padding: 0; }
 
 :focus-visible {
   outline: 2px solid var(--azul-led);
   outline-offset: 3px;
 }
 
-::selection { background: var(--azul-led); color: var(--preto); }
+::selection { background: var(--azul-led); color: var(--noite); }
 
 /* ---------- utilidades ---------- */
 
@@ -123,22 +151,20 @@ ul[role='list'] { list-style: none; padding: 0; }
   margin-inline: auto;
 }
 
-.secao { padding-block: var(--secao); }
-
 .lead {
   font-family: var(--f-apoio);
   font-size: var(--t-lead);
   line-height: 1.35;
   color: var(--branco);
-  max-width: 34ch;
+  max-width: 36ch;
 }
 
-.texto { color: var(--aco-claro); max-width: 62ch; }
+.texto { color: var(--texto-2); max-width: 62ch; }
 
 .pequeno {
   font-family: var(--f-apoio);
   font-size: var(--t-pequeno);
-  color: var(--aco-claro);
+  color: var(--texto-2);
 }
 
 .visualmente-oculto {
@@ -149,47 +175,106 @@ ul[role='list'] { list-style: none; padding: 0; }
   white-space: nowrap; border: 0;
 }
 
-/* ---------- botões ---------- */
+/* ---------- cromado: as letras LM do logo ---------- */
+/* Use num <span> dentro do título: cada linha ganha o próprio reflexo.
+   --brilho move uma faixa de luz pelo texto (animada no scroll). */
+.cromado { color: var(--branco); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .cromado {
+    background-image:
+      linear-gradient(100deg, transparent 0 42%, rgba(255, 255, 255, 0.95) 50%, transparent 58% 100%),
+      var(--cromo);
+    background-size: 260% 100%, 100% 100%;
+    background-position: var(--brilho, 100%) 0, 0 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    filter: drop-shadow(0 0 0.5px rgba(143, 212, 239, 0.9)) drop-shadow(0 0.06em 0.12em rgba(0, 0, 0, 0.55));
+  }
+}
+
+/* ---------- botões metálicos ---------- */
 
 .botao {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  min-height: 3.25rem;
-  padding: 0.8rem 1.5rem;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background: var(--azul-led);
-  color: var(--preto);
+  min-height: 3.375rem;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid rgba(214, 236, 250, 0.6);
+  border-radius: 6px;
+  background: linear-gradient(180deg, #56b4e4 0%, #2378b3 45%, #175a8d 55%, #2a86c4 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 12px 32px -10px rgba(35, 120, 179, 0.85);
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
   font-family: var(--f-apoio);
   font-weight: 700;
   font-size: 1.0625rem;
   line-height: 1.1;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s var(--curva);
+  transition: transform 0.25s var(--curva), box-shadow 0.25s;
 }
-.botao:hover { background: var(--azul-led-claro); }
+/* reflexo que atravessa o botão */
+.botao::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.8s var(--curva);
+}
+.botao:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 16px 40px -10px rgba(77, 181, 220, 0.9);
+}
+.botao:hover::after { transform: translateX(120%); }
 .botao:active { transform: translateY(1px); }
 .botao svg { width: 1.25rem; height: 1.25rem; flex: none; }
 
-.botao--contorno {
-  background: transparent;
-  color: var(--branco);
-  border-color: var(--aco-claro);
+.botao--vidro {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(214, 232, 246, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  text-shadow: none;
 }
-.botao--contorno:hover { background: var(--branco); color: var(--preto); border-color: var(--branco); }
+.botao--vidro:hover { background: rgba(255, 255, 255, 0.12); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); }
 
 .link-destaque {
   font-family: var(--f-apoio);
   font-weight: 700;
-  color: var(--azul-led);
+  color: var(--azul-led-claro);
   text-decoration: underline;
   text-underline-offset: 0.25em;
   text-decoration-thickness: 1px;
 }
-.link-destaque:hover { color: var(--azul-led-claro); }
+.link-destaque:hover { color: #fff; }
+
+.link-whats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-family: var(--f-apoio);
+  font-weight: 700;
+  color: var(--azul-led-claro);
+  text-decoration: none;
+}
+.link-whats:hover { color: #fff; text-decoration: underline; text-underline-offset: 0.25em; }
+.link-whats svg { width: 1.125rem; height: 1.125rem; }
 
 /* Espaço reservado para foto que o cliente ainda vai mandar */
 .espaco-foto {
@@ -197,34 +282,31 @@ ul[role='list'] { list-style: none; padding: 0; }
   place-items: center;
   min-height: 10rem;
   padding: 1.5rem;
-  border: 1px dashed var(--aco-claro);
-  color: var(--aco-claro);
+  border: 1px dashed rgba(169, 182, 195, 0.6);
+  color: var(--texto-2);
   font-family: var(--f-apoio);
   font-size: var(--t-pequeno);
   text-align: center;
-  background: repeating-linear-gradient(135deg, transparent 0 12px, rgba(168, 179, 191, 0.05) 12px 24px);
+  background: repeating-linear-gradient(135deg, transparent 0 12px, rgba(169, 182, 195, 0.05) 12px 24px);
 }
 
 /* ============================================================
-   Movimento: estados iniciais só existem quando o JS de
-   animação liga a classe .mov (nunca com reduced-motion).
+   Movimento: estados iniciais só existem com a classe .mov,
+   ligada pelo script de animação (nunca com reduced-motion).
    ============================================================ */
 
 /* Varredura de luz: o conteúdo aparece atrás de uma barra de LED */
 [data-varredura] { position: relative; }
-h1[data-varredura],
-h2[data-varredura],
-h3[data-varredura] { width: fit-content; }
 .mov [data-varredura] {
   --rev: 0%;
   --luz: 1;
-  clip-path: inset(-0.2em calc(100% - var(--rev)) -0.2em -0.2em);
+  clip-path: inset(-0.3em calc(100% - var(--rev)) -0.3em -0.3em);
 }
 .mov [data-varredura]::after {
   content: '';
   position: absolute;
-  top: -0.2em;
-  bottom: -0.2em;
+  top: -0.3em;
+  bottom: -0.3em;
   left: calc(var(--rev) - 2px);
   width: 2px;
   background: #fff;
@@ -235,22 +317,16 @@ h3[data-varredura] { width: fit-content; }
 
 /* Parallax: a imagem é maior que a moldura e desliza dentro dela */
 [data-parallax] { overflow: hidden; }
-.mov [data-parallax] > img { transform: scale(1.12); will-change: transform; }
+.mov [data-parallax] > img { transform: scale(1.14); will-change: transform; }
 
-/* Lenis (rolagem suave): regras mínimas da biblioteca */
-html.lenis, html.lenis body { height: auto; }
-.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
-.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
-
-/* Barra de progresso de leitura, como uma régua de LED */
+/* Régua de LED no topo mostrando o quanto já rolou */
 .progresso {
   position: fixed;
   inset: 0 0 auto 0;
   height: 2px;
-  z-index: 60;
-  background: var(--azul-led);
-  box-shadow: 0 0 10px rgba(77, 181, 220, 0.9);
+  z-index: 80;
+  background: linear-gradient(90deg, var(--azul), var(--azul-led), #fff);
+  box-shadow: 0 0 12px rgba(77, 181, 220, 0.9);
   transform-origin: 0 50%;
   transform: scaleX(0);
   pointer-events: none;
@@ -258,11 +334,19 @@ html.lenis, html.lenis body { height: auto; }
 }
 .mov .progresso { display: block; }
 
+/* Lenis (rolagem suave): regras mínimas da biblioteca */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Menos movimento: sem transições (uma duração mínima em tudo criaria
+   micro-transições de visibilidade herdada e atrasaria o foco) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }

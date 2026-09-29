@@ -38,7 +38,7 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     user-select: none;
     -webkit-user-select: none;
     cursor: ew-resize;
-    background: var(--grafite);
+    background: var(--noite-2);
   }
   .comparar__img { width: 100%; height: auto; pointer-events: none; }
 
@@ -53,7 +53,7 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     top: 0.75rem;
     left: 0.75rem;
     padding: 0.25rem 0.625rem;
-    background: rgba(11, 13, 16, 0.78);
+    background: rgba(5, 8, 13, 0.72);
     font-family: var(--f-apoio);
     font-weight: 700;
     font-size: var(--t-pequeno);
@@ -83,9 +83,10 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     height: 3.75rem;
     transform: translate(-50%, -50%);
     border-radius: 999px;
-    background: var(--azul-led);
-    color: var(--preto);
-    box-shadow: 0 0 0 3px rgba(11, 13, 16, 0.55), 0 0 28px rgba(77, 181, 220, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: linear-gradient(180deg, #56b4e4 0%, #2378b3 45%, #175a8d 55%, #2a86c4 100%);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 0 3px rgba(5, 8, 13, 0.55), 0 0 28px rgba(77, 181, 220, 0.8);
   }
   .comparar__pega svg { width: 1.25rem; height: 1.25rem; }
 
@@ -110,7 +111,7 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     bottom: 0.875rem;
     transform: translateX(-50%);
     padding: 0.3rem 0.75rem;
-    background: rgba(11, 13, 16, 0.78);
+    background: rgba(5, 8, 13, 0.72);
     font-family: var(--f-apoio);
     font-size: var(--t-pequeno);
     white-space: nowrap;

@@ -1,143 +1,222 @@
 ---
 import IconeWhats from './IconeWhats.astro';
-import { SITE, PAGINAS, CURSOS, whats, MSG } from '../data/site';
+import { SITE, PAGINAS, CURSOS, HORARIO, whats, MSG } from '../data/site';
 
 interface Props { atual?: string }
 const { atual = '/' } = Astro.props;
+const atualSe = (href: string) => (atual === href ? 'page' : undefined);
 ---
 
-<header class="topo">
+<header class="topo" data-topo>
   <div class="recipiente topo__barra">
     <a class="marca" href="/" aria-label={`${SITE.nome}, início`}>
       <img src="/assets/img/logo-lm-96.webp" width="96" height="96" alt="" class="marca__selo" />
       <span class="marca__nome">LM <span>Estética Automotiva</span></span>
     </a>
 
-    <button class="menu-botao" type="button" aria-expanded="false" aria-controls="navegacao">
-      <span class="menu-botao__icone" aria-hidden="true"><span></span><span></span></span>
-      <span class="menu-botao__texto">Menu</span>
-    </button>
-
-    <nav id="navegacao" class="navegacao" aria-label="Principal">
+    <nav class="navegacao" aria-label="Principal">
       <ul role="list" class="navegacao__lista">
-        {PAGINAS.map((p) => (
-          <li><a href={p.href} aria-current={atual === p.href ? 'page' : undefined}>{p.rotulo}</a></li>
-        ))}
-        <li class="navegacao__discreto"><a href={CURSOS.href} aria-current={atual === CURSOS.href ? 'page' : undefined}>{CURSOS.rotulo}</a></li>
-        <li class="navegacao__insta"><a href={SITE.instagram} target="_blank" rel="noopener">Instagram</a></li>
+        {PAGINAS.map((p) => <li><a href={p.href} aria-current={atualSe(p.href)}>{p.rotulo}</a></li>)}
+        <li class="navegacao__discreto"><a href={CURSOS.href} aria-current={atualSe(CURSOS.href)}>{CURSOS.rotulo}</a></li>
       </ul>
-      <a class="botao topo__cta" href={whats(MSG.geral)} target="_blank" rel="noopener">
-        <IconeWhats /> Pedir orçamento
-      </a>
+    </nav>
+
+    <a class="botao topo__cta" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento</a>
+
+    <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-celular" data-menu-botao>
+      <span class="menu-botao__icone" aria-hidden="true"><span></span><span></span></span>
+      <span class="menu-botao__texto" data-menu-rotulo>Menu</span>
+    </button>
+  </div>
+
+  <!-- Menu do celular: tela cheia -->
+  <div id="menu-celular" class="menu" data-menu>
+    <nav class="recipiente menu__corpo" aria-label="Menu">
+      <ul role="list" class="menu__lista">
+        <li><a href="/" aria-current={atualSe('/')}><span class="cromado">Início</span></a></li>
+        {PAGINAS.map((p) => <li><a href={p.href} aria-current={atualSe(p.href)}><span class="cromado">{p.rotulo}</span></a></li>)}
+      </ul>
+      <ul role="list" class="menu__secundario">
+        <li><a href={CURSOS.href}>{CURSOS.rotulo}</a></li>
+        <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram {SITE.instagramUsuario}</a></li>
+      </ul>
+      <a class="botao menu__cta" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
+      <p class="pequeno menu__rodape">
+        WhatsApp {SITE.telefoneExibicao}<br />
+        {HORARIO.map((h) => `${h.dias}: ${h.texto}`).join('. ')}.
+      </p>
     </nav>
   </div>
 </header>
 
 <style>
   .topo {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 70;
+  }
+  /* Vidro fosco só depois de rolar (fica num pseudo-elemento para não prender o menu fixo) */
+  .topo::before {
+    content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    z-index: 40;
-    padding-block: 0.75rem;
-    background: linear-gradient(to bottom, rgba(11, 13, 16, 0.9), rgba(11, 13, 16, 0));
+    height: var(--altura-topo);
+    z-index: -1;
+    background: linear-gradient(to bottom, rgba(5, 8, 13, 0.75), rgba(5, 8, 13, 0));
+    transition: background-color 0.35s, border-color 0.35s;
+    border-bottom: 1px solid transparent;
   }
+  .topo[data-solido]::before {
+    background: rgba(6, 11, 18, 0.72);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    backdrop-filter: blur(16px) saturate(1.3);
+    border-bottom-color: var(--linha);
+  }
+
   .topo__barra {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-height: calc(var(--altura-topo) - 1.5rem);
+    gap: 1.5rem;
+    height: var(--altura-topo);
   }
 
   .marca {
     display: flex;
     align-items: center;
     gap: 0.625rem;
+    margin-right: auto;
     text-decoration: none;
   }
-  .marca__selo { width: 2.75rem; height: 2.75rem; }
+  .marca__selo {
+    width: 2.625rem;
+    height: 2.625rem;
+    filter: drop-shadow(0 0 10px rgba(77, 181, 220, 0.35));
+  }
   .marca__nome {
     font-family: var(--f-apoio);
     font-weight: 700;
     font-size: 1.0625rem;
     line-height: 1.05;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
   }
-  .marca__nome span { display: block; font-weight: 400; color: var(--aco-claro); font-size: 0.875rem; }
+  .marca__nome span { display: block; font-weight: 400; color: var(--texto-2); font-size: 0.875rem; letter-spacing: 0; }
+
+  .navegacao,
+  .topo__cta { display: none; }
 
   .menu-botao {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     min-height: 2.75rem;
-    padding: 0.5rem 0.75rem;
-    background: rgba(11, 13, 16, 0.55);
+    padding: 0.5rem 0.875rem;
+    background: rgba(255, 255, 255, 0.06);
     color: var(--branco);
-    border: 1px solid var(--aco);
-    border-radius: 4px;
+    border: 1px solid rgba(214, 232, 246, 0.3);
+    border-radius: 6px;
     font-family: var(--f-apoio);
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
   .menu-botao__icone { display: grid; gap: 5px; width: 18px; }
-  .menu-botao__icone span { height: 2px; background: currentColor; transition: transform 0.25s var(--curva); }
+  .menu-botao__icone span { height: 2px; background: currentColor; transition: transform 0.3s var(--curva); }
   .menu-botao[aria-expanded='true'] .menu-botao__icone span:first-child { transform: translateY(3.5px) rotate(45deg); }
   .menu-botao[aria-expanded='true'] .menu-botao__icone span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
 
-  /* Menu no celular: painel que desce sob o topo */
-  .navegacao {
-    position: absolute;
-    inset: 100% 0 auto 0;
-    padding: 1.25rem var(--gutter) 1.75rem;
-    background: var(--grafite);
-    border-block: 1px solid var(--aco);
+  /* Menu em tela cheia */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow-y: auto;
+    padding-top: calc(var(--altura-topo) + 1.5rem);
+    padding-bottom: 2rem;
+    background:
+      radial-gradient(80% 50% at 90% 0%, rgba(35, 120, 179, 0.35), transparent 70%),
+      radial-gradient(70% 40% at 0% 100%, rgba(18, 58, 92, 0.7), transparent 70%),
+      rgba(5, 8, 13, 0.97);
+    opacity: 0;
+    visibility: hidden;
+    /* ao fechar, some depois do fade; ao abrir, fica visível na hora (o foco precisa disso) */
+    transition: opacity 0.35s var(--curva), visibility 0s linear 0.35s;
   }
-  :global(.js) .navegacao:not([data-aberto]) { display: none; }
+  .menu[data-aberto] { opacity: 1; visibility: visible; transition: opacity 0.35s var(--curva), visibility 0s; }
+  :global(html:not(.js)) .menu { display: none; }
 
-  .navegacao__lista { display: grid; gap: 0.25rem; }
-  .navegacao__lista a {
+  .menu__lista { display: grid; gap: 0.25rem; }
+  .menu__lista a {
     display: block;
-    padding-block: 0.625rem;
+    padding-block: 0.25rem;
+    font-family: var(--f-titulo);
+    font-size: clamp(2.75rem, 2rem + 4vw, 4rem);
+    line-height: 1;
+    text-decoration: none;
+    transform: translateY(0.4em);
+    opacity: 0;
+    transition: transform 0.5s var(--curva), opacity 0.5s;
+  }
+  .menu[data-aberto] .menu__lista a { transform: none; opacity: 1; }
+  .menu[data-aberto] .menu__lista li:nth-child(2) a { transition-delay: 0.04s; }
+  .menu[data-aberto] .menu__lista li:nth-child(3) a { transition-delay: 0.08s; }
+  .menu[data-aberto] .menu__lista li:nth-child(4) a { transition-delay: 0.12s; }
+  .menu__lista a[aria-current='page'] .cromado { filter: drop-shadow(0 0 10px rgba(77, 181, 220, 0.8)); }
+
+  .menu__secundario {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--linha);
+  }
+  .menu__secundario a {
+    display: inline-block;
+    padding-block: 0.5rem;
     font-family: var(--f-apoio);
-    font-weight: 700;
-    font-size: 1.375rem;
+    font-size: 1.125rem;
+    color: var(--texto-2);
     text-decoration: none;
   }
-  .navegacao__lista a[aria-current='page'] { color: var(--azul-led); }
-  .navegacao__discreto,
-  .navegacao__insta { border-top: 1px solid var(--aco); margin-top: 0.5rem; padding-top: 0.5rem; }
-  .navegacao__insta { border-top: 0; margin-top: 0; padding-top: 0; }
-  .navegacao__discreto a,
-  .navegacao__insta a { font-weight: 400; font-size: 1.0625rem; color: var(--aco-claro); }
-  .topo__cta { width: 100%; margin-top: 1.25rem; }
+  .menu__cta { width: 100%; margin-top: 2rem; }
+  .menu__rodape { margin-top: 1.25rem; }
 
   @media (min-width: 60rem) {
-    .topo {
-      position: sticky;
-      top: 0;
-      background: rgba(11, 13, 16, 0.92);
-      border-bottom: 1px solid var(--aco);
+    .topo__barra { gap: 2.25rem; }
+    .marca__selo { width: 3rem; height: 3rem; }
+    .menu-botao,
+    .menu { display: none; }
+    .navegacao { display: block; }
+    .navegacao__lista { display: flex; align-items: center; gap: 2rem; }
+    .navegacao__lista a {
+      position: relative;
+      display: block;
       padding-block: 0.5rem;
+      font-family: var(--f-apoio);
+      font-weight: 700;
+      font-size: 1.0625rem;
+      text-decoration: none;
     }
-    .menu-botao { display: none; }
-    .navegacao,
-    :global(.js) .navegacao:not([data-aberto]) {
-      position: static;
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      padding: 0;
-      background: none;
-      border: 0;
+    /* sublinhado de LED */
+    .navegacao__lista a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.2rem;
+      height: 2px;
+      background: var(--azul-led);
+      box-shadow: 0 0 10px rgba(77, 181, 220, 0.9);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      transition: transform 0.35s var(--curva);
     }
-    .navegacao__lista { display: flex; align-items: center; gap: 1.75rem; }
-    .navegacao__lista a { font-size: 1.0625rem; padding-block: 0.5rem; }
-    .navegacao__lista a:hover { color: var(--azul-led); }
-    .navegacao__discreto,
-    .navegacao__insta { border: 0; margin: 0; padding: 0; }
-    .navegacao__discreto a,
-    .navegacao__insta a { font-size: 0.9375rem; }
-    .topo__cta { width: auto; margin: 0; min-height: 2.75rem; padding: 0.55rem 1.1rem; font-size: 1rem; }
+    .navegacao__lista a:hover::after,
+    .navegacao__lista a[aria-current='page']::after { transform: scaleX(1); }
+    .navegacao__discreto a { font-weight: 400; color: var(--texto-2); }
+    .topo__cta { display: inline-flex; min-height: 2.875rem; padding: 0.6rem 1.15rem; font-size: 1rem; }
   }
 </style>

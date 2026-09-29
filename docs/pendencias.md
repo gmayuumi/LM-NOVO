@@ -1,6 +1,6 @@
 # Pendências do site novo
 
-Atualizado a cada página entregue. No código, tudo o que depende do cliente está marcado com `[CONFIRMAR]`.
+Atualizado a cada página entregue. Última atualização: home na versão "vitrine de luxo + metálico". No código, tudo o que depende do cliente está marcado com `[CONFIRMAR]`.
 
 ## Confirmar com o cliente
 
@@ -19,6 +19,8 @@ Atualizado a cada página entregue. No código, tudo o que depende do cliente es
 | 11 | Motos entram oficialmente em "Estética completa"? | Serviços da home | Escrito "para carros e motos" por causa do vídeo da Ducati |
 | 12 | Vídeo do hero | Home | Corte de 12s do vídeo real do martelinho (Nissan Kicks). Se for gerado outro vídeo, é só trocar `public/assets/video/hero.mp4` |
 | 13 | `video2.mp4` (animação genérica de carro) | Não usado | Não mostra o trabalho da LM e tem qualidade baixa |
+| 14 | "Lavagem detalhada" é um serviço que a LM oferece com esse nome? | Vitrine de serviços da home | Baseado em "detalhamento minucioso" do site antigo e nas fotos com espuma |
+| 15 | Higienização interna inclui extração de sujeira, hidratação de couro e oxi-sanitização? | Vitrine de serviços da home | Texto tirado da descrição do curso de higienização do site antigo |
 
 ## Fotos que faltam
 

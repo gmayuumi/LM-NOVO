@@ -26,6 +26,10 @@ export const MSG = {
   funilaria: 'Olá! Preciso de um orçamento para funilaria.',
   pintura: 'Olá! Preciso de um orçamento para pintura.',
   estetica: 'Olá! Gostaria de um orçamento para estética automotiva.',
+  polimento: 'Olá! Gostaria de um orçamento de polimento e vitrificação.',
+  higienizacao: 'Olá! Gostaria de um orçamento de higienização interna.',
+  detalhamento: 'Olá! Gostaria de um orçamento de lavagem detalhada.',
+  moto: 'Olá! Gostaria de um orçamento de estética para a minha moto.',
   foto: 'Olá! Quero enviar a foto do amassado para um pré-orçamento.',
 };
 
