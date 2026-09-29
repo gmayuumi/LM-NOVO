@@ -1,0 +1,85 @@
+---
+import { SITE, UNIDADES, HORARIO, PAGINAS, CURSOS, whats, MSG } from '../data/site';
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape">
+  <div class="recipiente rodape__grade">
+    <div class="rodape__marca">
+      <img src="/assets/img/logo-lm-192.webp" width="192" height="191" alt={SITE.nome} loading="lazy" decoding="async" />
+      <p>{SITE.posicionamento}</p>
+    </div>
+
+    <div>
+      <h2 class="rodape__titulo">Unidades</h2>
+      <address>
+        <p><strong>{UNIDADES.santoAmaro.nome}</strong> ({UNIDADES.santoAmaro.papel.toLowerCase()})<br />{UNIDADES.santoAmaro.rua}<br />CEP {UNIDADES.santoAmaro.cep}</p>
+        <p><strong>{UNIDADES.brooklin.nome}</strong> ({UNIDADES.brooklin.papel.toLowerCase()})<br />{UNIDADES.brooklin.rua}</p>
+      </address>
+    </div>
+
+    <div>
+      <h2 class="rodape__titulo">Horário</h2>
+      <!-- [CONFIRMAR se vale para as duas unidades e se abre domingo] -->
+      <dl class="rodape__horario">
+        {HORARIO.map((h) => (<div><dt>{h.dias}</dt><dd>{h.texto}</dd></div>))}
+      </dl>
+    </div>
+
+    <div>
+      <h2 class="rodape__titulo">Contato</h2>
+      <ul role="list" class="rodape__lista">
+        <li><a href={whats(MSG.geral)} target="_blank" rel="noopener">WhatsApp {SITE.telefoneExibicao}</a></li>
+        <li><a href={`tel:${SITE.telefoneE164}`}>Ligar {SITE.telefoneExibicao}</a></li>
+        <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+        <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram {SITE.instagramUsuario}</a></li>
+      </ul>
+    </div>
+
+    <nav aria-label="Rodapé">
+      <h2 class="rodape__titulo">Páginas</h2>
+      <ul role="list" class="rodape__lista">
+        <li><a href="/">Início</a></li>
+        {PAGINAS.map((p) => <li><a href={p.href}>{p.rotulo}</a></li>)}
+        <li><a href={CURSOS.href}>{CURSOS.rotulo}</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="recipiente rodape__base">© {ano} {SITE.nome}. Todos os direitos reservados.</p>
+</footer>
+
+<style>
+  .rodape {
+    padding-block: 4rem 2rem;
+    border-top: 1px solid var(--aco);
+    background: var(--preto);
+    font-size: 0.9375rem;
+    color: var(--aco-claro);
+  }
+  .rodape__grade { display: grid; gap: 2.25rem; }
+  .rodape__marca img { width: 5.5rem; height: auto; margin-bottom: 1rem; }
+  .rodape__marca p { font-family: var(--f-titulo); font-size: 1.75rem; line-height: 1; color: var(--branco); max-width: 12ch; }
+  .rodape__titulo {
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    color: var(--branco);
+    margin-bottom: 0.75rem;
+  }
+  address { font-style: normal; display: grid; gap: 1rem; }
+  address strong { color: var(--branco); font-weight: 500; }
+  .rodape__horario div { display: flex; justify-content: space-between; gap: 1.25rem; max-width: 18rem; padding-block: 0.25rem; border-bottom: 1px solid var(--aco); white-space: nowrap; }
+  .rodape__horario dd { margin: 0; color: var(--branco); }
+  .rodape__lista { display: grid; gap: 0.5rem; }
+  .rodape__lista a { text-decoration: none; }
+  .rodape__lista a:hover { color: var(--azul-led); text-decoration: underline; }
+  .rodape__base { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--aco); font-size: 0.8125rem; }
+
+  @media (min-width: 48rem) {
+    .rodape__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 64rem) {
+    .rodape__grade { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) auto minmax(0, 1.3fr) auto; gap: 3rem; }
+  }
+</style>

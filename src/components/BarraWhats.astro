@@ -1,0 +1,34 @@
+---
+import IconeWhats from './IconeWhats.astro';
+import { whats, MSG } from '../data/site';
+interface Props { mensagem?: string }
+const { mensagem = MSG.geral } = Astro.props;
+---
+
+<!-- Fixa só no celular. O body reserva o espaço para não cobrir conteúdo. -->
+<div class="barra-whats" data-barra-whats>
+  <a class="botao" href={whats(mensagem)} target="_blank" rel="noopener">
+    <IconeWhats /> Pedir orçamento no WhatsApp
+  </a>
+</div>
+
+<style>
+  .barra-whats {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    padding: 0.625rem var(--gutter) calc(0.625rem + env(safe-area-inset-bottom));
+    background: rgba(11, 13, 16, 0.94);
+    border-top: 1px solid var(--aco);
+    transition: transform 0.3s var(--curva), visibility 0.3s;
+  }
+  .barra-whats .botao { width: 100%; }
+  .barra-whats[data-oculta] { transform: translateY(110%); visibility: hidden; }
+
+  :global(body) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+
+  @media (min-width: 60rem) {
+    .barra-whats { display: none; }
+    :global(body) { padding-bottom: 0; }
+  }
+</style>

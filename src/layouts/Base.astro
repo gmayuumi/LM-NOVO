@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import { SITE, HORARIO, UNIDADES } from '../data/site';
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  caminho?: string; // '/' ou '/martelinho'
+  imagem?: string;
+  preloadImagem?: string;
+}
+
+const { titulo, descricao, caminho = '/', imagem = '/assets/img/og-lm.jpg', preloadImagem } = Astro.props;
+const canonical = new URL(caminho === '/' ? '/' : caminho, SITE.url).href;
+const imagemAbs = new URL(imagem, SITE.url).href;
+
+const horarios = HORARIO.map((h) => ({
+  '@type': 'OpeningHoursSpecification',
+  dayOfWeek: h.schema,
+  opens: h.abre,
+  closes: h.fecha,
+}));
+
+const unidade = (u: (typeof UNIDADES)[keyof typeof UNIDADES], id: string) => ({
+  '@type': 'AutoRepair',
+  '@id': `${SITE.url}/#${id}`,
+  name: `${SITE.nome} - ${u.nome}`,
+  url: SITE.url,
+  image: imagemAbs,
+  telephone: SITE.telefoneE164,
+  email: SITE.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: u.rua,
+    addressLocality: 'São Paulo',
+    addressRegion: 'SP',
+    ...(u.cep ? { postalCode: u.cep } : {}),
+    addressCountry: 'BR',
+  },
+  areaServed: ['Santo Amaro', 'Brooklin', 'Zona Sul de São Paulo'],
+  openingHoursSpecification: horarios,
+  sameAs: [SITE.instagram],
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [unidade(UNIDADES.santoAmaro, 'santo-amaro'), unidade(UNIDADES.brooklin, 'brooklin')],
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // .js: há JavaScript. .mov: animações ligadas (esconde o que vai ser revelado).
+      // Se o script de animação não subir em 3,5s, tudo volta a aparecer.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          d.classList.add('mov');
+          setTimeout(function () { if (!window.__lmMov) d.classList.remove('mov'); }, 3500);
+        }
+      })();
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script is:inline define:vars={{ gtm: SITE.gtm }}>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);
+    </script>
+
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0b0d10" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={SITE.nome} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:image" content={imagemAbs} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descricao} />
+    <meta name="twitter:image" content={imagemAbs} />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <link rel="preload" href="/assets/fonts/bebas-neue-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/poppins-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    {preloadImagem && <link rel="preload" href={preloadImagem} as="image" fetchpriority="high" />}
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${SITE.gtm}`} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+    <div class="progresso" aria-hidden="true"></div>
+    <slot />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

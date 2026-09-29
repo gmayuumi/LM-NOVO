@@ -1,0 +1,143 @@
+---
+import IconeWhats from './IconeWhats.astro';
+import { SITE, PAGINAS, CURSOS, whats, MSG } from '../data/site';
+
+interface Props { atual?: string }
+const { atual = '/' } = Astro.props;
+---
+
+<header class="topo">
+  <div class="recipiente topo__barra">
+    <a class="marca" href="/" aria-label={`${SITE.nome}, início`}>
+      <img src="/assets/img/logo-lm-96.webp" width="96" height="96" alt="" class="marca__selo" />
+      <span class="marca__nome">LM <span>Estética Automotiva</span></span>
+    </a>
+
+    <button class="menu-botao" type="button" aria-expanded="false" aria-controls="navegacao">
+      <span class="menu-botao__icone" aria-hidden="true"><span></span><span></span></span>
+      <span class="menu-botao__texto">Menu</span>
+    </button>
+
+    <nav id="navegacao" class="navegacao" aria-label="Principal">
+      <ul role="list" class="navegacao__lista">
+        {PAGINAS.map((p) => (
+          <li><a href={p.href} aria-current={atual === p.href ? 'page' : undefined}>{p.rotulo}</a></li>
+        ))}
+        <li class="navegacao__discreto"><a href={CURSOS.href} aria-current={atual === CURSOS.href ? 'page' : undefined}>{CURSOS.rotulo}</a></li>
+        <li class="navegacao__insta"><a href={SITE.instagram} target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+      <a class="botao topo__cta" href={whats(MSG.geral)} target="_blank" rel="noopener">
+        <IconeWhats /> Pedir orçamento
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .topo {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 40;
+    padding-block: 0.75rem;
+    background: linear-gradient(to bottom, rgba(11, 13, 16, 0.9), rgba(11, 13, 16, 0));
+  }
+  .topo__barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: calc(var(--altura-topo) - 1.5rem);
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+  }
+  .marca__selo { width: 2.75rem; height: 2.75rem; }
+  .marca__nome {
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
+  .marca__nome span { display: block; font-weight: 400; color: var(--aco-claro); font-size: 0.875rem; }
+
+  .menu-botao {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(11, 13, 16, 0.55);
+    color: var(--branco);
+    border: 1px solid var(--aco);
+    border-radius: 4px;
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .menu-botao__icone { display: grid; gap: 5px; width: 18px; }
+  .menu-botao__icone span { height: 2px; background: currentColor; transition: transform 0.25s var(--curva); }
+  .menu-botao[aria-expanded='true'] .menu-botao__icone span:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .menu-botao[aria-expanded='true'] .menu-botao__icone span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+
+  /* Menu no celular: painel que desce sob o topo */
+  .navegacao {
+    position: absolute;
+    inset: 100% 0 auto 0;
+    padding: 1.25rem var(--gutter) 1.75rem;
+    background: var(--grafite);
+    border-block: 1px solid var(--aco);
+  }
+  :global(.js) .navegacao:not([data-aberto]) { display: none; }
+
+  .navegacao__lista { display: grid; gap: 0.25rem; }
+  .navegacao__lista a {
+    display: block;
+    padding-block: 0.625rem;
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: 1.375rem;
+    text-decoration: none;
+  }
+  .navegacao__lista a[aria-current='page'] { color: var(--azul-led); }
+  .navegacao__discreto,
+  .navegacao__insta { border-top: 1px solid var(--aco); margin-top: 0.5rem; padding-top: 0.5rem; }
+  .navegacao__insta { border-top: 0; margin-top: 0; padding-top: 0; }
+  .navegacao__discreto a,
+  .navegacao__insta a { font-weight: 400; font-size: 1.0625rem; color: var(--aco-claro); }
+  .topo__cta { width: 100%; margin-top: 1.25rem; }
+
+  @media (min-width: 60rem) {
+    .topo {
+      position: sticky;
+      top: 0;
+      background: rgba(11, 13, 16, 0.92);
+      border-bottom: 1px solid var(--aco);
+      padding-block: 0.5rem;
+    }
+    .menu-botao { display: none; }
+    .navegacao,
+    :global(.js) .navegacao:not([data-aberto]) {
+      position: static;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0;
+      background: none;
+      border: 0;
+    }
+    .navegacao__lista { display: flex; align-items: center; gap: 1.75rem; }
+    .navegacao__lista a { font-size: 1.0625rem; padding-block: 0.5rem; }
+    .navegacao__lista a:hover { color: var(--azul-led); }
+    .navegacao__discreto,
+    .navegacao__insta { border: 0; margin: 0; padding: 0; }
+    .navegacao__discreto a,
+    .navegacao__insta a { font-size: 0.9375rem; }
+    .topo__cta { width: auto; margin: 0; min-height: 2.75rem; padding: 0.55rem 1.1rem; font-size: 1rem; }
+  }
+</style>

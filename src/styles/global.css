@@ -1,0 +1,268 @@
+/* ============================================================
+   LM Estética Automotiva: tokens e base
+   Paleta tirada do logo novo: azul-marinho do selo, azul do
+   anel luminoso e cromado. Base preta/grafite.
+   ============================================================ */
+
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('/assets/fonts/bebas-neue-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Condensed';
+  src: url('/assets/fonts/roboto-condensed-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Condensed';
+  src: url('/assets/fonts/roboto-condensed-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/poppins-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/poppins-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* cor */
+  --preto: #0b0d10;          /* fundo: preto verniz */
+  --grafite: #131a23;        /* superfícies, puxado para o marinho do selo */
+  --marinho: #0f2133;        /* fundo do selo do logo */
+  --aco: #2a3643;            /* linhas e bordas */
+  --aco-claro: #a8b3bf;      /* texto secundário (8,7:1 no preto) */
+  --branco: #f2f5f8;         /* texto principal, luz de LED */
+  --azul: #2f7fb5;           /* azul médio do selo */
+  --azul-led: #4db5dc;       /* anel luminoso do logo: CTAs e destaques */
+  --azul-led-claro: #82cfec;
+
+  /* tipo */
+  --f-titulo: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
+  --f-apoio: 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  --f-texto: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --t-h1: clamp(3.5rem, 2.2rem + 6vw, 6.75rem);
+  --t-h2: clamp(2.5rem, 1.8rem + 3vw, 4.25rem);
+  --t-h3: clamp(1.75rem, 1.45rem + 1.1vw, 2.375rem);
+  --t-lead: clamp(1.1875rem, 1.1rem + 0.45vw, 1.4375rem);
+  --t-texto: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --t-pequeno: 0.875rem;
+
+  /* espaço */
+  --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  --largura: 76rem;
+  --secao: clamp(4.5rem, 3rem + 6vw, 9rem);
+  --altura-topo: 4.5rem;
+
+  --curva: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--altura-topo);
+}
+
+body {
+  background: var(--preto);
+  color: var(--branco);
+  font-family: var(--f-texto);
+  font-size: var(--t-texto);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+img, video, svg { display: block; max-width: 100%; }
+img, video { height: auto; }
+
+a { color: inherit; }
+
+h1, h2, h3 {
+  font-family: var(--f-titulo);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); line-height: 1; }
+
+p { text-wrap: pretty; }
+
+ul[role='list'] { list-style: none; padding: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--azul-led);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--azul-led); color: var(--preto); }
+
+/* ---------- utilidades ---------- */
+
+.recipiente {
+  width: min(100% - 2 * var(--gutter), var(--largura));
+  margin-inline: auto;
+}
+
+.secao { padding-block: var(--secao); }
+
+.lead {
+  font-family: var(--f-apoio);
+  font-size: var(--t-lead);
+  line-height: 1.35;
+  color: var(--branco);
+  max-width: 34ch;
+}
+
+.texto { color: var(--aco-claro); max-width: 62ch; }
+
+.pequeno {
+  font-family: var(--f-apoio);
+  font-size: var(--t-pequeno);
+  color: var(--aco-claro);
+}
+
+.visualmente-oculto {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* ---------- botões ---------- */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 3.25rem;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: var(--azul-led);
+  color: var(--preto);
+  font-family: var(--f-apoio);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s var(--curva);
+}
+.botao:hover { background: var(--azul-led-claro); }
+.botao:active { transform: translateY(1px); }
+.botao svg { width: 1.25rem; height: 1.25rem; flex: none; }
+
+.botao--contorno {
+  background: transparent;
+  color: var(--branco);
+  border-color: var(--aco-claro);
+}
+.botao--contorno:hover { background: var(--branco); color: var(--preto); border-color: var(--branco); }
+
+.link-destaque {
+  font-family: var(--f-apoio);
+  font-weight: 700;
+  color: var(--azul-led);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+.link-destaque:hover { color: var(--azul-led-claro); }
+
+/* Espaço reservado para foto que o cliente ainda vai mandar */
+.espaco-foto {
+  display: grid;
+  place-items: center;
+  min-height: 10rem;
+  padding: 1.5rem;
+  border: 1px dashed var(--aco-claro);
+  color: var(--aco-claro);
+  font-family: var(--f-apoio);
+  font-size: var(--t-pequeno);
+  text-align: center;
+  background: repeating-linear-gradient(135deg, transparent 0 12px, rgba(168, 179, 191, 0.05) 12px 24px);
+}
+
+/* ============================================================
+   Movimento: estados iniciais só existem quando o JS de
+   animação liga a classe .mov (nunca com reduced-motion).
+   ============================================================ */
+
+/* Varredura de luz: o conteúdo aparece atrás de uma barra de LED */
+[data-varredura] { position: relative; }
+h1[data-varredura],
+h2[data-varredura],
+h3[data-varredura] { width: fit-content; }
+.mov [data-varredura] {
+  --rev: 0%;
+  --luz: 1;
+  clip-path: inset(-0.2em calc(100% - var(--rev)) -0.2em -0.2em);
+}
+.mov [data-varredura]::after {
+  content: '';
+  position: absolute;
+  top: -0.2em;
+  bottom: -0.2em;
+  left: calc(var(--rev) - 2px);
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.9), 0 0 22px 4px rgba(77, 181, 220, 0.8);
+  opacity: var(--luz);
+  pointer-events: none;
+}
+
+/* Parallax: a imagem é maior que a moldura e desliza dentro dela */
+[data-parallax] { overflow: hidden; }
+.mov [data-parallax] > img { transform: scale(1.12); will-change: transform; }
+
+/* Lenis (rolagem suave): regras mínimas da biblioteca */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Barra de progresso de leitura, como uma régua de LED */
+.progresso {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 60;
+  background: var(--azul-led);
+  box-shadow: 0 0 10px rgba(77, 181, 220, 0.9);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+  display: none;
+}
+.mov .progresso { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,120 @@
+---
+// Antes/depois com barra de luz de inspeção.
+// Arrastar, tocar ou usar as setas do teclado. No scroll, a animação
+// (src/scripts/site.ts) passa a barra da direita para a esquerda.
+interface Props {
+  antes: { src: string; alt: string };
+  depois: { src: string; alt: string };
+  largura: number;
+  altura: number;
+  rotulo: string;
+}
+const { antes, depois, largura, altura, rotulo } = Astro.props;
+---
+
+<div class="comparar" data-comparar style="--pos: 50%">
+  <div class="comparar__quadro">
+    <img class="comparar__img" src={depois.src} alt={depois.alt} width={largura} height={altura} loading="lazy" decoding="async" draggable="false" />
+    <span class="comparar__rotulo comparar__rotulo--depois" aria-hidden="true">Depois</span>
+    <div class="comparar__antes">
+      <img class="comparar__img" src={antes.src} alt={antes.alt} width={largura} height={altura} loading="lazy" decoding="async" draggable="false" />
+      <span class="comparar__rotulo" aria-hidden="true">Antes</span>
+    </div>
+    <input class="comparar__controle" type="range" min="0" max="100" step="1" value="50" aria-label={rotulo} />
+    <div class="comparar__barra" aria-hidden="true">
+      <span class="comparar__pega">
+        <svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </span>
+    </div>
+    <span class="comparar__dica" aria-hidden="true">Arraste a barra</span>
+  </div>
+</div>
+
+<style>
+  .comparar__quadro {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: ew-resize;
+    background: var(--grafite);
+  }
+  .comparar__img { width: 100%; height: auto; pointer-events: none; }
+
+  .comparar__antes {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+
+  .comparar__rotulo {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    background: rgba(11, 13, 16, 0.78);
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: var(--t-pequeno);
+    letter-spacing: 0.02em;
+  }
+  .comparar__rotulo--depois { left: auto; right: 0.75rem; }
+
+  /* Barra de LED: núcleo branco com brilho azul do logo */
+  .comparar__barra {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    transform: translateX(-50%);
+    background: #fff;
+    box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.95), 0 0 24px 5px rgba(77, 181, 220, 0.75);
+    pointer-events: none;
+  }
+  .comparar__pega {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 3.75rem;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background: var(--azul-led);
+    color: var(--preto);
+    box-shadow: 0 0 0 3px rgba(11, 13, 16, 0.55), 0 0 28px rgba(77, 181, 220, 0.8);
+  }
+  .comparar__pega svg { width: 1.25rem; height: 1.25rem; }
+
+  /* O range fica invisível: o mouse e o dedo usam o quadro; o teclado usa o range */
+  .comparar__controle {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .comparar__controle:focus-visible ~ .comparar__barra .comparar__pega {
+    outline: 2px solid var(--branco);
+    outline-offset: 4px;
+  }
+
+  .comparar__dica {
+    position: absolute;
+    left: 50%;
+    bottom: 0.875rem;
+    transform: translateX(-50%);
+    padding: 0.3rem 0.75rem;
+    background: rgba(11, 13, 16, 0.78);
+    font-family: var(--f-apoio);
+    font-size: var(--t-pequeno);
+    white-space: nowrap;
+    transition: opacity 0.3s;
+  }
+  :global(.comparar--usado) .comparar__dica { opacity: 0; }
+</style>

@@ -33,12 +33,13 @@ O argumento central é: *o amassado sai, a pintura original fica, e em horas, n�
 - Posicionamento: "A Arte de Restaurar a Perfeição".
 - Base preta/grafite. Acento **azul**, tirado do logo novo (o cliente trocou de logo; o laranja/dourado do site atual não é mais usado). Hex exato a extrair do logo. [CONFIRMAR quando o logo chegar] Usado com parcimônia: CTAs e um ou dois momentos de destaque, não em toda seção.
 - Fontes: Bebas Neue (títulos), Roboto Condensed (apoio/subtítulos), Poppins (texto corrido).
-- Hero com vídeo: vou gerar o vídeo à parte e colocar em `assets/hero.mp4`. Monte o hero preparado para ele, com poster em imagem e fallback se o vídeo não carregar. [CONFIRMAR nome do arquivo quando eu subir]
+- Hero com vídeo: hoje é um corte de 12s do vídeo real de martelinho (Nissan Kicks) em `public/assets/video/hero.mp4`, com poster em imagem e fallback se o vídeo não carregar. Se eu gerar outro vídeo, ele substitui esse.
 
 ## Direção de design
 
 - O momento memorável é a **transformação**: antes/depois interativo (slider arrastável) é o elemento em que o design gasta a ousadia. O resto fica sóbrio e disciplinado.
-- Nada de kit genérico de IA: sem cards idênticos com a mesma sombra, sem rótulo em caixa-alta em cima de todo título, sem numeração 01/02/03 se o conteúdo não for sequência, sem animação de fade-in em cada seção. Uma entrada orquestrada no hero basta.
+- Nada de kit genérico de IA: sem cards idênticos com a mesma sombra, sem rótulo em caixa-alta em cima de todo título, sem numeração 01/02/03 se o conteúdo não for sequência.
+- **Animação (decisão do cliente, substitui a regra antiga de "só uma entrada no hero"):** o site deve impressionar, com animação de scroll, parallax e efeitos visuais. Linguagem de movimento única: a **luz de inspeção** (varredura de luz revelando conteúdo, barra de LED, reflexo endireitando), não fade-in genérico. Tudo desliga com `prefers-reduced-motion` e o site continua funcionando sem JS.
 - Linguagem visual tirada do mundo da oficina e da pintura: reflexo em lataria, luz de inspeção, textura de metal, precisão. Não decoração abstrata.
 - Mobile first. A maioria do tráfego vem do Instagram e do WhatsApp, no celular.
 - Acessibilidade básica: contraste legível sobre preto, foco visível, `prefers-reduced-motion` respeitado.
@@ -69,7 +70,7 @@ Mantenha as páginas: Home, Martelinho de Ouro, Serviços, Cursos, Localização
 - Adicionar dados estruturados JSON-LD tipo `AutoRepair`, uma entrada para cada unidade, com endereço, horário e telefone.
 - SEO local: termos como martelinho de ouro em Santo Amaro, Brooklin, Zona Sul SP, nos títulos e descrições, de forma natural.
 - Mantenha o Google Tag Manager (GTM-TBDKS699) em todas as páginas.
-- Mantenha a stack que já está no repositório. Imagens em WebP com `width`/`height` e `loading="lazy"` abaixo da dobra. Meta: página leve e rápida no 4G.
+- Stack: **Astro** (páginas estáticas) + **GSAP/ScrollTrigger** + **Lenis**, publicado na Vercel. URLs antigas (`/martelinho.html` etc.) continuam funcionando. Imagens em WebP com `width`/`height` e `loading="lazy"` abaixo da dobra. Meta: página rápida no 4G mesmo com as animações.
 
 ## Processo
 
