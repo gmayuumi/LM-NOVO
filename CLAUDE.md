@@ -31,7 +31,7 @@ O argumento central é: *o amassado sai, a pintura original fica, e em horas, n�
 ## Identidade visual
 
 - Posicionamento: "A Arte de Restaurar a Perfeição".
-- Base preta/grafite. Acento em gradiente #C4451E → #FFD700 (cobre para ouro), usado com parcimônia: CTAs e um ou dois momentos de destaque, não em toda seção.
+- Base preta/grafite. Acento **azul**, tirado do logo novo (o cliente trocou de logo; o laranja/dourado do site atual não é mais usado). Hex exato a extrair do logo. [CONFIRMAR quando o logo chegar] Usado com parcimônia: CTAs e um ou dois momentos de destaque, não em toda seção.
 - Fontes: Bebas Neue (títulos), Roboto Condensed (apoio/subtítulos), Poppins (texto corrido).
 - Hero com vídeo: vou gerar o vídeo à parte e colocar em `assets/hero.mp4`. Monte o hero preparado para ele, com poster em imagem e fallback se o vídeo não carregar. [CONFIRMAR nome do arquivo quando eu subir]
 
