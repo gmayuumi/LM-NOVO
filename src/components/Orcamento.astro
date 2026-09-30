@@ -1,5 +1,6 @@
 ---
 import IconeWhats from './IconeWhats.astro';
+import Textura from './Textura.astro';
 import { whats, MSG } from '../data/site';
 // Orçamento interativo: o cliente escolhe o serviço (cards com foto), toca na
 // parte do carro (desenho visto de cima) e vê a mensagem sendo escrita num
@@ -41,6 +42,7 @@ const etapas = ['Serviço', 'Onde', 'Carro', 'Enviar'];
 ---
 
 <section class="orc" id={id} aria-labelledby={`${id}-titulo`} data-orcamento>
+  <Textura tipo="carbono" onde="centro" />
   <div class="recipiente">
     <div class="orc__cabeca">
       <p class="pilula"><span class="ponto-vivo"></span> Orçamento em 1 minuto</p>
@@ -137,7 +139,7 @@ const etapas = ['Serviço', 'Onde', 'Carro', 'Enviar'];
 </section>
 
 <style>
-  .orc { padding-block: var(--secao); }
+  .orc { position: relative; isolation: isolate; padding-block: var(--secao); }
   .orc__cabeca { display: grid; gap: 1rem; justify-items: start; margin-bottom: 2.25rem; }
   .orc__cabeca .lead { color: var(--texto-2); }
 

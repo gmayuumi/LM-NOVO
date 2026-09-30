@@ -9,6 +9,7 @@ import BarraWhats from '../components/BarraWhats.astro';
 import Comparador from '../components/Comparador.astro';
 import Orcamento from '../components/Orcamento.astro';
 import IconeWhats from '../components/IconeWhats.astro';
+import Textura from '../components/Textura.astro';
 import { SITE, UNIDADES, whats, MSG } from '../data/site';
 
 const img = (nome: string) => `/assets/img/${nome}`;
@@ -79,6 +80,7 @@ const avaliacoes = [
 
     <!-- 2. POR QUE MARTELINHO: caixas =================================== -->
     <section class="sec" aria-labelledby="bento-titulo">
+      <Textura tipo="hex" onde="direita" />
       <div class="recipiente">
         <div class="sec-cabeca" data-revelar>
           <p class="pilula">Martelinho de ouro</p>
@@ -133,7 +135,8 @@ const avaliacoes = [
     <Orcamento />
 
     <!-- 4. SERVIÇOS ======================================================= -->
-    <section class="sec" aria-labelledby="servicos-titulo">
+    <section class="sec sec--piso" aria-labelledby="servicos-titulo">
+      <Textura tipo="piso" onde="base" />
       <div class="recipiente">
         <div class="sec-cabeca" data-revelar>
           <p class="pilula">Serviços</p>
@@ -155,6 +158,7 @@ const avaliacoes = [
 
     <!-- 5. UNIDADES ======================================================= -->
     <section class="sec" aria-labelledby="unidades-titulo">
+      <Textura tipo="hex" onde="esquerda" />
       <div class="recipiente">
         <div class="sec-cabeca" data-revelar>
           <p class="pilula">Zona Sul de SP</p>
@@ -187,6 +191,7 @@ const avaliacoes = [
 
     <!-- 6. AVALIAÇÕES ===================================================== -->
     <section class="sec" aria-labelledby="avaliacoes-titulo">
+      <Textura tipo="carbono" onde="topo" />
       <div class="recipiente">
         <div class="sec-cabeca sec-cabeca--linha" data-revelar>
           <div>
@@ -214,7 +219,7 @@ const avaliacoes = [
     <section class="sec cta" aria-labelledby="cta-titulo">
       <div class="recipiente">
         <div class="cta__painel" data-revelar>
-          <img class="cta__selo" src={img('logo-lm-480.webp')} width="480" height="479" alt="" loading="lazy" decoding="async" />
+          <Textura tipo="hex" onde="direita" />
           <p class="pilula"><span class="ponto-vivo ponto-vivo--verde"></span> Resposta em menos de 2 minutos</p>
           <h2 id="cta-titulo">Mande a foto do amassado</h2>
           <p class="cta__texto">Receba um pré-orçamento pelo WhatsApp, sem compromisso.</p>
@@ -306,7 +311,8 @@ const avaliacoes = [
   /* =================================================================
      SEÇÕES
      ================================================================= */
-  .sec { padding-block: var(--secao) 0; }
+  .sec { position: relative; isolation: isolate; padding-block: var(--secao) 0; }
+  .sec--piso { padding-bottom: 4rem; }
   .sec-cabeca--linha { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; width: 100%; }
   .sec-cabeca--linha > div { display: grid; gap: 1rem; justify-items: start; }
 
@@ -455,9 +461,8 @@ const avaliacoes = [
   }
   .cta__painel h2 { font-size: clamp(2.75rem, 1.6rem + 5vw, 6rem); max-width: 12ch; }
   .cta__texto { font-family: var(--f-apoio); font-size: var(--t-lead); color: rgba(255, 255, 255, 0.9); }
-  .cta__selo { position: absolute; right: -4rem; bottom: -4rem; z-index: -1; width: 18rem; height: auto; opacity: 0.22; }
+  .cta__painel :global(.textura--hex path) { stroke: rgba(255, 255, 255, 0.24); }
   @media (min-width: 60rem) {
     .cta__painel { padding: 4rem; }
-    .cta__selo { right: 3rem; top: 50%; bottom: auto; width: 20rem; transform: translateY(-50%); opacity: 0.9; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45)); }
   }
 </style>

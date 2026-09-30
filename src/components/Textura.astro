@@ -1,0 +1,80 @@
+---
+// Textura de fundo para seções, tirada da oficina da LM:
+//   hex     = teto de LED hexagonal (tubos com fresta nos cantos)
+//   piso    = piso quadriculado com faixa azul, em perspectiva
+//   carbono = trama de fibra de carbono
+// Fica atrás do conteúdo (a seção precisa de position: relative e isolation).
+// `onde` controla de que lado a textura aparece antes de sumir.
+interface Props { tipo: 'hex' | 'piso' | 'carbono'; onde?: 'topo' | 'base' | 'direita' | 'esquerda' | 'centro'; id?: string }
+const { tipo, onde = 'centro', id = `tx-${Math.random().toString(36).slice(2, 8)}` } = Astro.props;
+---
+
+<div class:list={['textura', `textura--${tipo}`, `textura--${onde}`]} aria-hidden="true">
+  {tipo === 'hex' && (
+    <svg width="100%" height="100%" focusable="false">
+      <defs>
+        <pattern id={id} width="34.64" height="60" patternUnits="userSpaceOnUse" patternTransform="scale(1.7)">
+          <path d="M17.32 0 L34.64 10 L34.64 30 L17.32 40 L0 30 L0 10 Z M17.32 40 L17.32 60" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  )}
+  {tipo === 'piso' && <div class="textura__piso"></div>}
+</div>
+
+<style>
+  .textura {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  /* onde a textura aparece: some suavemente para o resto da seção */
+  .textura--centro { -webkit-mask-image: radial-gradient(70% 60% at 50% 50%, #000 20%, transparent 75%); mask-image: radial-gradient(70% 60% at 50% 50%, #000 20%, transparent 75%); }
+  .textura--topo { -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%); mask-image: linear-gradient(to bottom, #000 0%, transparent 70%); }
+  .textura--base { -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 22%, transparent 78%); mask-image: linear-gradient(to top, transparent 0%, #000 22%, transparent 78%); }
+  .textura--direita { -webkit-mask-image: radial-gradient(80% 90% at 100% 30%, #000 10%, transparent 70%); mask-image: radial-gradient(80% 90% at 100% 30%, #000 10%, transparent 70%); }
+  .textura--esquerda { -webkit-mask-image: radial-gradient(80% 90% at 0% 40%, #000 10%, transparent 70%); mask-image: radial-gradient(80% 90% at 0% 40%, #000 10%, transparent 70%); }
+
+  /* hexágonos: linhas de LED com fresta nos cantos, em azul */
+  .textura--hex svg { display: block; }
+  .textura--hex path {
+    fill: none;
+    stroke: rgba(143, 212, 239, 0.16);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-dasharray: 15 5;
+    stroke-dashoffset: -2.5;
+  }
+
+  /* piso quadriculado em perspectiva, com a faixa azul da oficina */
+  .textura--piso { perspective: 700px; perspective-origin: 50% 0%; }
+  .textura__piso {
+    position: absolute;
+    left: -50%;
+    right: -50%;
+    bottom: -10%;
+    height: 90%;
+    transform: rotateX(62deg);
+    transform-origin: 50% 100%;
+    background:
+      linear-gradient(90deg, transparent 0 47%, rgba(46, 143, 214, 0.18) 47% 48.5%, transparent 48.5% 100%),
+      repeating-conic-gradient(rgba(214, 232, 246, 0.07) 0 25%, rgba(214, 232, 246, 0.015) 0 50%) 0 0 / 56px 56px;
+  }
+
+  /* fibra de carbono (trama 2x2), levemente azulada */
+  .textura--carbono {
+    opacity: 0.55;
+    background:
+      linear-gradient(27deg, #07111d 5px, transparent 5px) 0 5px,
+      linear-gradient(207deg, #07111d 5px, transparent 5px) 10px 0,
+      linear-gradient(27deg, #0f1d2e 5px, transparent 5px) 0 10px,
+      linear-gradient(207deg, #0f1d2e 5px, transparent 5px) 10px 5px,
+      linear-gradient(90deg, #0b1726 10px, transparent 10px),
+      linear-gradient(#0c1a2b 25%, #091522 25%, #091522 50%, transparent 50%, transparent 75%, #112236 75%, #112236);
+    background-color: #08131f;
+    background-size: 20px 20px;
+  }
+</style>
