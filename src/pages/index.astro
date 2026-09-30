@@ -171,7 +171,7 @@ const avaliacoes: Avaliacao[] = [
             rotulo="Comparar antes e depois do Nissan Kicks"
           />
         </div>
-        <p class="pequeno ad__legenda">Nissan Kicks, tampa traseira. Martelinho de ouro, quadros do vídeo do reparo.</p>
+        <p class="pequeno ad__legenda">Mesmo carro, mesma luz: <strong>só o amassado saiu.</strong> A pintura continua a original de fábrica.</p>
       </div>
       <div class="recipiente ad__mais">
         <Casos itens={casos} />
@@ -551,7 +551,8 @@ const avaliacoes: Avaliacao[] = [
   .ad__depois { opacity: calc(0.18 + 0.82 * (1 - var(--ad, 0.5))); }
   .ad__visual {
     width: 100%;
-    max-width: min(30rem, calc((100svh - 18rem - env(safe-area-inset-bottom)) * 414 / 518));
+    /* altura da tela menos título, legenda e barra do WhatsApp */
+    max-width: min(30rem, calc((100svh - 18.75rem - env(safe-area-inset-bottom)) * 414 / 518));
   }
   .ad__visual :global(.comparar__quadro) {
     border-radius: 12px;
@@ -559,6 +560,7 @@ const avaliacoes: Avaliacao[] = [
     box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 60px -12px rgba(77, 181, 220, 0.45);
   }
   .ad__legenda { text-align: center; max-width: 30rem; }
+  .ad__legenda strong { color: var(--branco); }
   .ad__mais { padding-block: 2rem var(--secao); }
 
   @media (min-width: 60rem) {
