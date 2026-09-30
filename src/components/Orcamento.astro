@@ -1,12 +1,13 @@
 ---
 import IconeWhats from './IconeWhats.astro';
 import { whats, MSG } from '../data/site';
-// Orçamento interativo: o cliente escolhe o serviço, toca na parte do carro
-// (desenho visto de cima) e vê a mensagem do WhatsApp sendo escrita.
-// Sem preço: o link abre o WhatsApp com o texto pronto.
+// Orçamento interativo: o cliente escolhe o serviço (cards com foto), toca na
+// parte do carro (desenho visto de cima) e vê a mensagem sendo escrita num
+// celular, como no WhatsApp. Sem preço: o botão abre a conversa com o texto.
 // Sem JavaScript, o botão abre o WhatsApp com a mensagem geral.
 interface Props { id?: string; titulo?: string }
 const { id = 'orcamento', titulo = 'Monte seu orçamento' } = Astro.props;
+const img = (nome: string) => `/assets/img/${nome}`;
 
 const servicos = [
   { id: 'martelinho', nome: 'Martelinho de ouro', lataria: true },
@@ -19,217 +20,354 @@ const servicos = [
 ];
 
 // Carro visto de cima, frente para o alto. Esquerda do desenho = lado do motorista.
-type Parte = { id: string; nome: string; d?: string; rect?: [number, number, number, number, number] };
+type Parte = { nome: string; d?: string; rect?: [number, number, number, number, number] };
 const lado = (x: number, w: number) => 240 - x - w;
 const partes: Parte[] = [
-  { id: 'pc-d', nome: 'para-choque dianteiro', d: 'M48 26 Q120 2 192 26 L194 46 Q120 24 46 46 Z' },
-  { id: 'capo', nome: 'capô', d: 'M62 56 Q120 40 178 56 L176 148 L64 148 Z' },
-  { id: 'pl-de', nome: 'para-lama dianteiro esquerdo', rect: [34, 58, 24, 90, 10] },
-  { id: 'pl-dd', nome: 'para-lama dianteiro direito', rect: [lado(34, 24), 58, 24, 90, 10] },
-  { id: 'pt-de', nome: 'porta dianteira esquerda', rect: [32, 156, 26, 92, 5] },
-  { id: 'pt-dd', nome: 'porta dianteira direita', rect: [lado(32, 26), 156, 26, 92, 5] },
-  { id: 'teto', nome: 'teto', rect: [72, 194, 96, 132, 12] },
-  { id: 'pt-te', nome: 'porta traseira esquerda', rect: [32, 254, 26, 84, 5] },
-  { id: 'pt-td', nome: 'porta traseira direita', rect: [lado(32, 26), 254, 26, 84, 5] },
-  { id: 'lt-te', nome: 'lateral traseira esquerda', rect: [34, 344, 24, 86, 10] },
-  { id: 'lt-td', nome: 'lateral traseira direita', rect: [lado(34, 24), 344, 24, 86, 10] },
-  { id: 'tampa', nome: 'tampa traseira', d: 'M64 362 L176 362 L178 426 Q120 440 62 426 Z' },
-  { id: 'pc-t', nome: 'para-choque traseiro', d: 'M46 436 Q120 460 194 436 L192 456 Q120 478 48 456 Z' },
+  { nome: 'para-choque dianteiro', d: 'M48 26 Q120 2 192 26 L194 46 Q120 24 46 46 Z' },
+  { nome: 'capô', d: 'M62 56 Q120 40 178 56 L176 148 L64 148 Z' },
+  { nome: 'para-lama dianteiro esquerdo', rect: [34, 58, 24, 90, 10] },
+  { nome: 'para-lama dianteiro direito', rect: [lado(34, 24), 58, 24, 90, 10] },
+  { nome: 'porta dianteira esquerda', rect: [32, 156, 26, 92, 5] },
+  { nome: 'porta dianteira direita', rect: [lado(32, 26), 156, 26, 92, 5] },
+  { nome: 'teto', rect: [72, 194, 96, 132, 12] },
+  { nome: 'porta traseira esquerda', rect: [32, 254, 26, 84, 5] },
+  { nome: 'porta traseira direita', rect: [lado(32, 26), 254, 26, 84, 5] },
+  { nome: 'lateral traseira esquerda', rect: [34, 344, 24, 86, 10] },
+  { nome: 'lateral traseira direita', rect: [lado(34, 24), 344, 24, 86, 10] },
+  { nome: 'tampa traseira', d: 'M64 362 L176 362 L178 426 Q120 440 62 426 Z' },
+  { nome: 'para-choque traseiro', d: 'M46 436 Q120 460 194 436 L192 456 Q120 478 48 456 Z' },
 ];
+const etapas = ['Serviço', 'Onde', 'Carro', 'Enviar'];
 ---
 
 <section class="orc" id={id} aria-labelledby={`${id}-titulo`} data-orcamento>
-  <div class="recipiente orc__grade">
+  <div class="recipiente">
     <div class="orc__cabeca">
-      <h2 id={`${id}-titulo`} data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
-      <p class="lead">Escolha o serviço e mostre onde é. A mensagem vai pronta para o WhatsApp.</p>
+      <p class="pilula"><span class="ponto-vivo"></span> Orçamento em 1 minuto</p>
+      <h2 id={`${id}-titulo`}><span class="cromado">{titulo}</span></h2>
+      <p class="lead">Escolha o serviço, mostre onde é e mande pelo WhatsApp. Sem compromisso.</p>
     </div>
 
-    <form class="orc__form" data-orc-form onsubmit="return false">
-      <fieldset class="orc__passo">
-        <legend><span class="orc__num">1</span> O que você precisa?</legend>
-        <div class="orc__chips">
-          {servicos.map((s) => (
-            <label class="chip">
-              <input type="checkbox" name="servico" value={s.nome} data-lataria={s.lataria ? '' : undefined} />
-              <span>{s.nome}</span>
-            </label>
-          ))}
+    <div class="orc__painel">
+      <ol role="list" class="orc__etapas" aria-hidden="true">
+        {etapas.map((e, i) => <li data-etapa={i + 1}><span class="orc__bola">{i + 1}</span>{e}</li>)}
+      </ol>
+
+      <form class="orc__form" data-orc-form onsubmit="return false">
+        <div class="orc__campos">
+          <fieldset class="orc__passo">
+            <legend>O que você precisa?</legend>
+            <div class="orc__servicos">
+              {servicos.map((s) => (
+                <label class="servico">
+                  <input type="checkbox" name="servico" value={s.nome} data-lataria={s.lataria ? '' : undefined} />
+                  <span class="servico__foto"><img src={img(`orc-${s.id}.webp`)} width="360" height="270" alt="" loading="lazy" decoding="async" /></span>
+                  <span class="servico__nome">{s.nome}</span>
+                  <span class="servico__check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div class="orc__linha">
+            <fieldset class="orc__passo orc__carro" data-orc-carro>
+              <legend>Onde é o dano? <span class="orc__dica">Toque nas partes do carro</span></legend>
+              <div class="orc__planta">
+                <svg viewBox="-14 -16 268 510" class="carro" role="group" aria-label="Carro visto de cima: toque nas partes com dano">
+                  <text x="120" y="-5" class="carro__rotulo" text-anchor="middle">FRENTE</text>
+                  <text x="6" y="250" class="carro__rotulo" text-anchor="middle" transform="rotate(-90 6 250)">ESQUERDA</text>
+                  <text x="234" y="250" class="carro__rotulo" text-anchor="middle" transform="rotate(90 234 250)">DIREITA</text>
+                  <path class="carro__corpo" aria-hidden="true" d="M120 6 C168 6 194 18 201 42 L207 120 L209 250 L207 380 L201 440 C194 464 168 476 120 476 C72 476 46 464 39 440 L33 380 L31 250 L33 120 L39 42 C46 18 72 6 120 6 Z" />
+                  <g class="carro__fixo" aria-hidden="true">
+                    <rect x="22" y="74" width="10" height="50" rx="4" />
+                    <rect x="208" y="74" width="10" height="50" rx="4" />
+                    <rect x="22" y="364" width="10" height="50" rx="4" />
+                    <rect x="208" y="364" width="10" height="50" rx="4" />
+                    <path d="M32 160 L18 165 L18 178 L32 178 Z" />
+                    <path d="M208 160 L222 165 L222 178 L208 178 Z" />
+                  </g>
+                  <g class="carro__vidro" aria-hidden="true">
+                    <path d="M66 156 L174 156 L166 188 L74 188 Z" />
+                    <path d="M74 332 L166 332 L172 356 L68 356 Z" />
+                  </g>
+                  <g>
+                    {partes.map((p) =>
+                      p.d ? (
+                        <path class="parte" d={p.d} data-parte={p.nome} role="checkbox" aria-checked="false" aria-label={p.nome} tabindex="0" />
+                      ) : (
+                        <rect class="parte" x={p.rect![0]} y={p.rect![1]} width={p.rect![2]} height={p.rect![3]} rx={p.rect![4]} data-parte={p.nome} role="checkbox" aria-checked="false" aria-label={p.nome} tabindex="0" />
+                      ),
+                    )}
+                  </g>
+                </svg>
+              </div>
+              <ul role="list" class="orc__escolhidas" data-orc-escolhidas aria-live="polite"></ul>
+            </fieldset>
+
+            <fieldset class="orc__passo orc__modelo">
+              <legend>Qual é o carro?</legend>
+              <input class="orc__campo" type="text" name="modelo" placeholder="Ex.: Jeep Compass 2022" autocomplete="off" maxlength="60" />
+              <p class="pequeno">Modelo e ano ajudam a gente a responder mais rápido.</p>
+            </fieldset>
+          </div>
         </div>
-      </fieldset>
 
-      <fieldset class="orc__passo orc__carro" data-orc-carro>
-        <legend><span class="orc__num">2</span> Onde é? <span class="orc__dica">Toque nas partes do carro</span></legend>
-        <div class="orc__desenho">
-          <svg viewBox="0 0 240 480" class="carro" role="group" aria-label="Carro visto de cima: toque nas partes com dano">
-            <text x="120" y="-4" class="carro__rotulo" text-anchor="middle">FRENTE</text>
-            <text x="8" y="250" class="carro__rotulo" text-anchor="middle" transform="rotate(-90 8 250)">ESQUERDA</text>
-            <text x="232" y="250" class="carro__rotulo" text-anchor="middle" transform="rotate(90 232 250)">DIREITA</text>
-            <!-- carroceria, rodas, retrovisores e vidros: só desenho -->
-            <path class="carro__corpo" aria-hidden="true" d="M120 6 C168 6 194 18 201 42 L207 120 L209 250 L207 380 L201 440 C194 464 168 476 120 476 C72 476 46 464 39 440 L33 380 L31 250 L33 120 L39 42 C46 18 72 6 120 6 Z" />
-            <g class="carro__fixo" aria-hidden="true">
-              <rect x="22" y="74" width="10" height="50" rx="4" />
-              <rect x="208" y="74" width="10" height="50" rx="4" />
-              <rect x="22" y="364" width="10" height="50" rx="4" />
-              <rect x="208" y="364" width="10" height="50" rx="4" />
-              <path d="M32 160 L18 165 L18 178 L32 178 Z" />
-              <path d="M208 160 L222 165 L222 178 L208 178 Z" />
-            </g>
-            <g class="carro__vidro" aria-hidden="true">
-              <path d="M66 156 L174 156 L166 188 L74 188 Z" />
-              <path d="M74 332 L166 332 L172 356 L68 356 Z" />
-            </g>
-            <g class="carro__partes">
-              {partes.map((p) =>
-                p.d ? (
-                  <path class="parte" d={p.d} data-parte={p.nome} role="checkbox" aria-checked="false" aria-label={p.nome} tabindex="0" />
-                ) : (
-                  <rect class="parte" x={p.rect![0]} y={p.rect![1]} width={p.rect![2]} height={p.rect![3]} rx={p.rect![4]} data-parte={p.nome} role="checkbox" aria-checked="false" aria-label={p.nome} tabindex="0" />
-                ),
-              )}
-            </g>
-          </svg>
-        </div>
-        <p class="orc__escolhidas" data-orc-escolhidas aria-live="polite">Nenhuma parte escolhida.</p>
-      </fieldset>
-
-      <fieldset class="orc__passo">
-        <legend><span class="orc__num" data-orc-num-modelo>3</span> Qual é o carro?</legend>
-        <input class="orc__campo" type="text" name="modelo" placeholder="Ex.: Jeep Compass 2022" autocomplete="off" maxlength="60" />
-      </fieldset>
-
-      <div class="orc__envio">
-        <p class="orc__previa-rotulo">Sua mensagem</p>
-        <div class="orc__previa" data-orc-previa aria-live="polite">Olá! Vim pelo site e quero um orçamento.</div>
-        <a class="botao orc__botao" href={whats(MSG.geral)} target="_blank" rel="noopener" data-orc-enviar><IconeWhats /> Enviar no WhatsApp</a>
-        <p class="pequeno">Sem compromisso. Se puder, mande as fotos do carro na conversa.</p>
-      </div>
-    </form>
+        <!-- prévia: a conversa no celular -->
+        <aside class="orc__envio" aria-label="Prévia da mensagem">
+          <div class="cel">
+            <div class="cel__topo">
+              <img src={img('logo-lm-96.webp')} width="96" height="96" alt="" />
+              <p><strong>LM Estética Automotiva</strong><span>WhatsApp (11) 99174-0995</span></p>
+            </div>
+            <div class="cel__conversa">
+              <div class="cel__balao">
+                <p data-orc-previa aria-live="polite">Olá! Vim pelo site e quero um orçamento.</p>
+                <span class="cel__hora">agora <svg viewBox="0 0 18 12" aria-hidden="true"><path d="M1 6.5l3 3L10 3M7 9.5l1 1L15 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+              </div>
+            </div>
+          </div>
+          <a class="btn btn--whats orc__botao" href={whats(MSG.geral)} target="_blank" rel="noopener" data-orc-enviar><IconeWhats /> Enviar no WhatsApp</a>
+          <p class="pequeno orc__nota">Resposta em menos de 2 minutos no horário comercial.</p>
+        </aside>
+      </form>
+    </div>
   </div>
 </section>
 
 <style>
   .orc { padding-block: var(--secao); }
-  .orc__grade { display: grid; gap: 2.5rem; }
-  .orc__cabeca { display: grid; gap: 1.25rem; }
-  .orc__form { display: grid; gap: 2.25rem; align-items: start; }
-  .orc__passo { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 1rem; }
+  .orc__cabeca { display: grid; gap: 1rem; justify-items: start; margin-bottom: 2.25rem; }
+  .orc__cabeca .lead { color: var(--texto-2); }
+
+  /* painel azul com vidro */
+  .orc__painel {
+    position: relative;
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 28px;
+    background:
+      radial-gradient(80% 60% at 0% 0%, rgba(46, 143, 214, 0.35), transparent 70%),
+      radial-gradient(60% 50% at 100% 100%, rgba(92, 200, 240, 0.18), transparent 70%),
+      linear-gradient(160deg, rgba(16, 44, 74, 0.9), rgba(8, 20, 36, 0.92));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+  }
+
+  /* etapas com progresso */
+  .orc__etapas {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .orc__etapas li {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    font-family: var(--f-apoio);
+    font-size: 0.8125rem;
+    color: var(--texto-2);
+    text-align: center;
+  }
+  /* trilho entre as bolinhas */
+  .orc__etapas li + li::before {
+    content: '';
+    position: absolute;
+    top: 0.95rem;
+    right: calc(50% + 1.25rem);
+    width: calc(100% - 2rem);
+    height: 2px;
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .orc__etapas li.feita + li::before { background: linear-gradient(90deg, #43a8ec, #5cc8f0); }
+  .orc__bola {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+    font-weight: 700;
+    color: var(--branco);
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .orc__etapas li.ativa { color: var(--branco); }
+  .orc__etapas li.ativa .orc__bola { border-color: #5cc8f0; box-shadow: 0 0 0 4px rgba(92, 200, 240, 0.2); }
+  .orc__etapas li.feita .orc__bola { background: linear-gradient(135deg, #43a8ec, #1f6fb2); border-color: transparent; }
+
+  .orc__form { display: grid; gap: 2rem; }
+  .orc__campos { display: grid; gap: 2rem; min-width: 0; }
+  .orc__passo { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 0.9rem; align-content: start; }
   .orc__passo legend {
     display: flex;
-    align-items: baseline;
     flex-wrap: wrap;
+    align-items: baseline;
     gap: 0.25rem 0.75rem;
     padding: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0.9rem;
     font-family: var(--f-apoio);
     font-weight: 700;
     font-size: 1.25rem;
   }
-  .orc__num {
-    display: inline-grid;
+  .orc__dica { font-weight: 400; font-size: var(--t-pequeno); color: var(--texto-2); }
+
+  /* cards de serviço com foto */
+  .orc__servicos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+  .servico {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.5rem 0.5rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s var(--curva), border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  }
+  .servico:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.3); }
+  .servico input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .servico__foto { display: block; overflow: hidden; border-radius: 11px; aspect-ratio: 4 / 3; }
+  .servico__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--curva); }
+  .servico:hover .servico__foto img { transform: scale(1.05); }
+  .servico__nome { padding-inline: 0.25rem; font-family: var(--f-apoio); font-weight: 700; font-size: 0.9375rem; line-height: 1.2; }
+  .servico__check {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    display: grid;
     place-items: center;
     width: 1.75rem;
     height: 1.75rem;
-    border: 1px solid rgba(143, 212, 239, 0.6);
     border-radius: 50%;
-    font-size: 0.9375rem;
-    color: var(--azul-led-claro);
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    background: rgba(6, 17, 32, 0.5);
+    color: transparent;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   }
-  .orc__dica { font-weight: 400; font-size: var(--t-pequeno); color: var(--texto-2); }
+  .servico__check svg { width: 1rem; height: 1rem; }
+  .servico:has(input:checked) {
+    border-color: #5cc8f0;
+    background: rgba(46, 143, 214, 0.22);
+    box-shadow: 0 0 0 1px #5cc8f0, 0 14px 30px -14px rgba(46, 143, 214, 0.9);
+  }
+  .servico:has(input:checked) .servico__check { background: #2e8fd6; border-color: #fff; color: #fff; }
+  .servico:has(input:focus-visible) { outline: 2px solid #5cc8f0; outline-offset: 3px; }
 
-  /* chips de serviço: checkbox de verdade, com cara de botão */
-  .orc__chips { display: flex; flex-wrap: wrap; gap: 0.625rem; }
-  .chip { position: relative; cursor: pointer; }
-  .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .chip span {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.75rem;
-    padding: 0.5rem 1.125rem;
-    border: 1px solid rgba(214, 232, 246, 0.3);
-    border-radius: 999px;
-    font-family: var(--f-apoio);
-    font-size: 1rem;
-    color: var(--texto-2);
-    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
-  }
-  .chip:hover span { border-color: rgba(214, 232, 246, 0.6); color: var(--branco); }
-  .chip input:checked + span {
-    border-color: var(--azul-led);
-    background: rgba(35, 120, 179, 0.28);
-    color: var(--branco);
-  }
-  .chip input:focus-visible + span { outline: 2px solid var(--azul-led); outline-offset: 3px; }
-
-  /* desenho do carro */
+  /* planta do carro: papel quadriculado azul */
+  .orc__linha { display: grid; gap: 2rem; }
   .orc__carro { display: none; }
   :global(.js) .orc__carro { display: grid; }
   .orc__carro[hidden] { display: none !important; }
-  .orc__desenho { width: min(100%, 17rem); margin-inline: auto; }
-  .carro { width: 100%; height: auto; overflow: visible; }
-  .carro__rotulo { fill: var(--texto-2); font-family: var(--f-apoio); font-size: 9px; letter-spacing: 0.12em; }
-  .carro__corpo { fill: rgba(255, 255, 255, 0.02); stroke: rgba(214, 232, 246, 0.16); stroke-width: 1; }
-  .carro__fixo { fill: #1a232d; }
-  .carro__vidro { fill: rgba(143, 212, 239, 0.07); stroke: rgba(214, 232, 246, 0.18); stroke-width: 1; }
+  .orc__planta {
+    padding: 1rem;
+    border: 1px solid rgba(92, 200, 240, 0.25);
+    border-radius: 18px;
+    background:
+      radial-gradient(60% 45% at 50% 45%, rgba(46, 143, 214, 0.28), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(143, 212, 239, 0.07) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(90deg, rgba(143, 212, 239, 0.07) 0 1px, transparent 1px 22px),
+      rgba(4, 14, 26, 0.6);
+  }
+  .carro { display: block; width: min(100%, 15rem); height: auto; margin-inline: auto; overflow: visible; }
+  .carro__rotulo { fill: rgba(169, 196, 222, 0.8); font-family: var(--f-apoio); font-size: 9px; letter-spacing: 0.12em; }
+  .carro__corpo { fill: rgba(255, 255, 255, 0.03); stroke: rgba(143, 212, 239, 0.3); stroke-width: 1; }
+  .carro__fixo { fill: #14263a; }
+  .carro__vidro { fill: rgba(143, 212, 239, 0.1); stroke: rgba(214, 232, 246, 0.2); stroke-width: 1; }
   .parte {
-    fill: rgba(255, 255, 255, 0.035);
-    stroke: rgba(214, 232, 246, 0.42);
+    fill: rgba(255, 255, 255, 0.05);
+    stroke: rgba(214, 232, 246, 0.5);
     stroke-width: 1.4;
     cursor: pointer;
     transition: fill 0.25s, stroke 0.25s;
   }
-  .parte:hover { fill: rgba(143, 212, 239, 0.12); stroke: rgba(214, 232, 246, 0.8); }
+  .parte:hover { fill: rgba(92, 200, 240, 0.18); stroke: #d9f3ff; }
   .parte:focus-visible { outline: none; stroke: #fff; stroke-width: 2.5; }
-  .parte[aria-checked='true'] { fill: rgba(77, 181, 220, 0.5); stroke: #d9f3ff; stroke-width: 2; animation: parte-acende 0.5s linear; }
+  .parte[aria-checked='true'] { fill: rgba(92, 200, 240, 0.62); stroke: #e9f8ff; stroke-width: 2; animation: parte-acende 0.5s linear; }
   /* ao tocar, a parte acende como lâmpada de oficina */
   @keyframes parte-acende {
-    0% { fill: rgba(255, 255, 255, 0.85); }
-    30% { fill: rgba(77, 181, 220, 0.15); }
-    55% { fill: rgba(255, 255, 255, 0.7); }
-    100% { fill: rgba(77, 181, 220, 0.5); }
+    0% { fill: rgba(255, 255, 255, 0.9); }
+    30% { fill: rgba(92, 200, 240, 0.15); }
+    55% { fill: rgba(255, 255, 255, 0.75); }
+    100% { fill: rgba(92, 200, 240, 0.62); }
   }
-  .orc__escolhidas { text-align: center; font-family: var(--f-apoio); color: var(--texto-2); min-height: 1.5em; }
+  .orc__escolhidas { display: flex; flex-wrap: wrap; gap: 0.4rem; min-height: 1.75rem; }
+  .orc__escolhidas li {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(92, 200, 240, 0.18);
+    border: 1px solid rgba(92, 200, 240, 0.45);
+    font-family: var(--f-apoio);
+    font-size: 0.8125rem;
+  }
+  .orc__escolhidas li.vazio { background: none; border-color: transparent; color: var(--texto-2); padding-inline: 0; }
 
   .orc__campo {
     width: 100%;
-    max-width: 26rem;
-    min-height: 3rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(214, 232, 246, 0.3);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.04);
+    min-height: 3.25rem;
+    padding: 0.8rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.07);
     color: var(--branco);
     font: inherit;
   }
-  .orc__campo::placeholder { color: rgba(169, 182, 195, 0.7); }
-  .orc__campo:focus-visible { outline: 2px solid var(--azul-led); outline-offset: 2px; border-color: transparent; }
+  .orc__campo::placeholder { color: rgba(169, 182, 195, 0.75); }
+  .orc__campo:focus-visible { outline: 2px solid #5cc8f0; outline-offset: 2px; }
 
-  /* prévia: um balão de conversa */
-  .orc__envio { display: grid; gap: 0.875rem; justify-items: start; }
-  .orc__previa-rotulo { font-family: var(--f-apoio); font-weight: 700; color: var(--texto-2); font-size: var(--t-pequeno); }
-  .orc__previa {
-    width: 100%;
-    max-width: 30rem;
-    padding: 1rem 1.125rem;
-    border: 1px solid rgba(214, 232, 246, 0.16);
-    border-radius: 14px 14px 14px 4px;
-    background: rgba(255, 255, 255, 0.05);
-    white-space: pre-line;
-    font-size: 0.9375rem;
-    line-height: 1.55;
+  /* celular com a conversa */
+  .orc__envio { display: grid; gap: 1rem; justify-items: center; align-content: start; }
+  .cel {
+    width: min(100%, 20rem);
+    overflow: hidden;
+    border: 7px solid #0d1318;
+    border-radius: 34px;
+    background: #0b141a;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -24px rgba(0, 0, 0, 0.9);
   }
-  .orc__botao { margin-top: 0.25rem; }
+  .cel__topo { display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 0.9rem; background: #1f2c34; }
+  .cel__topo img { width: 2.1rem; height: 2.1rem; border-radius: 50%; }
+  .cel__topo p { display: grid; line-height: 1.2; font-family: var(--f-apoio); font-size: 0.875rem; }
+  .cel__topo span { font-size: 0.75rem; color: #8696a0; }
+  .cel__conversa {
+    display: flex;
+    justify-content: flex-end;
+    min-height: 13rem;
+    padding: 1rem 0.75rem 1.25rem;
+    align-items: flex-end;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.025) 0 2px, transparent 3px) 0 0 / 28px 28px,
+      #0b141a;
+  }
+  .cel__balao {
+    position: relative;
+    max-width: 88%;
+    padding: 0.55rem 0.7rem 0.35rem;
+    border-radius: 10px 10px 2px 10px;
+    background: #005c4b;
+    color: #e9edef;
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+  .cel__balao p { white-space: pre-line; }
+  .cel__hora { display: flex; justify-content: flex-end; align-items: center; gap: 0.25rem; margin-top: 0.15rem; font-size: 0.6875rem; color: rgba(233, 237, 239, 0.6); }
+  .cel__hora svg { width: 1rem; height: 0.7rem; color: #53bdeb; }
+  .orc__botao { width: min(100%, 20rem); }
+  .orc__nota { text-align: center; }
 
-  @media (min-width: 60rem) {
-    .orc__grade { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 5rem; align-items: start; }
-    .orc__cabeca { position: sticky; top: calc(var(--altura-topo) + 2.5rem); }
-    /* a 4ª linha (1fr) absorve a altura do desenho, sem abrir buraco entre os passos */
-    .orc__form { grid-template-columns: minmax(0, 1fr) minmax(0, 17rem); grid-template-rows: auto auto auto 1fr; gap: 2.25rem 3rem; }
-    .orc__form > .orc__passo:first-child { grid-column: 1 / -1; }
-    .orc__form > .orc__passo:nth-child(3),
-    .orc__envio { grid-column: 1; }
-    .orc__carro { grid-column: 2; grid-row: 2 / span 3; }
-    .orc__desenho { width: 100%; }
+  @media (min-width: 40rem) {
+    .orc__painel { padding: 2rem; }
+    .orc__servicos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .orc__linha { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  }
+  @media (min-width: 64rem) {
+    .orc__painel { padding: 2.5rem; }
+    .orc__form { grid-template-columns: minmax(0, 1fr) 20rem; gap: 3rem; align-items: start; }
+    .orc__servicos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .orc__envio { position: sticky; top: calc(var(--altura-topo) + 1.5rem); }
+    .orc__etapas { max-width: 36rem; }
   }
 </style>
 
@@ -243,22 +381,37 @@ const partes: Parte[] = [
     const escolhidas = raiz.querySelector<HTMLElement>('[data-orc-escolhidas]')!;
     const previa = raiz.querySelector<HTMLElement>('[data-orc-previa]')!;
     const enviar = raiz.querySelector<HTMLAnchorElement>('[data-orc-enviar]')!;
-    const numModelo = raiz.querySelector<HTMLElement>('[data-orc-num-modelo]');
+    const etapas = [...raiz.querySelectorAll<HTMLElement>('[data-etapa]')];
 
     const lista = (itens: string[]) =>
       itens.length <= 1 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens[itens.length - 1]}`;
+    const servicosMarcados = () => [...form.querySelectorAll<HTMLInputElement>('input[name="servico"]:checked')];
 
     const atualizar = () => {
-      const marcados = [...form.querySelectorAll<HTMLInputElement>('input[name="servico"]:checked')];
+      const marcados = servicosMarcados();
       const servicos = marcados.map((i) => i.value);
       // O desenho só aparece para serviço de lataria (ou antes de escolher)
       const lataria = marcados.length === 0 || marcados.some((i) => i.hasAttribute('data-lataria'));
       blocoCarro.hidden = !lataria;
-      if (numModelo) numModelo.textContent = lataria ? '3' : '2';
 
       const onde = lataria ? partes.filter((p) => p.getAttribute('aria-checked') === 'true').map((p) => p.dataset.parte!) : [];
-      escolhidas.textContent = onde.length ? `Escolhido: ${lista(onde)}.` : 'Nenhuma parte escolhida.';
+      escolhidas.replaceChildren(
+        ...(onde.length ? onde : ['Nenhuma parte escolhida.']).map((nome) => {
+          const li = document.createElement('li');
+          li.textContent = nome;
+          if (!onde.length) li.className = 'vazio';
+          return li;
+        }),
+      );
       const modelo = (form.elements.namedItem('modelo') as HTMLInputElement).value.trim();
+
+      // etapas: 1 serviço, 2 onde (pula se não for lataria), 3 carro, 4 enviar
+      const feitas = [servicos.length > 0, servicos.length > 0 && (!lataria || onde.length > 0), modelo.length > 1];
+      const ativa = feitas.indexOf(false) === -1 ? 3 : feitas.indexOf(false);
+      etapas.forEach((li, i) => {
+        li.classList.toggle('feita', i < 3 ? feitas[i] : ativa === 3);
+        li.classList.toggle('ativa', i === ativa);
+      });
 
       const linhas = ['Olá! Vim pelo site e quero um orçamento.'];
       if (servicos.length) linhas.push(`*Serviço:* ${lista(servicos)}`);
@@ -290,8 +443,7 @@ const partes: Parte[] = [
     // Métrica no Google Tag Manager: quais serviços levaram ao WhatsApp
     enviar.addEventListener('click', () => {
       const w = window as unknown as { dataLayer?: object[] };
-      const servicos = [...form.querySelectorAll<HTMLInputElement>('input[name="servico"]:checked')].map((i) => i.value);
-      w.dataLayer?.push({ event: 'orcamento_whatsapp', servicos: servicos.join(', ') || 'nenhum' });
+      w.dataLayer?.push({ event: 'orcamento_whatsapp', servicos: servicosMarcados().map((i) => i.value).join(', ') || 'nenhum' });
     });
 
     atualizar();

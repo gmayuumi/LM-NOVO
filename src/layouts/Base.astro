@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/vidro.css';
 import { SITE, HORARIO, UNIDADES } from '../data/site';
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
   preloadImagem?: string;
   jsonLdExtra?: object[]; // entra no @graph junto com as duas unidades
   semIndice?: boolean; // 404: fora do Google e sem canonical
-  estilo?: 'limpo'; // variação visual sem cromado e sem brilhos (proposta)
+  estilo?: 'limpo' | 'vidro'; // variações visuais da proposta de redesenho
 }
 
 const { titulo, descricao, caminho = '/', imagem = '/assets/img/og-lm.jpg', preloadImagem, jsonLdExtra = [], semIndice = false, estilo } = Astro.props;

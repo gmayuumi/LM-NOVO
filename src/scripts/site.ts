@@ -472,7 +472,26 @@ iniciarVideo();
 iniciarVideosLoop();
 iniciarBarraWhats();
 const comparadores = iniciarComparadores();
-if (!reduzMovimento) {
+/* ---------- estilo vidro: só aparece ao rolar, sem GSAP nem Lenis ---------- */
+function iniciarRevelar() {
+  const alvos = document.querySelectorAll<HTMLElement>('[data-revelar]');
+  const io = new IntersectionObserver(
+    (entradas) =>
+      entradas.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('visivel');
+        io.unobserve(e.target);
+      }),
+    { rootMargin: '0px 0px -8% 0px' },
+  );
+  alvos.forEach((el) => io.observe(el));
+}
+
+const estiloVidro = document.documentElement.dataset.estilo === 'vidro';
+if (estiloVidro) {
+  window.__lmMov = true;
+  if (!reduzMovimento) iniciarRevelar();
+} else if (!reduzMovimento) {
   // Avisa o <head> que o script subiu (senão ele tira .mov em 3,5s).
   window.__lmMov = true;
   // GSAP e Lenis entram depois da página pronta, quando o navegador estiver livre:

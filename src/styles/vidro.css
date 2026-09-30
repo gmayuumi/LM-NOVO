@@ -1,0 +1,172 @@
+/* ============================================================
+   Estilo "vidro" (proposta v2): fundo azul da marca, painéis de
+   vidro líquido, botões em pílula, cor nos detalhes.
+   Carregado só nas páginas com <Base estilo="vidro">.
+   ============================================================ */
+
+[data-estilo='vidro'] {
+  --fundo: #061120;
+  --fundo-2: #0a1a2e;
+  --azul-vivo: #2e8fd6;
+  --ciano: #5cc8f0;
+  --verde-wa: #25d366;
+  --ouro: #f5c451;
+  --raio: 22px;
+  background: var(--fundo);
+}
+[data-estilo='vidro'] body { background: transparent; }
+[data-estilo='vidro'] body::before {
+  background:
+    radial-gradient(60% 40% at 0% 0%, rgba(46, 143, 214, 0.34), transparent 70%),
+    radial-gradient(50% 45% at 100% 35%, rgba(92, 200, 240, 0.16), transparent 70%),
+    radial-gradient(70% 50% at 30% 100%, rgba(35, 120, 179, 0.3), transparent 70%),
+    linear-gradient(180deg, #061120 0%, #081a2d 50%, #061120 100%);
+}
+[data-estilo='vidro'] body::after { display: none; }
+
+/* títulos: branco, sem cromado; a cor vem do .destaque-cor */
+[data-estilo='vidro'] .cromado { background-image: none; color: var(--branco); filter: none; }
+[data-estilo='vidro'] h2 { font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.75rem); }
+
+/* ---------- vidro líquido ---------- */
+.vidro {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 60%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--raio, 22px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    0 24px 48px -22px rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.7);
+  backdrop-filter: blur(18px) saturate(1.7);
+}
+/* reflexo no canto do vidro */
+.vidro::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(120% 70% at 12% 0%, rgba(255, 255, 255, 0.2), transparent 55%);
+  pointer-events: none;
+}
+
+/* ---------- botões em pílula ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--f-apoio);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.1;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s var(--curva), box-shadow 0.2s, background-color 0.2s;
+}
+.btn svg { width: 1.2rem; height: 1.2rem; flex: none; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn--primario {
+  background: linear-gradient(135deg, #43a8ec, #1f6fb2);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 30px -10px rgba(46, 143, 214, 0.85);
+}
+.btn--vidro {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+}
+.btn--vidro:hover { background: rgba(255, 255, 255, 0.18); }
+.btn--whats {
+  background: linear-gradient(135deg, #34e07f, #16a34e);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 30px -12px rgba(37, 211, 102, 0.75);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+.btn--pequeno { min-height: 2.75rem; padding: 0.6rem 1.1rem; font-size: 0.9375rem; }
+
+/* ---------- pílula e detalhes ---------- */
+.pilula {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: fit-content;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  backdrop-filter: blur(12px) saturate(1.5);
+  font-family: var(--f-apoio);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  color: var(--branco);
+}
+.ponto-vivo {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--ciano, #5cc8f0);
+  box-shadow: 0 0 0 4px rgba(92, 200, 240, 0.22);
+}
+.ponto-vivo--verde { background: #34e07f; box-shadow: 0 0 0 4px rgba(52, 224, 127, 0.22); }
+.ponto-vivo--cinza { background: #8a97a5; box-shadow: 0 0 0 4px rgba(138, 151, 165, 0.2); }
+.destaque-cor {
+  background: linear-gradient(90deg, #8fdcff 0%, #43a8ec 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.estrelas { color: var(--ouro, #f5c451); letter-spacing: 0.12em; font-size: 1rem; }
+
+/* cabeçalho de seção */
+.sec-cabeca { display: grid; gap: 1rem; justify-items: start; margin-bottom: 2.5rem; }
+.sec-cabeca .lead { color: var(--texto-2); }
+
+/* ---------- cabeçalho, barra do WhatsApp e rodapé no estilo vidro ---------- */
+[data-estilo='vidro'] .topo[data-solido]::before {
+  background: rgba(6, 17, 32, 0.62);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+}
+[data-estilo='vidro'] .marca__selo { filter: none; }
+[data-estilo='vidro'] .topo .botao,
+[data-estilo='vidro'] .menu .botao {
+  border-radius: 999px;
+  background: linear-gradient(135deg, #43a8ec, #1f6fb2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+[data-estilo='vidro'] .botao::after { display: none; }
+[data-estilo='vidro'] .barra-whats {
+  background: rgba(6, 17, 32, 0.7);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+}
+[data-estilo='vidro'] .barra-whats .botao {
+  border-radius: 999px;
+  background: linear-gradient(135deg, #34e07f, #16a34e);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+[data-estilo='vidro'] .rodape { background: rgba(4, 10, 20, 0.6); }
+
+/* ---------- aparecer ao rolar (leve, sem travar a tela) ---------- */
+.mov [data-revelar] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--curva), transform 0.7s var(--curva);
+  transition-delay: var(--atraso, 0s);
+}
+.mov [data-revelar].visivel { opacity: 1; transform: none; }
