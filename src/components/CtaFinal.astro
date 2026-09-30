@@ -47,7 +47,7 @@ const { titulo, texto, botao, mensagem, nota, fundo = 'luz-lataria-ambiente.webp
     height: 120%;
     object-fit: cover;
     z-index: -2;
-    filter: blur(34px) saturate(1.4) brightness(0.55);
+    opacity: 0.89; /* o desfoque já vem na imagem */
   }
   .final::before {
     content: '';
@@ -65,7 +65,9 @@ const { titulo, texto, botao, mensagem, nota, fundo = 'luz-lataria-ambiente.webp
     width: min(66vw, 22rem);
     justify-self: center;
     border-radius: 50%;
-    filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 40px rgba(77, 181, 220, 0.3));
+    /* sombra comum no círculo: um filtro aqui seria recalculado a cada quadro do giro */
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(77, 181, 220, 0.3);
+    will-change: transform;
   }
   .final__selo img { width: 100%; height: auto; }
   .final__selo::after {
@@ -73,10 +75,9 @@ const { titulo, texto, botao, mensagem, nota, fundo = 'luz-lataria-ambiente.webp
     position: absolute;
     inset: 4%;
     border-radius: 50%;
-    background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%);
+    background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.3) 50%, transparent 62%);
     background-size: 300% 100%;
     background-position: var(--brilho, 100%) 0;
-    mix-blend-mode: soft-light;
     pointer-events: none;
   }
 

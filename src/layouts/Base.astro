@@ -27,6 +27,20 @@ const unidade = (u: (typeof UNIDADES)[keyof typeof UNIDADES], id: string) => ({
   '@type': 'AutoRepair',
   '@id': `${SITE.url}/#${id}`,
   name: `${SITE.nome} - ${u.nome}`,
+  alternateName: SITE.nomeCompleto,
+  slogan: 'Especialistas em martelinho de ouro',
+  knowsAbout: ['Martelinho de ouro', 'Reparo de amassados sem pintura', 'Funilaria', 'Pintura automotiva', 'Polimento e vitrificação', 'Estética automotiva'],
+  makesOffer: [
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'Martelinho de ouro',
+        description: 'Remoção de amassados sem pintura, preservando a pintura original de fábrica.',
+        url: `${SITE.url}/martelinho`,
+      },
+    },
+  ],
   url: SITE.url,
   image: imagemAbs,
   telephone: SITE.telefoneE164,

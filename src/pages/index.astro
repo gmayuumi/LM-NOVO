@@ -9,6 +9,7 @@ import TetoHex from '../components/TetoHex.astro';
 import Processo from '../components/Processo.astro';
 import Avaliacoes, { type Avaliacao } from '../components/Avaliacoes.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import Casos, { type Caso } from '../components/Casos.astro';
 import { SITE, UNIDADES, whats, MSG } from '../data/site';
 
 const img = (nome: string) => `/assets/img/${nome}`;
@@ -33,6 +34,15 @@ const passos = [
     foto: 'passo-resultado',
     alt: 'A mesma tampa traseira lisa, com o reflexo reto e a pintura original brilhando',
   },
+];
+
+// Mais pares de antes e depois: fotos enviadas pelo cliente e as do site antigo.
+// Serviço de cada caso como no site antigo; o do Yaris não foi informado.
+const casos: Caso[] = [
+  { id: 'branco', titulo: 'Lateral traseira', detalhe: 'Martelinho de ouro', altAntes: 'lateral traseira de um carro branco amassada e marcada perto da roda', altDepois: 'a mesma lateral lisa, sem o amassado' },
+  { id: 'yaris', titulo: 'Toyota Yaris', detalhe: 'Tampa traseira', altAntes: 'tampa traseira prata do Toyota Yaris com um amassado em V acima do emblema', altDepois: 'a mesma tampa lisa, com o reflexo das luzes reto' },
+  { id: 'prata', titulo: 'Lateral', detalhe: 'Funilaria', altAntes: 'lateral de um carro prata amassada perto da roda traseira', altDepois: 'o mesmo carro prata com a lateral reparada' },
+  { id: 'captur', titulo: 'Renault Captur 2022', detalhe: 'Polimento e vitrificação, em 8 horas', altAntes: 'porta laranja do Renault Captur com a pintura opaca e manchada', altDepois: 'a traseira do Captur com a pintura laranja brilhando' },
 ];
 
 // Vitrine de serviços. Textos do site antigo; motos confirmadas pelo cliente (vídeo da Ducati).
@@ -63,8 +73,8 @@ const avaliacoes: Avaliacao[] = [
 ---
 
 <Base
-  titulo="Martelinho de ouro em Santo Amaro e Brooklin | LM Estética Automotiva"
-  descricao="Martelinho de ouro na Zona Sul de SP: o amassado sai, a pintura original fica, em horas. Funilaria, pintura em cabine com estufa e estética completa em Santo Amaro e no Brooklin."
+  titulo="Especialistas em martelinho de ouro em Santo Amaro e Brooklin | LM Estética Automotiva"
+  descricao="Especialistas em martelinho de ouro na Zona Sul de SP: o amassado sai, a pintura original fica, em horas. Orçamento pelo WhatsApp com resposta em menos de 2 minutos. Santo Amaro e Brooklin."
   caminho="/"
   preloadImagem="/assets/img/hero-poster-464.webp"
 >
@@ -104,11 +114,12 @@ const avaliacoes: Avaliacao[] = [
 
       <div class="recipiente hero__conteudo" data-hero-conteudo>
         <h1 id="hero-titulo" class="hero__titulo">
-          <span class="hero__linha"><span class="cromado">O amassado sai.</span></span>
-          <span class="hero__linha"><span class="cromado">A pintura</span></span>
-          <span class="hero__linha"><span class="cromado">original fica.</span></span>
+          <span class="hero__selo">Especialistas em martelinho de ouro</span>
+          <span class="hero__linha"><span class="cromado" style="--i: 0">O amassado sai.</span></span>
+          <span class="hero__linha"><span class="cromado" style="--i: 1">A pintura</span></span>
+          <span class="hero__linha"><span class="cromado" style="--i: 2">original fica.</span></span>
         </h1>
-        <p class="lead hero__lead">Martelinho de ouro em Santo Amaro e no Brooklin, Zona Sul de SP. Reparo em horas, não em dias.</p>
+        <p class="lead hero__lead">Em Santo Amaro e no Brooklin, Zona Sul de SP. Reparo em horas, não em dias.</p>
         <div class="hero__acoes">
           <a class="botao" data-cta-principal href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
           <a class="botao botao--vidro" href="#antes-e-depois">Ver o antes e depois</a>
@@ -116,6 +127,16 @@ const avaliacoes: Avaliacao[] = [
         <p class="pequeno hero__prova">+1.000 clientes atendidos em SP</p>
       </div>
       <a class="hero__rolar" href="#martelinho" aria-label="Rolar até o martelinho de ouro"><span aria-hidden="true"></span></a>
+    </section>
+
+    <!-- CREDENCIAIS: por que são especialistas (dados do site antigo) ====== -->
+    <section class="credenciais" aria-label="Por que a LM">
+      <ul role="list" class="recipiente credenciais__lista" data-varredura>
+        <li><span class="credenciais__numero cromado">+1.000</span><span>clientes atendidos em SP</span></li>
+        <li><span class="credenciais__numero cromado">&lt; 2 min</span><span>para responder no WhatsApp, no horário comercial</span></li>
+        <li><span class="credenciais__numero cromado">100%</span><span>da pintura original mantida no martelinho</span></li>
+        <li><span class="credenciais__numero cromado">2</span><span>unidades na Zona Sul, uma só para pintura</span></li>
+      </ul>
     </section>
 
     <!-- MARTELINHO: o amassado some em 3 passos ========================== -->
@@ -127,7 +148,10 @@ const avaliacoes: Avaliacao[] = [
     >
       <div class="recipiente processo__fechamento">
         <p class="lead">Até 60% mais barato que funilaria e pintura tradicionais, para o mesmo tipo de dano. E com garantia em todos os serviços.</p>
-        <a class="botao" href={whats(MSG.martelinho)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento de martelinho</a>
+        <div class="processo__links">
+          <a class="botao" href={whats(MSG.martelinho)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento de martelinho</a>
+          <a class="link-destaque" href="/martelinho#resolve">Que amassado sai com martelinho?</a>
+        </div>
       </div>
     </Processo>
 
@@ -150,7 +174,7 @@ const avaliacoes: Avaliacao[] = [
         <p class="pequeno ad__legenda">Nissan Kicks, tampa traseira. Martelinho de ouro, quadros do vídeo do reparo.</p>
       </div>
       <div class="recipiente ad__mais">
-        <div class="espaco-foto">[FOTO: mais pares de antes e depois, do mesmo ângulo e com a mesma luz]</div>
+        <Casos itens={casos} />
       </div>
     </section>
 
@@ -307,12 +331,65 @@ const avaliacoes: Avaliacao[] = [
     z-index: -1;
     opacity: 0.6;
     mix-blend-mode: screen;
+    will-change: transform, opacity; /* o teto (com brilho) é desenhado uma vez e só se move */
   }
 
   .hero__titulo { font-size: var(--t-hero); line-height: 0.9; }
   .hero__linha { display: block; overflow: hidden; padding-bottom: 0.06em; }
   .hero__linha > span { display: inline-block; }
   .hero__lead { margin-top: 1.25rem; }
+  /* selo de especialista: plaqueta escura com borda de luz, legível sobre o teto de LED */
+  .hero__selo {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 1.125rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.7rem;
+    border: 1px solid rgba(143, 212, 239, 0.65);
+    border-radius: 4px;
+    background: rgba(5, 8, 13, 0.82);
+    box-shadow: 0 0 22px -6px rgba(77, 181, 220, 0.85), inset 0 0 12px -6px rgba(77, 181, 220, 0.9);
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.1875rem);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    color: var(--branco);
+  }
+  .hero__selo::before {
+    content: '';
+    flex: none;
+    width: 1.125rem;
+    height: 2px;
+    background: #fff;
+    box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.8), 0 0 14px 3px rgba(77, 181, 220, 0.8);
+  }
+  :global(.mov) .hero__selo { animation: hero-aparece 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s backwards; }
+
+  /* =================================================================
+     CREDENCIAIS
+     ================================================================= */
+  .credenciais { padding-block: 2.5rem 0; }
+  .credenciais__lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-block: 1px solid var(--linha);
+  }
+  .credenciais__lista li { display: grid; gap: 0.25rem; align-content: start; padding: 1.25rem 1rem 1.25rem 0; }
+  .credenciais__lista li:nth-child(even) { padding-left: 1rem; border-left: 1px solid var(--linha); }
+  .credenciais__lista li:nth-child(n + 3) { border-top: 1px solid var(--linha); }
+  .credenciais__numero { font-family: var(--f-titulo); font-size: clamp(2.5rem, 1.8rem + 2.6vw, 4.25rem); line-height: 0.95; }
+  .credenciais__lista li > span:last-child { font-family: var(--f-apoio); color: var(--texto-2); line-height: 1.3; max-width: 22ch; }
+  .processo__links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
+
+  @media (min-width: 60rem) {
+    .credenciais { padding-top: 0; }
+    .credenciais__lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .credenciais__lista li { padding: 1.75rem 1.5rem; border-left: 1px solid var(--linha); }
+    .credenciais__lista li:first-child { padding-left: 0; border-left: 0; }
+    .credenciais__lista li:nth-child(n + 3) { border-top: 0; }
+  }
   .hero__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
   .hero__acoes .botao { flex: 1 1 100%; }
   .hero__prova { margin-top: 0.875rem; }
@@ -328,11 +405,9 @@ const avaliacoes: Avaliacao[] = [
     height: 2.75rem;
     border: 1px solid rgba(242, 245, 248, 0.35);
     border-radius: 50%;
-    background: rgba(5, 8, 13, 0.5);
+    background: rgba(5, 8, 13, 0.65);
     color: var(--branco);
     cursor: pointer;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
   }
   .hero__pausa svg { width: 1.125rem; height: 1.125rem; }
   .hero__pausa .icone-tocar { display: none; }
@@ -341,11 +416,8 @@ const avaliacoes: Avaliacao[] = [
 
   .hero__rolar { display: none; }
 
-  :global(.mov) .hero__linha > span,
-  :global(.mov) .hero__lead,
-  :global(.mov) .hero__acoes,
-  :global(.mov) .hero__prova { visibility: hidden; }
-  :global(.mov) .hero__vitrine { opacity: 0; }
+  /* entrada (keyframes em global.css): primeiro o teto acende, depois a vitrine e o título */
+  .hero { --intro: 0.6s; --intro-vitrine: 0.35s; }
 
   @media (min-width: 40rem) {
     .hero__acoes .botao { flex: 0 0 auto; }
@@ -367,8 +439,7 @@ const avaliacoes: Avaliacao[] = [
     .hero__ambiente video {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      filter: blur(26px) saturate(1.5) brightness(0.62);
+      object-fit: cover; /* o vídeo já vem desfocado */
     }
     .hero__ambiente::after {
       content: '';
@@ -392,7 +463,22 @@ const avaliacoes: Avaliacao[] = [
       border-radius: 12px;
       border: 1px solid rgba(220, 236, 248, 0.4);
       box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 70px -10px rgba(77, 181, 220, 0.45);
-      -webkit-box-reflect: below 14px linear-gradient(transparent 72%, rgba(255, 255, 255, 0.22));
+    }
+    /* reflexo no chão: a imagem inicial do vídeo espelhada e parada
+       (refletir o vídeo tocando redesenhava o reflexo a cada quadro) */
+    .hero__vitrine::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 14px);
+      height: 28%;
+      border-radius: 12px;
+      background: url('/assets/img/hero-poster-464.webp') center bottom / 100% auto no-repeat;
+      transform: scaleY(-1);
+      opacity: 0.22;
+      -webkit-mask-image: linear-gradient(to top, #000, transparent);
+      mask-image: linear-gradient(to top, #000, transparent);
     }
     .hero__conteudo { padding-block: 4rem; }
     .hero__titulo,
@@ -452,7 +538,7 @@ const avaliacoes: Avaliacao[] = [
     height: 120%;
     object-fit: cover;
     z-index: -1;
-    filter: blur(38px) saturate(1.35) brightness(0.42);
+    opacity: 0.68; /* o desfoque já vem na imagem */
   }
   .ad__titulo {
     display: flex;
@@ -474,7 +560,6 @@ const avaliacoes: Avaliacao[] = [
   }
   .ad__legenda { text-align: center; max-width: 30rem; }
   .ad__mais { padding-block: 2rem var(--secao); }
-  .ad__mais .espaco-foto { max-width: 30rem; margin-inline: auto; }
 
   @media (min-width: 60rem) {
     .ad__palco { padding: calc(var(--altura-topo) + 2rem) var(--gutter) 2.5rem; }

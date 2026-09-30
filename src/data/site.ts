@@ -5,6 +5,9 @@ export const SITE = {
   nome: 'LM Estética Automotiva',
   url: 'https://www.lmesteticautomotiva.com.br',
   posicionamento: 'A arte de restaurar a perfeição.',
+  // Como está na fachada e no logo: "Estética automotiva e martelinho de ouro"
+  descritor: 'Martelinho de ouro e estética',
+  nomeCompleto: 'LM Estética Automotiva e Martelinho de Ouro',
   telefoneExibicao: '(11) 99174-0995',
   telefoneE164: '+5511991740995',
   email: 'contato@lmestetica.com.br',

@@ -198,9 +198,6 @@ const perguntas = [
               <figcaption class="pequeno">Fachada</figcaption>
             </figure>
           </li>
-          <li class="estrutura__item">
-            <div class="espaco-foto estrutura__falta">[FOTO: sala de espera climatizada, com Wi-Fi, TV e café]</div>
-          </li>
         </ul>
       </div>
     </section>
@@ -297,18 +294,18 @@ const perguntas = [
   .estrutura__item figure { margin: 0; display: grid; gap: 0.5rem; }
   .estrutura__foto { aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; border: 1px solid var(--linha); }
   .estrutura__foto img { width: 100%; height: 100%; object-fit: cover; }
-  .estrutura__falta { height: 100%; min-height: 12rem; border-radius: 10px; }
 
   @media (min-width: 40rem) {
     .estrutura__mosaico { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .estrutura__item--largo { grid-column: 1 / -1; }
   }
+  /* desktop: duas fileiras de larguras alternadas (7+5, 5+7), mesma altura */
   @media (min-width: 60rem) {
     .estrutura__mosaico { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; }
-    .estrutura__item { grid-column: span 4; }
-    .estrutura__item--largo { grid-column: span 8; grid-row: span 2; }
-    .estrutura__item--largo .estrutura__foto { aspect-ratio: auto; height: calc(100% - 2rem); }
-    .estrutura__item--largo figure { height: 100%; grid-template-rows: 1fr auto; }
-    .estrutura__item:nth-child(n + 4) { grid-column: span 6; }
+    .estrutura__item,
+    .estrutura__item--largo { grid-column: span 5; }
+    .estrutura__item:nth-child(4n + 1),
+    .estrutura__item:nth-child(4n) { grid-column: span 7; }
+    .estrutura__foto { aspect-ratio: auto; height: clamp(16rem, 24vw, 22rem); }
   }
 </style>

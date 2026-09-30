@@ -18,9 +18,8 @@ const { mensagem = MSG.geral, rotulo = 'Pedir orçamento no WhatsApp' } = Astro.
     inset: auto 0 0 0;
     z-index: 50;
     padding: 0.625rem var(--gutter) calc(0.625rem + env(safe-area-inset-bottom));
-    background: rgba(6, 11, 18, 0.78);
-    -webkit-backdrop-filter: blur(14px) saturate(1.3);
-    backdrop-filter: blur(14px) saturate(1.3);
+    /* fundo quase opaco em vez de vidro fosco: desfocar o que passa por trás pesa no celular */
+    background: rgba(6, 11, 18, 0.95);
     border-top: 1px solid var(--linha);
     transition: transform 0.3s var(--curva), visibility 0.3s;
   }

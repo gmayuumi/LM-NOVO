@@ -38,7 +38,7 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
 
   <div class="recipiente hero-int__conteudo" data-hero-conteudo>
     <h1 id="hero-titulo" class:list={['hero-int__titulo', { 'hero-int__titulo--longo': longo }]}>
-      {titulo.map((linha) => <span class="hero__linha"><span class="cromado">{linha}</span></span>)}
+      {titulo.map((linha, i) => <span class="hero__linha"><span class="cromado" style={`--i: ${i}`}>{linha}</span></span>)}
     </h1>
     {subtitulo && <p class="hero__subtitulo">{subtitulo}</p>}
     <p class="lead hero__lead">{texto}</p>
@@ -94,12 +94,6 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
   .hero__acoes .botao { flex: 1 1 100%; }
   .hero__prova { margin-top: 0.875rem; }
 
-  :global(.mov) .hero__linha > span,
-  :global(.mov) .hero__subtitulo,
-  :global(.mov) .hero__lead,
-  :global(.mov) .hero__acoes,
-  :global(.mov) .hero__prova { visibility: hidden; }
-  :global(.mov) .hero-int__vitrine { opacity: 0; }
 
   @media (min-width: 40rem) {
     .hero__acoes .botao { flex: 0 0 auto; }
@@ -123,7 +117,7 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
       max-width: none;
       height: 124%;
       object-fit: cover;
-      filter: blur(30px) saturate(1.45) brightness(0.55);
+      opacity: 0.89; /* o desfoque já vem na imagem */
     }
     .hero-int::before {
       content: '';

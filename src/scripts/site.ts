@@ -117,17 +117,26 @@ function iniciarVideo() {
     }
   });
 
-  if (pausadoPeloUsuario) mostrar(false);
-  else tocar();
-
   // Economiza bateria: pausa quando o hero sai da tela.
+  let liberado = false;
+  let naTela = true;
   new IntersectionObserver(([entrada]) => {
-    if (pausadoPeloUsuario) return;
-    if (entrada.isIntersecting) {
+    naTela = entrada.isIntersecting;
+    if (pausadoPeloUsuario || !liberado) return;
+    if (naTela) {
       video.play().catch(() => {});
       tocarAmbiente();
     } else pausar();
   }).observe(video);
+
+  // O vídeo só começa a baixar depois que a página carregou: o poster segura o lugar.
+  const liberar = () => {
+    liberado = true;
+    if (!pausadoPeloUsuario && naTela) tocar();
+  };
+  if (pausadoPeloUsuario) mostrar(false);
+  else if (document.readyState === 'complete') liberar();
+  else window.addEventListener('load', liberar, { once: true });
 }
 
 /* ---------- vídeos curtos que tocam sozinhos quando aparecem ---------- */
@@ -253,9 +262,7 @@ async function iniciarMovimento(comparadores: Comparador[]) {
     import('lenis'),
   ]);
   gsap.registerPlugin(ScrollTrigger);
-
-  document.documentElement.classList.add('mov');
-  window.__lmMov = true;
+  if (!document.documentElement.classList.contains('mov')) return;
 
   // Rolagem suave
   const lenis = new Lenis({ lerp: 0.1, anchors: true, autoRaf: false });
@@ -269,45 +276,9 @@ async function iniciarMovimento(comparadores: Comparador[]) {
   // Régua de LED no topo
   gsap.to('.progresso', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
 
-  /* ---- Hero: as luzes da oficina acendem, a vitrine aparece, o título brilha ---- */
+  /* ---- Hero: a entrada é CSS (global.css); aqui só o parallax ao rolar ---- */
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (hero) {
-    const tubos = gsap.utils.toArray<SVGLineElement>('.teto .tubo', hero);
-    const linhas = gsap.utils.toArray<HTMLElement>('.hero__linha > span', hero);
-    const intro = gsap.timeline();
-    if (tubos.length) {
-      gsap.set(tubos, { opacity: 0.05 });
-      intro.to(
-        tubos,
-        { keyframes: { opacity: [0.05, 1, 0.2, 1], easeEach: 'none' }, duration: 0.45, stagger: { each: 0.006, from: 'random' } },
-        0,
-      );
-    }
-    const vitrine = hero.querySelector('[data-hero-vitrine]');
-    if (vitrine) {
-      intro.fromTo(
-        vitrine,
-        { autoAlpha: 0, scale: telaGrande() ? 0.94 : 1.08 },
-        { autoAlpha: 1, scale: 1, duration: 1.5, ease: 'power3.out' },
-        tubos.length ? 0.35 : 0,
-      );
-    }
-    if (linhas.length) {
-      gsap.set(linhas, { yPercent: 110, visibility: 'visible' });
-      intro
-        .to(linhas, { yPercent: 0, duration: 1.1, stagger: 0.1, ease: 'power4.out' }, tubos.length ? 0.6 : 0.25)
-        .fromTo(linhas, { '--brilho': '100%' }, { '--brilho': '0%', duration: 1.5, stagger: 0.15, ease: 'power2.inOut' }, tubos.length ? 1.05 : 0.7);
-    }
-    const textos = hero.querySelectorAll('.hero__subtitulo, .hero__lead, .hero__acoes, .hero__prova');
-    if (textos.length) {
-      intro.fromTo(
-        textos,
-        { y: 24, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.9, stagger: 0.08, ease: 'power3.out' },
-        tubos.length ? 1.0 : 0.65,
-      );
-    }
-
     // Ao rolar: o texto sobe mais rápido que a imagem (parallax) e o teto se afasta
     const saida = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true };
     const rolar = (seletor: string, vars: object) => {
@@ -459,7 +430,8 @@ async function iniciarMovimento(comparadores: Comparador[]) {
       .to(foto, { filter: 'brightness(0.3) saturate(0.5)', duration: 0.08 })
       .to(foto, { filter: 'brightness(1.08) saturate(1)', duration: 0.06 }, '+=0.12')
       .to(foto, { filter: 'brightness(0.55) saturate(0.8)', duration: 0.05 })
-      .to(foto, { filter: 'brightness(1) saturate(1)', duration: 0.6, ease: 'power2.out' });
+      .to(foto, { filter: 'brightness(1) saturate(1)', duration: 0.6, ease: 'power2.out' })
+      .set(foto, { clearProps: 'filter' });
   });
 
   /* ---- Varredura de luz genérica (páginas internas) ---- */
@@ -501,5 +473,15 @@ iniciarVideosLoop();
 iniciarBarraWhats();
 const comparadores = iniciarComparadores();
 if (!reduzMovimento) {
-  iniciarMovimento(comparadores).catch(() => document.documentElement.classList.remove('mov'));
+  // Avisa o <head> que o script subiu (senão ele tira .mov em 3,5s).
+  window.__lmMov = true;
+  // GSAP e Lenis entram depois da página pronta, quando o navegador estiver livre:
+  // não disputam com a primeira pintura. A entrada do hero já roda em CSS.
+  const comecar = () => {
+    const rodar = () => iniciarMovimento(comparadores).catch(() => document.documentElement.classList.remove('mov'));
+    if ('requestIdleCallback' in window) window.requestIdleCallback(rodar, { timeout: 1200 });
+    else setTimeout(rodar, 200);
+  };
+  if (document.readyState === 'complete') comecar();
+  else window.addEventListener('load', comecar, { once: true });
 }

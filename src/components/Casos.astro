@@ -1,0 +1,105 @@
+---
+// Pares de antes e depois (fotos reais enviadas pelo cliente).
+// Celular: faixa que desliza para o lado. Desktop: grade 2×2.
+// O "depois" de cada par aparece com a barra de luz ([data-varredura]).
+export interface Caso {
+  id: string;
+  titulo: string;
+  detalhe: string;
+  altAntes: string;
+  altDepois: string;
+}
+interface Props { titulo?: string; itens: Caso[] }
+const { titulo = 'Mais resultados', itens } = Astro.props;
+const img = (nome: string) => `/assets/img/${nome}`;
+---
+
+<div class="casos">
+  <h3 class="casos__titulo"><span class="cromado">{titulo}</span></h3>
+  <div class="casos__trilho" tabindex="0" role="region" aria-label={`${titulo}: antes e depois`}>
+    <ul role="list" class="casos__lista">
+      {itens.map((c) => (
+        <li class="caso">
+          <figure>
+            <div class="caso__par">
+              <div class="caso__lado">
+                <img src={img(`caso-${c.id}-antes.webp`)} width="480" height="600" alt={`Antes: ${c.altAntes}`} loading="lazy" decoding="async" />
+                <span class="caso__rotulo" aria-hidden="true">Antes</span>
+              </div>
+              <div class="caso__lado" data-varredura>
+                <img src={img(`caso-${c.id}-depois.webp`)} width="480" height="600" alt={`Depois: ${c.altDepois}`} loading="lazy" decoding="async" />
+                <span class="caso__rotulo caso__rotulo--depois" aria-hidden="true">Depois</span>
+              </div>
+            </div>
+            <figcaption><strong>{c.titulo}</strong> {c.detalhe}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <p class="pequeno casos__dica" aria-hidden="true">Deslize para ver mais</p>
+</div>
+
+<style>
+  .casos { display: grid; gap: 1.5rem; }
+  .casos__titulo { font-size: var(--t-h3); }
+
+  /* celular: faixa com encaixe, um caso por vez com a ponta do próximo aparecendo */
+  .casos__trilho {
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .casos__trilho::-webkit-scrollbar { display: none; }
+  .casos__lista { display: flex; gap: 1rem; width: max-content; }
+  .caso { width: min(84vw, 26rem); scroll-snap-align: start; }
+  .caso figure { margin: 0; display: grid; gap: 0.75rem; }
+
+  .caso__par {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(220, 236, 248, 0.3);
+    background: var(--noite-2);
+  }
+  /* filete de LED entre o antes e o depois */
+  .caso__par::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: #fff;
+    box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.9), 0 0 18px 3px rgba(77, 181, 220, 0.7);
+    pointer-events: none;
+  }
+  .caso__lado { position: relative; }
+  .caso__lado img { width: 100%; height: 100%; object-fit: cover; }
+  .caso__rotulo {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    background: rgba(5, 8, 13, 0.72);
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: 0.8125rem;
+  }
+  .caso__rotulo--depois { left: auto; right: 0.5rem; }
+  figcaption { font-family: var(--f-apoio); color: var(--texto-2); }
+  figcaption strong { display: block; color: var(--branco); font-size: 1.0625rem; }
+
+  @media (min-width: 60rem) {
+    .casos__trilho { margin-inline: 0; padding-inline: 0; overflow: visible; }
+    .casos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 2rem; width: auto; }
+    .caso { width: auto; }
+    .casos__dica { display: none; }
+  }
+</style>

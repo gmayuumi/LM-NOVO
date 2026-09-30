@@ -169,6 +169,7 @@ const compacto = passos.length > 3;
   @media (min-width: 60rem) {
     :global(.mov) .processo__ambiente {
       display: block;
+      opacity: 0.8; /* o desfoque já vem na imagem */
       position: absolute;
       inset: -10%;
       z-index: -1;
@@ -179,7 +180,6 @@ const compacto = passos.length > 3;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: blur(34px) saturate(1.4) brightness(0.5);
       opacity: 0;
     }
     :global(.mov) .processo__ambiente img:first-child { opacity: 1; }

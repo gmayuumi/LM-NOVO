@@ -244,14 +244,12 @@ ol[role='list'] { list-style: none; padding: 0; }
 .botao svg { width: 1.25rem; height: 1.25rem; flex: none; }
 
 .botao--vidro {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(8, 14, 22, 0.55);
   border-color: rgba(214, 232, 246, 0.38);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
   text-shadow: none;
 }
-.botao--vidro:hover { background: rgba(255, 255, 255, 0.12); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); }
+.botao--vidro:hover { background: rgba(24, 38, 54, 0.7); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); }
 
 .link-destaque {
   font-family: var(--f-apoio);
@@ -294,6 +292,47 @@ ol[role='list'] { list-style: none; padding: 0; }
    Movimento: estados iniciais só existem com a classe .mov,
    ligada pelo script de animação (nunca com reduced-motion).
    ============================================================ */
+
+/* Entrada do hero em CSS: começa no primeiro quadro, sem esperar o
+   JavaScript das animações (que só carrega depois da página pronta).
+   --intro: atraso das linhas do título. --i: número da linha.
+   Preenchimento "backwards": ao terminar, a animação se solta do elemento
+   (o estado final é o próprio estilo dele). Com "both" ela ficaria ativa e
+   pesaria em cada quadro da rolagem. */
+@property --brilho {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 100%;
+}
+@keyframes hero-sobe { from { transform: translateY(110%); } }
+@keyframes hero-brilho { from { --brilho: 100%; } to { --brilho: 0%; } }
+/* opacidade inicial de 1% (invisível ao olho) e não 0: com 0 o navegador só conta
+   o texto como pintado no fim da animação, e o LCP da página atrasa ~2 s */
+@keyframes hero-aparece { from { opacity: 0.01; transform: translateY(24px); } }
+@keyframes hero-vitrine { from { opacity: 0.01; transform: scale(var(--escala-inicial, 1.08)); } }
+
+.mov .hero__linha > span {
+  animation:
+    hero-sobe 1.1s cubic-bezier(0.16, 1, 0.3, 1) backwards,
+    hero-brilho 1.5s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  animation-delay:
+    calc(var(--intro, 0.25s) + var(--i, 0) * 0.1s),
+    calc(var(--intro, 0.25s) + 0.45s + var(--i, 0) * 0.15s);
+}
+.mov .hero__subtitulo,
+.mov .hero__lead,
+.mov .hero__acoes,
+.mov .hero__prova {
+  animation: hero-aparece 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--intro, 0.25s) + 0.4s + var(--j, 0) * 0.08s);
+}
+.mov .hero__lead { --j: 1; }
+.mov .hero__acoes { --j: 2; }
+.mov .hero__prova { --j: 3; }
+.mov [data-hero-vitrine] { animation: hero-vitrine 1.5s cubic-bezier(0.22, 1, 0.36, 1) var(--intro-vitrine, 0s) backwards; }
+@media (min-width: 60rem) {
+  .mov [data-hero-vitrine] { --escala-inicial: 0.94; }
+}
 
 /* Varredura de luz: o conteúdo aparece atrás de uma barra de LED */
 [data-varredura] { position: relative; }

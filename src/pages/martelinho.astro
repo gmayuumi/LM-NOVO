@@ -57,6 +57,13 @@ const passos = [
   },
 ];
 
+// "Que amassado sai com martelinho?": tirado das respostas do FAQ do site antigo
+const resolve = [
+  { tipo: 'sim', titulo: 'Sai com martelinho', itens: ['Batida de porta em estacionamento', 'Chuva de granizo', 'Pequenas colisões', 'Impacto de objetos'] },
+  { tipo: 'talvez', titulo: 'Pede avaliação mais criteriosa', itens: ['Amassado em vinco', 'Peças de alumínio'], nota: 'Trabalhamos com alumínio. O reparo pode ser mais complexo e demorado.' },
+  { tipo: 'nao', titulo: 'Não é caso de martelinho', itens: ['Pintura trincada ou arranhada'], nota: 'Aí o caminho é funilaria e pintura, que a LM também faz.', link: { rotulo: 'Ver funilaria e pintura', href: '/servicos#funilaria' } },
+];
+
 const perguntas = [
   {
     pergunta: 'Que tipo de amassado o martelinho de ouro conserta?',
@@ -109,6 +116,30 @@ const perguntas = [
       lead="O amassado sai sem pintura. A originalidade e o valor do seu carro ficam."
       itens={beneficios}
     />
+
+    <!-- QUE AMASSADO SAI: o que resolve e o que não resolve ================ -->
+    <section class="resolve" id="resolve" aria-labelledby="resolve-titulo">
+      <div class="recipiente">
+        <div class="resolve__cabeca">
+          <h2 id="resolve-titulo" data-titulo><span class="cromado" data-brilho>Que amassado sai com martelinho?</span></h2>
+          <p class="lead">A técnica é ideal quando a pintura não foi danificada, sem trinca nem arranhão.</p>
+        </div>
+        <div class="resolve__grade">
+          {resolve.map((c) => (
+            <div class:list={['resolve__coluna', `resolve__coluna--${c.tipo}`]} data-varredura>
+              <h3>{c.titulo}</h3>
+              <ul role="list">{c.itens.map((i) => <li>{i}</li>)}</ul>
+              {c.nota && <p class="pequeno">{c.nota}</p>}
+              {c.link && <a class="link-destaque" href={c.link.href}>{c.link.rotulo}</a>}
+            </div>
+          ))}
+        </div>
+        <div class="resolve__acao">
+          <a class="botao" href={whats(msg.foto)} target="_blank" rel="noopener"><IconeWhats /> Enviar foto do amassado</a>
+          <p class="pequeno">Pela foto, você recebe um pré-orçamento online, sem compromisso.</p>
+        </div>
+      </div>
+    </section>
 
     <Processo id="processo" titulo="Arte e técnica em 4 passos" passos={passos}>
       <div class="recipiente processo__fechamento">
@@ -173,7 +204,6 @@ const perguntas = [
             </blockquote>
           </div>
         </div>
-        <div class="espaco-foto resultados__falta">[FOTO: mais pares de antes e depois do martelinho, do mesmo ângulo e com a mesma luz]</div>
       </div>
     </section>
 
@@ -197,6 +227,57 @@ const perguntas = [
 
 <style>
   /* =================================================================
+     QUE AMASSADO SAI
+     ================================================================= */
+  .resolve { padding-block: 0 var(--secao); }
+  .resolve__cabeca { display: grid; gap: 1.25rem; margin-bottom: 2.5rem; }
+  .resolve__grade { display: grid; border-top: 1px solid var(--linha); }
+  .resolve__coluna { display: grid; gap: 1rem; align-content: start; justify-items: start; padding-block: 1.75rem; border-bottom: 1px solid var(--linha); }
+  .resolve__coluna h3 { font-size: clamp(1.875rem, 1.6rem + 1vw, 2.5rem); }
+  .resolve__coluna ul { display: grid; gap: 0.625rem; }
+  .resolve__coluna li { position: relative; padding-left: 1.75rem; font-family: var(--f-apoio); font-size: 1.125rem; }
+  .resolve__coluna li::before {
+    content: '';
+    position: absolute;
+    left: 0.125rem;
+    top: 0.3em;
+    width: 0.8rem;
+    height: 0.45rem;
+    border-left: 2px solid var(--azul-led);
+    border-bottom: 2px solid var(--azul-led);
+    transform: rotate(-45deg);
+    filter: drop-shadow(0 0 4px rgba(77, 181, 220, 0.9));
+  }
+  /* avaliação: anel de luz vazado */
+  .resolve__coluna--talvez li::before {
+    top: 0.3em;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 2px solid var(--azul-led-claro);
+    border-radius: 50%;
+    transform: none;
+    filter: none;
+  }
+  /* não é martelinho: um traço apagado */
+  .resolve__coluna--nao li::before {
+    top: 0.62em;
+    width: 0.8rem;
+    height: 0;
+    border: 0;
+    border-top: 2px solid var(--texto-2);
+    transform: none;
+    filter: none;
+  }
+  .resolve__coluna--nao li { color: var(--texto-2); }
+  .resolve__acao { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 2.5rem; }
+
+  @media (min-width: 60rem) {
+    .resolve__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--linha); }
+    .resolve__coluna { padding: 2rem 2rem 2.25rem; border-bottom: 0; border-left: 1px solid var(--linha); }
+    .resolve__coluna:first-child { padding-left: 0; border-left: 0; }
+  }
+
+  /* =================================================================
      VÍDEO
      ================================================================= */
   .filme {
@@ -213,7 +294,7 @@ const perguntas = [
     max-width: none;
     height: 120%;
     object-fit: cover;
-    filter: blur(34px) saturate(1.4) brightness(0.45);
+    opacity: 0.73; /* o desfoque já vem na imagem */
   }
   .filme::before {
     content: '';
@@ -259,7 +340,6 @@ const perguntas = [
     font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
     line-height: 0.95;
   }
-  .resultados__falta { min-height: 8rem; }
 
   @media (min-width: 60rem) {
     .resultados__grade { grid-template-columns: auto minmax(0, 1fr); gap: 4rem; align-items: start; }

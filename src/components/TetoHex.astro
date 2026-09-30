@@ -1,7 +1,7 @@
 ---
 // Teto de LED hexagonal, igual ao da oficina (aparece nas fotos e no vídeo).
 // Cada hexágono é feito de 6 tubos separados; há uma moldura retangular em volta.
-// A animação (src/scripts/site.ts) acende os tubos com a piscada de lâmpada.
+// Os tubos acendem com a piscada de lâmpada (CSS abaixo, atrasos variados por nth-child).
 interface Props { class?: string }
 const { class: classe } = Astro.props;
 
@@ -84,6 +84,19 @@ const f = (n: number) => n.toFixed(1);
     /* o brilho vai no <svg> (filtros CSS em elementos internos do SVG falham em alguns navegadores) */
     filter: drop-shadow(0 0 3px rgba(215, 242, 255, 0.95)) drop-shadow(0 0 12px rgba(77, 181, 220, 0.75));
   }
+  @keyframes tubo-acende {
+    0% { opacity: 0.05; }
+    35% { opacity: 1; }
+    65% { opacity: 0.2; }
+    100% { opacity: 1; }
+  }
+  /* backwards: depois de acender, a animação se solta (420 animações presas travariam a rolagem) */
+  :global(.mov) .tubo { animation: tubo-acende 0.45s linear 0.05s backwards; }
+  :global(.mov) .tubo:nth-child(3n) { animation-delay: 0.4s; }
+  :global(.mov) .tubo:nth-child(5n + 1) { animation-delay: 0.7s; }
+  :global(.mov) .tubo:nth-child(7n + 2) { animation-delay: 0.25s; }
+  :global(.mov) .tubo:nth-child(11n + 4) { animation-delay: 0.95s; }
+  :global(.mov) .tubo:nth-child(13n + 6) { animation-delay: 0.55s; }
   .teto__tubos {
     stroke: #f4fbff;
     stroke-width: 3.2;
