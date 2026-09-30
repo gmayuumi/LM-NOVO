@@ -289,6 +289,44 @@ ol[role='list'] { list-style: none; padding: 0; }
 }
 
 /* ============================================================
+   Estilo limpo (proposta): tipografia e foto fazem o trabalho.
+   Sem cromado, sem brilhos, botões chapados, link com seta.
+   ============================================================ */
+[data-estilo='limpo'] body::before,
+[data-estilo='limpo'] body::after { display: none; }
+[data-estilo='limpo'] .cromado {
+  background-image: none;
+  color: var(--branco);
+  filter: none;
+}
+[data-estilo='limpo'] .botao {
+  background: var(--azul);
+  border-color: var(--azul);
+  border-radius: 2px;
+  box-shadow: none;
+  text-shadow: none;
+}
+[data-estilo='limpo'] .botao::after { display: none; }
+[data-estilo='limpo'] .botao:hover { background: #2a86c4; box-shadow: none; transform: none; }
+[data-estilo='limpo'] .botao--vidro { background: transparent; border-color: rgba(242, 245, 248, 0.45); }
+[data-estilo='limpo'] .botao--vidro:hover { background: rgba(255, 255, 255, 0.08); }
+[data-estilo='limpo'] .marca__selo { filter: none; }
+
+.link-seta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-family: var(--f-apoio);
+  font-weight: 700;
+  color: var(--branco);
+  text-decoration: none;
+}
+.link-seta::after { content: '→'; transition: transform 0.25s var(--curva); }
+.link-seta:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+.link-seta:hover::after { transform: translateX(4px); }
+
+/* ============================================================
    Movimento: estados iniciais só existem com a classe .mov,
    ligada pelo script de animação (nunca com reduced-motion).
    ============================================================ */

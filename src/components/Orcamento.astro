@@ -1,0 +1,299 @@
+---
+import IconeWhats from './IconeWhats.astro';
+import { whats, MSG } from '../data/site';
+// Orçamento interativo: o cliente escolhe o serviço, toca na parte do carro
+// (desenho visto de cima) e vê a mensagem do WhatsApp sendo escrita.
+// Sem preço: o link abre o WhatsApp com o texto pronto.
+// Sem JavaScript, o botão abre o WhatsApp com a mensagem geral.
+interface Props { id?: string; titulo?: string }
+const { id = 'orcamento', titulo = 'Monte seu orçamento' } = Astro.props;
+
+const servicos = [
+  { id: 'martelinho', nome: 'Martelinho de ouro', lataria: true },
+  { id: 'funilaria', nome: 'Funilaria', lataria: true },
+  { id: 'pintura', nome: 'Pintura', lataria: true },
+  { id: 'polimento', nome: 'Polimento e vitrificação', lataria: false },
+  { id: 'higienizacao', nome: 'Higienização interna', lataria: false },
+  { id: 'estetica', nome: 'Estética completa', lataria: false },
+  { id: 'moto', nome: 'Moto', lataria: false },
+];
+
+// Carro visto de cima, frente para o alto. Esquerda do desenho = lado do motorista.
+type Parte = { id: string; nome: string; d?: string; rect?: [number, number, number, number, number] };
+const lado = (x: number, w: number) => 240 - x - w;
+const partes: Parte[] = [
+  { id: 'pc-d', nome: 'para-choque dianteiro', d: 'M48 26 Q120 2 192 26 L194 46 Q120 24 46 46 Z' },
+  { id: 'capo', nome: 'capô', d: 'M62 56 Q120 40 178 56 L176 148 L64 148 Z' },
+  { id: 'pl-de', nome: 'para-lama dianteiro esquerdo', rect: [34, 58, 24, 90, 10] },
+  { id: 'pl-dd', nome: 'para-lama dianteiro direito', rect: [lado(34, 24), 58, 24, 90, 10] },
+  { id: 'pt-de', nome: 'porta dianteira esquerda', rect: [32, 156, 26, 92, 5] },
+  { id: 'pt-dd', nome: 'porta dianteira direita', rect: [lado(32, 26), 156, 26, 92, 5] },
+  { id: 'teto', nome: 'teto', rect: [72, 194, 96, 132, 12] },
+  { id: 'pt-te', nome: 'porta traseira esquerda', rect: [32, 254, 26, 84, 5] },
+  { id: 'pt-td', nome: 'porta traseira direita', rect: [lado(32, 26), 254, 26, 84, 5] },
+  { id: 'lt-te', nome: 'lateral traseira esquerda', rect: [34, 344, 24, 86, 10] },
+  { id: 'lt-td', nome: 'lateral traseira direita', rect: [lado(34, 24), 344, 24, 86, 10] },
+  { id: 'tampa', nome: 'tampa traseira', d: 'M64 362 L176 362 L178 426 Q120 440 62 426 Z' },
+  { id: 'pc-t', nome: 'para-choque traseiro', d: 'M46 436 Q120 460 194 436 L192 456 Q120 478 48 456 Z' },
+];
+---
+
+<section class="orc" id={id} aria-labelledby={`${id}-titulo`} data-orcamento>
+  <div class="recipiente orc__grade">
+    <div class="orc__cabeca">
+      <h2 id={`${id}-titulo`} data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
+      <p class="lead">Escolha o serviço e mostre onde é. A mensagem vai pronta para o WhatsApp.</p>
+    </div>
+
+    <form class="orc__form" data-orc-form onsubmit="return false">
+      <fieldset class="orc__passo">
+        <legend><span class="orc__num">1</span> O que você precisa?</legend>
+        <div class="orc__chips">
+          {servicos.map((s) => (
+            <label class="chip">
+              <input type="checkbox" name="servico" value={s.nome} data-lataria={s.lataria ? '' : undefined} />
+              <span>{s.nome}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset class="orc__passo orc__carro" data-orc-carro>
+        <legend><span class="orc__num">2</span> Onde é? <span class="orc__dica">Toque nas partes do carro</span></legend>
+        <div class="orc__desenho">
+          <svg viewBox="0 0 240 480" class="carro" role="group" aria-label="Carro visto de cima: toque nas partes com dano">
+            <text x="120" y="-4" class="carro__rotulo" text-anchor="middle">FRENTE</text>
+            <text x="8" y="250" class="carro__rotulo" text-anchor="middle" transform="rotate(-90 8 250)">ESQUERDA</text>
+            <text x="232" y="250" class="carro__rotulo" text-anchor="middle" transform="rotate(90 232 250)">DIREITA</text>
+            <!-- carroceria, rodas, retrovisores e vidros: só desenho -->
+            <path class="carro__corpo" aria-hidden="true" d="M120 6 C168 6 194 18 201 42 L207 120 L209 250 L207 380 L201 440 C194 464 168 476 120 476 C72 476 46 464 39 440 L33 380 L31 250 L33 120 L39 42 C46 18 72 6 120 6 Z" />
+            <g class="carro__fixo" aria-hidden="true">
+              <rect x="22" y="74" width="10" height="50" rx="4" />
+              <rect x="208" y="74" width="10" height="50" rx="4" />
+              <rect x="22" y="364" width="10" height="50" rx="4" />
+              <rect x="208" y="364" width="10" height="50" rx="4" />
+              <path d="M32 160 L18 165 L18 178 L32 178 Z" />
+              <path d="M208 160 L222 165 L222 178 L208 178 Z" />
+            </g>
+            <g class="carro__vidro" aria-hidden="true">
+              <path d="M66 156 L174 156 L166 188 L74 188 Z" />
+              <path d="M74 332 L166 332 L172 356 L68 356 Z" />
+            </g>
+            <g class="carro__partes">
+              {partes.map((p) =>
+                p.d ? (
+                  <path class="parte" d={p.d} data-parte={p.nome} role="checkbox" aria-checked="false" aria-label={p.nome} tabindex="0" />
+                ) : (
+                  <rect class="parte" x={p.rect![0]} y={p.rect![1]} width={p.rect![2]} height={p.rect![3]} rx={p.rect![4]} data-parte={p.nome} role="checkbox" aria-checked="false" aria-label={p.nome} tabindex="0" />
+                ),
+              )}
+            </g>
+          </svg>
+        </div>
+        <p class="orc__escolhidas" data-orc-escolhidas aria-live="polite">Nenhuma parte escolhida.</p>
+      </fieldset>
+
+      <fieldset class="orc__passo">
+        <legend><span class="orc__num" data-orc-num-modelo>3</span> Qual é o carro?</legend>
+        <input class="orc__campo" type="text" name="modelo" placeholder="Ex.: Jeep Compass 2022" autocomplete="off" maxlength="60" />
+      </fieldset>
+
+      <div class="orc__envio">
+        <p class="orc__previa-rotulo">Sua mensagem</p>
+        <div class="orc__previa" data-orc-previa aria-live="polite">Olá! Vim pelo site e quero um orçamento.</div>
+        <a class="botao orc__botao" href={whats(MSG.geral)} target="_blank" rel="noopener" data-orc-enviar><IconeWhats /> Enviar no WhatsApp</a>
+        <p class="pequeno">Sem compromisso. Se puder, mande as fotos do carro na conversa.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .orc { padding-block: var(--secao); }
+  .orc__grade { display: grid; gap: 2.5rem; }
+  .orc__cabeca { display: grid; gap: 1.25rem; }
+  .orc__form { display: grid; gap: 2.25rem; align-items: start; }
+  .orc__passo { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 1rem; }
+  .orc__passo legend {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    padding: 0;
+    margin-bottom: 1rem;
+    font-family: var(--f-apoio);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .orc__num {
+    display: inline-grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid rgba(143, 212, 239, 0.6);
+    border-radius: 50%;
+    font-size: 0.9375rem;
+    color: var(--azul-led-claro);
+  }
+  .orc__dica { font-weight: 400; font-size: var(--t-pequeno); color: var(--texto-2); }
+
+  /* chips de serviço: checkbox de verdade, com cara de botão */
+  .orc__chips { display: flex; flex-wrap: wrap; gap: 0.625rem; }
+  .chip { position: relative; cursor: pointer; }
+  .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.125rem;
+    border: 1px solid rgba(214, 232, 246, 0.3);
+    border-radius: 999px;
+    font-family: var(--f-apoio);
+    font-size: 1rem;
+    color: var(--texto-2);
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+  }
+  .chip:hover span { border-color: rgba(214, 232, 246, 0.6); color: var(--branco); }
+  .chip input:checked + span {
+    border-color: var(--azul-led);
+    background: rgba(35, 120, 179, 0.28);
+    color: var(--branco);
+  }
+  .chip input:focus-visible + span { outline: 2px solid var(--azul-led); outline-offset: 3px; }
+
+  /* desenho do carro */
+  .orc__carro { display: none; }
+  :global(.js) .orc__carro { display: grid; }
+  .orc__carro[hidden] { display: none !important; }
+  .orc__desenho { width: min(100%, 17rem); margin-inline: auto; }
+  .carro { width: 100%; height: auto; overflow: visible; }
+  .carro__rotulo { fill: var(--texto-2); font-family: var(--f-apoio); font-size: 9px; letter-spacing: 0.12em; }
+  .carro__corpo { fill: rgba(255, 255, 255, 0.02); stroke: rgba(214, 232, 246, 0.16); stroke-width: 1; }
+  .carro__fixo { fill: #1a232d; }
+  .carro__vidro { fill: rgba(143, 212, 239, 0.07); stroke: rgba(214, 232, 246, 0.18); stroke-width: 1; }
+  .parte {
+    fill: rgba(255, 255, 255, 0.035);
+    stroke: rgba(214, 232, 246, 0.42);
+    stroke-width: 1.4;
+    cursor: pointer;
+    transition: fill 0.25s, stroke 0.25s;
+  }
+  .parte:hover { fill: rgba(143, 212, 239, 0.12); stroke: rgba(214, 232, 246, 0.8); }
+  .parte:focus-visible { outline: none; stroke: #fff; stroke-width: 2.5; }
+  .parte[aria-checked='true'] { fill: rgba(77, 181, 220, 0.5); stroke: #d9f3ff; stroke-width: 2; animation: parte-acende 0.5s linear; }
+  /* ao tocar, a parte acende como lâmpada de oficina */
+  @keyframes parte-acende {
+    0% { fill: rgba(255, 255, 255, 0.85); }
+    30% { fill: rgba(77, 181, 220, 0.15); }
+    55% { fill: rgba(255, 255, 255, 0.7); }
+    100% { fill: rgba(77, 181, 220, 0.5); }
+  }
+  .orc__escolhidas { text-align: center; font-family: var(--f-apoio); color: var(--texto-2); min-height: 1.5em; }
+
+  .orc__campo {
+    width: 100%;
+    max-width: 26rem;
+    min-height: 3rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(214, 232, 246, 0.3);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--branco);
+    font: inherit;
+  }
+  .orc__campo::placeholder { color: rgba(169, 182, 195, 0.7); }
+  .orc__campo:focus-visible { outline: 2px solid var(--azul-led); outline-offset: 2px; border-color: transparent; }
+
+  /* prévia: um balão de conversa */
+  .orc__envio { display: grid; gap: 0.875rem; justify-items: start; }
+  .orc__previa-rotulo { font-family: var(--f-apoio); font-weight: 700; color: var(--texto-2); font-size: var(--t-pequeno); }
+  .orc__previa {
+    width: 100%;
+    max-width: 30rem;
+    padding: 1rem 1.125rem;
+    border: 1px solid rgba(214, 232, 246, 0.16);
+    border-radius: 14px 14px 14px 4px;
+    background: rgba(255, 255, 255, 0.05);
+    white-space: pre-line;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+  .orc__botao { margin-top: 0.25rem; }
+
+  @media (min-width: 60rem) {
+    .orc__grade { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 5rem; align-items: start; }
+    .orc__cabeca { position: sticky; top: calc(var(--altura-topo) + 2.5rem); }
+    /* a 4ª linha (1fr) absorve a altura do desenho, sem abrir buraco entre os passos */
+    .orc__form { grid-template-columns: minmax(0, 1fr) minmax(0, 17rem); grid-template-rows: auto auto auto 1fr; gap: 2.25rem 3rem; }
+    .orc__form > .orc__passo:first-child { grid-column: 1 / -1; }
+    .orc__form > .orc__passo:nth-child(3),
+    .orc__envio { grid-column: 1; }
+    .orc__carro { grid-column: 2; grid-row: 2 / span 3; }
+    .orc__desenho { width: 100%; }
+  }
+</style>
+
+<script>
+  import { whats } from '../data/site';
+
+  document.querySelectorAll<HTMLElement>('[data-orcamento]').forEach((raiz) => {
+    const form = raiz.querySelector<HTMLFormElement>('[data-orc-form]')!;
+    const blocoCarro = raiz.querySelector<HTMLElement>('[data-orc-carro]')!;
+    const partes = [...raiz.querySelectorAll<SVGElement>('.parte')];
+    const escolhidas = raiz.querySelector<HTMLElement>('[data-orc-escolhidas]')!;
+    const previa = raiz.querySelector<HTMLElement>('[data-orc-previa]')!;
+    const enviar = raiz.querySelector<HTMLAnchorElement>('[data-orc-enviar]')!;
+    const numModelo = raiz.querySelector<HTMLElement>('[data-orc-num-modelo]');
+
+    const lista = (itens: string[]) =>
+      itens.length <= 1 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens[itens.length - 1]}`;
+
+    const atualizar = () => {
+      const marcados = [...form.querySelectorAll<HTMLInputElement>('input[name="servico"]:checked')];
+      const servicos = marcados.map((i) => i.value);
+      // O desenho só aparece para serviço de lataria (ou antes de escolher)
+      const lataria = marcados.length === 0 || marcados.some((i) => i.hasAttribute('data-lataria'));
+      blocoCarro.hidden = !lataria;
+      if (numModelo) numModelo.textContent = lataria ? '3' : '2';
+
+      const onde = lataria ? partes.filter((p) => p.getAttribute('aria-checked') === 'true').map((p) => p.dataset.parte!) : [];
+      escolhidas.textContent = onde.length ? `Escolhido: ${lista(onde)}.` : 'Nenhuma parte escolhida.';
+      const modelo = (form.elements.namedItem('modelo') as HTMLInputElement).value.trim();
+
+      const linhas = ['Olá! Vim pelo site e quero um orçamento.'];
+      if (servicos.length) linhas.push(`*Serviço:* ${lista(servicos)}`);
+      if (onde.length) linhas.push(`*Onde:* ${lista(onde)}`);
+      if (modelo) linhas.push(`*Carro:* ${modelo}`);
+      if (servicos.length || onde.length) linhas.push('Posso mandar as fotos por aqui?');
+      const texto = linhas.join('\n');
+
+      previa.textContent = texto.replace(/\*/g, '');
+      enviar.href = whats(texto);
+    };
+
+    const alternar = (p: SVGElement) => {
+      p.setAttribute('aria-checked', p.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+      atualizar();
+    };
+    partes.forEach((p) => {
+      p.addEventListener('click', () => alternar(p));
+      p.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          alternar(p);
+        }
+      });
+    });
+    form.addEventListener('input', atualizar);
+    form.addEventListener('change', atualizar);
+
+    // Métrica no Google Tag Manager: quais serviços levaram ao WhatsApp
+    enviar.addEventListener('click', () => {
+      const w = window as unknown as { dataLayer?: object[] };
+      const servicos = [...form.querySelectorAll<HTMLInputElement>('input[name="servico"]:checked')].map((i) => i.value);
+      w.dataLayer?.push({ event: 'orcamento_whatsapp', servicos: servicos.join(', ') || 'nenhum' });
+    });
+
+    atualizar();
+  });
+</script>

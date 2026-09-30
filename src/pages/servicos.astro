@@ -8,6 +8,7 @@ import Especificacoes from '../components/Especificacoes.astro';
 import Avaliacoes, { type Avaliacao } from '../components/Avaliacoes.astro';
 import CtaFinal from '../components/CtaFinal.astro';
 import VideoLoop from '../components/VideoLoop.astro';
+import Orcamento from '../components/Orcamento.astro';
 import IconeWhats from '../components/IconeWhats.astro';
 import { whats, MSG } from '../data/site';
 
@@ -222,6 +223,8 @@ const avaliacoes: Avaliacao[] = [
         </article>
       ))}
     </section>
+
+    <Orcamento />
 
     <Especificacoes id="diferenciais" titulo="Por que escolher a LM Estética?" itens={diferenciais} />
 

@@ -3,13 +3,13 @@ import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import Rodape from '../components/Rodape.astro';
 import BarraWhats from '../components/BarraWhats.astro';
-import Comparador from '../components/Comparador.astro';
+import AntesDepois from '../components/AntesDepois.astro';
 import IconeWhats from '../components/IconeWhats.astro';
 import TetoHex from '../components/TetoHex.astro';
 import Processo from '../components/Processo.astro';
 import Avaliacoes, { type Avaliacao } from '../components/Avaliacoes.astro';
 import CtaFinal from '../components/CtaFinal.astro';
-import Casos, { type Caso } from '../components/Casos.astro';
+import Orcamento from '../components/Orcamento.astro';
 import { SITE, UNIDADES, whats, MSG } from '../data/site';
 
 const img = (nome: string) => `/assets/img/${nome}`;
@@ -34,15 +34,6 @@ const passos = [
     foto: 'passo-resultado',
     alt: 'A mesma tampa traseira lisa, com o reflexo reto e a pintura original brilhando',
   },
-];
-
-// Mais pares de antes e depois: fotos enviadas pelo cliente e as do site antigo.
-// Serviço de cada caso como no site antigo; o do Yaris não foi informado.
-const casos: Caso[] = [
-  { id: 'branco', titulo: 'Lateral traseira', detalhe: 'Martelinho de ouro', altAntes: 'lateral traseira de um carro branco amassada e marcada perto da roda', altDepois: 'a mesma lateral lisa, sem o amassado' },
-  { id: 'yaris', titulo: 'Toyota Yaris', detalhe: 'Tampa traseira', altAntes: 'tampa traseira prata do Toyota Yaris com um amassado em V acima do emblema', altDepois: 'a mesma tampa lisa, com o reflexo das luzes reto' },
-  { id: 'prata', titulo: 'Lateral', detalhe: 'Funilaria', altAntes: 'lateral de um carro prata amassada perto da roda traseira', altDepois: 'o mesmo carro prata com a lateral reparada' },
-  { id: 'captur', titulo: 'Renault Captur 2022', detalhe: 'Polimento e vitrificação, em 8 horas', altAntes: 'porta laranja do Renault Captur com a pintura opaca e manchada', altDepois: 'a traseira do Captur com a pintura laranja brilhando' },
 ];
 
 // Vitrine de serviços. Textos do site antigo; motos confirmadas pelo cliente (vídeo da Ducati).
@@ -155,28 +146,9 @@ const avaliacoes: Avaliacao[] = [
       </div>
     </Processo>
 
-    <!-- ANTES E DEPOIS: a luz atravessa o carro =========================== -->
-    <section class="ad" id="antes-e-depois" aria-labelledby="ad-titulo">
-      <div class="ad__palco" data-palco style="--ad: 0.5">
-        <img class="ad__ambiente" src={img('kicks-ambiente.webp')} alt="" aria-hidden="true" width="96" height="120" loading="lazy" />
-        <h2 id="ad-titulo" class="ad__titulo">
-          <span class="ad__antes cromado">Antes</span><span class="visualmente-oculto"> e </span><span class="ad__depois cromado">Depois</span>
-        </h2>
-        <div class="ad__visual">
-          <Comparador
-            antes={{ src: img('kicks-antes-414.webp'), alt: 'Antes: tampa traseira do Nissan Kicks com amassado; o reflexo da barra de luz aparece entortado' }}
-            depois={{ src: img('kicks-depois-414.webp'), alt: 'Depois: a mesma tampa lisa, com o reflexo reto e a pintura original' }}
-            largura={414}
-            altura={518}
-            rotulo="Comparar antes e depois do Nissan Kicks"
-          />
-        </div>
-        <p class="pequeno ad__legenda">Mesmo carro, mesma luz: <strong>só o amassado saiu.</strong> A pintura continua a original de fábrica.</p>
-      </div>
-      <div class="recipiente ad__mais">
-        <Casos itens={casos} />
-      </div>
-    </section>
+    <AntesDepois />
+
+    <Orcamento />
 
     <!-- VITRINE DE SERVIÇOS ============================================== -->
     <section class="vitrine" id="servicos" aria-labelledby="vitrine-titulo">
@@ -514,68 +486,6 @@ const avaliacoes: Avaliacao[] = [
     25% { opacity: 1; }
     80% { transform: translateY(1.1rem); opacity: 0; }
     100% { opacity: 0; }
-  }
-
-  /* =================================================================
-     ANTES E DEPOIS
-     ================================================================= */
-  .ad__palco {
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    justify-items: center;
-    align-content: center;
-    gap: 1.25rem;
-    min-height: 100svh;
-    padding: calc(var(--altura-topo) + 1rem) var(--gutter) calc(6rem + env(safe-area-inset-bottom));
-    overflow: hidden;
-  }
-  .ad__ambiente {
-    position: absolute;
-    inset: -10%;
-    width: 120%;
-    max-width: none;
-    height: 120%;
-    object-fit: cover;
-    z-index: -1;
-    opacity: 0.68; /* o desfoque já vem na imagem */
-  }
-  .ad__titulo {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 30rem;
-    font-size: clamp(3rem, 2rem + 6vw, 5rem);
-  }
-  .ad__antes { opacity: calc(0.18 + 0.82 * var(--ad, 0.5)); }
-  .ad__depois { opacity: calc(0.18 + 0.82 * (1 - var(--ad, 0.5))); }
-  .ad__visual {
-    width: 100%;
-    /* altura da tela menos título, legenda e barra do WhatsApp */
-    max-width: min(30rem, calc((100svh - 18.75rem - env(safe-area-inset-bottom)) * 414 / 518));
-  }
-  .ad__visual :global(.comparar__quadro) {
-    border-radius: 12px;
-    border: 1px solid rgba(220, 236, 248, 0.38);
-    box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 60px -12px rgba(77, 181, 220, 0.45);
-  }
-  .ad__legenda { text-align: center; max-width: 30rem; }
-  .ad__legenda strong { color: var(--branco); }
-  .ad__mais { padding-block: 2rem var(--secao); }
-
-  @media (min-width: 60rem) {
-    .ad__palco { padding: calc(var(--altura-topo) + 2rem) var(--gutter) 2.5rem; }
-    .ad__titulo {
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      max-width: none;
-      align-items: center;
-      padding: var(--altura-topo) max(var(--gutter), calc((100vw - var(--largura)) / 2)) 0;
-      font-size: clamp(5rem, 1rem + 8vw, 11rem);
-      pointer-events: none;
-    }
-    .ad__visual { max-width: min(30rem, calc((100svh - 12rem) * 414 / 518)); }
   }
 
   /* =================================================================
