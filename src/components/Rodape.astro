@@ -7,7 +7,7 @@ const ano = new Date().getFullYear();
   <div class="recipiente rodape__grade">
     <div class="rodape__marca">
       <img src="/assets/img/logo-lm-192.webp" width="192" height="191" alt={SITE.nome} loading="lazy" decoding="async" />
-      <p><span class="cromado">{SITE.posicionamento}</span></p>
+      <p>{SITE.posicionamento}</p>
     </div>
 
     <div>
@@ -51,12 +51,12 @@ const ano = new Date().getFullYear();
   .rodape {
     padding-block: 4rem 2rem;
     border-top: 1px solid var(--linha);
-    background: linear-gradient(to bottom, rgba(10, 18, 28, 0.6), rgba(5, 8, 13, 0.95));
+    background: rgba(4, 10, 20, 0.6);
     font-size: 0.9375rem;
     color: var(--texto-2);
   }
   .rodape__grade { display: grid; gap: 2.25rem; }
-  .rodape__marca img { width: 5.5rem; height: auto; margin-bottom: 1rem; filter: drop-shadow(0 0 18px rgba(77, 181, 220, 0.35)); }
+  .rodape__marca img { width: 5.5rem; height: auto; margin-bottom: 1rem; }
   .rodape__marca p { font-family: var(--f-titulo); font-size: 2.25rem; line-height: 0.95; max-width: 11ch; }
   .rodape__titulo {
     font-family: var(--f-apoio);

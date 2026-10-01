@@ -1,62 +1,73 @@
 ---
 import { SITE } from '../data/site';
-// Avaliações do site antigo. Quando houver avaliações do Google,
-// preencher `link` com o perfil de quem avaliou.
+import Textura from './Textura.astro';
+// Avaliações do site antigo, em cartões de vidro. Quando houver avaliações
+// do Google, preencher `link` com o perfil de quem avaliou.
 export interface Avaliacao { nome: string; carro: string; texto: string; link?: string }
-interface Props { titulo?: string; itens: Avaliacao[] }
-const { titulo = 'Quem já trouxe o carro', itens } = Astro.props;
+interface Props { titulo?: string; destaque?: string; itens: Avaliacao[] }
+const { titulo = 'Quem já trouxe', destaque = 'o carro', itens } = Astro.props;
 ---
 
 <section class="avaliacoes" aria-labelledby="avaliacoes-titulo">
+  <Textura tipo="carbono" onde="topo" />
   <div class="recipiente">
-    <h2 id="avaliacoes-titulo" data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
-    <ul role="list" class:list={['avaliacoes__lista', { 'avaliacoes__lista--4': itens.length === 4 }]}>
-      {itens.map((a) => (
-        <li class="avaliacao">
+    <div class="sec-cabeca avaliacoes__cabeca" data-revelar>
+      <div>
+        <p class="pilula"><span class="estrelas">★★★★★</span> Clientes</p>
+        <h2 id="avaliacoes-titulo">{titulo} <span class="destaque-cor">{destaque}</span></h2>
+      </div>
+      <a class="btn btn--vidro btn--pequeno" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver no Google</a>
+    </div>
+    <div class="avals" tabindex="0" role="region" aria-label="Avaliações de clientes">
+      {itens.map((a, i) => (
+        <figure class="aval vidro" data-revelar style={`--atraso: ${i * 0.06}s`}>
+          <p class="estrelas" aria-label="5 estrelas">★★★★★</p>
           <blockquote><p>{a.texto}</p></blockquote>
-          <p class="avaliacao__autor">
-            {a.link ? <a href={a.link} target="_blank" rel="noopener"><strong>{a.nome}</strong></a> : <strong>{a.nome}</strong>}
-            <span>{a.carro}</span>
-          </p>
-        </li>
+          <figcaption class="aval__autor">
+            <span class="aval__avatar" aria-hidden="true">{a.nome[0]}</span>
+            <span>
+              {a.link ? <a href={a.link} target="_blank" rel="noopener"><strong>{a.nome}</strong></a> : <strong>{a.nome}</strong>}
+              <span>{a.carro}</span>
+            </span>
+          </figcaption>
+        </figure>
       ))}
-    </ul>
-    <a class="botao botao--vidro" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver avaliações no Google</a>
+    </div>
   </div>
 </section>
 
 <style>
-  /* =================================================================
-     AVALIAÇÕES
-     ================================================================= */
-  .avaliacoes { padding-block: 0 var(--secao); }
-  .avaliacoes__lista { display: grid; gap: 2.5rem; margin-block: 3rem; }
-  .avaliacao {
-    position: relative;
-    padding: 0.25rem 0 0.25rem 1.5rem;
+  .avaliacoes { position: relative; isolation: isolate; padding-top: var(--secao); }
+  .avaliacoes__cabeca { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; width: 100%; }
+  .avaliacoes__cabeca > div { display: grid; gap: 1rem; justify-items: start; }
+  .avals {
+    display: flex;
+    gap: 1rem;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 0.25rem var(--gutter) 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
   }
-  .avaliacao::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--azul-led), rgba(77, 181, 220, 0));
-    box-shadow: 0 0 10px rgba(77, 181, 220, 0.6);
+  .avals::-webkit-scrollbar { display: none; }
+  .aval { flex: 0 0 min(82vw, 22rem); scroll-snap-align: start; margin: 0; display: grid; gap: 1rem; align-content: space-between; padding: 1.5rem; }
+  .aval blockquote p { font-size: 1rem; line-height: 1.55; }
+  .aval__autor { display: flex; align-items: center; gap: 0.75rem; font-family: var(--f-apoio); }
+  .aval__autor strong { display: block; }
+  .aval__autor span span { color: var(--texto-2); font-size: 0.875rem; }
+  .aval__avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #43a8ec, #1f6fb2);
+    font-weight: 700;
   }
-  .avaliacao blockquote p { font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem); line-height: 1.55; }
-  .avaliacao__autor { margin-top: 1.25rem; font-family: var(--f-apoio); }
-  .avaliacao__autor strong { display: block; font-weight: 700; font-size: 1.0625rem; }
-  .avaliacao__autor span { color: var(--texto-2); }
-
-  @media (min-width: 60rem) {
-    .avaliacoes__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3.5rem; margin-block: 4rem; }
-  }
-  @media (min-width: 60rem) {
-    .avaliacoes__lista--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (min-width: 80rem) {
-    .avaliacoes__lista--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5rem; }
+  @media (min-width: 64rem) {
+    .avals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding-inline: 0; overflow: visible; }
+    .aval { flex: none; }
   }
 </style>

@@ -1,28 +1,28 @@
 ---
-// Lista de benefícios em formato de ficha técnica: título à esquerda,
-// explicação à direita, linhas finas entre os itens. Cada linha é revelada
-// pela barra de luz ([data-varredura]).
+// Benefícios em caixas de vidro: título curto e explicação.
+// A primeira caixa ganha o azul cheio da marca, como na home.
 interface Item { titulo: string; texto: string }
 interface Props {
   id: string;
   titulo: string;
+  destaque?: string; // final do título, na cor de destaque
   lead?: string;
   itens: Item[];
 }
-const { id, titulo, lead, itens } = Astro.props;
+const { id, titulo, destaque, lead, itens } = Astro.props;
 ---
 
 <section class="ficha" id={id} aria-labelledby={`${id}-titulo`}>
-  <div class="recipiente ficha__grade">
-    <div class="ficha__cabeca">
-      <h2 id={`${id}-titulo`} data-titulo><span class="cromado" data-brilho>{titulo}</span></h2>
+  <div class="recipiente">
+    <div class="sec-cabeca" data-revelar>
+      <h2 id={`${id}-titulo`}>{titulo}{destaque && <> <span class="destaque-cor">{destaque}</span></>}</h2>
       {lead && <p class="lead">{lead}</p>}
       <slot name="cabeca" />
     </div>
-    <dl class="ficha__lista">
-      {itens.map((item) => (
-        <div class="ficha__item" data-varredura>
-          <dt><span class="cromado">{item.titulo}</span></dt>
+    <dl class:list={['ficha__lista', { 'ficha__lista--3': itens.length === 3 }]}>
+      {itens.map((item, i) => (
+        <div class:list={['ficha__item', i === 0 ? 'ficha__item--destaque' : 'vidro']} data-revelar style={`--atraso: ${i * 0.06}s`}>
+          <dt>{item.titulo}</dt>
           <dd>{item.texto}</dd>
         </div>
       ))}
@@ -31,28 +31,25 @@ const { id, titulo, lead, itens } = Astro.props;
 </section>
 
 <style>
-  .ficha { padding-block: var(--secao); }
-  .ficha__grade { display: grid; gap: 2.5rem; }
-  .ficha__cabeca { display: grid; gap: 1.25rem; align-content: start; justify-items: start; }
-  .ficha__lista { border-top: 1px solid var(--linha); }
-  .ficha__item {
-    display: grid;
-    gap: 0.5rem;
-    padding-block: 1.5rem;
-    border-bottom: 1px solid var(--linha);
+  .ficha { padding-top: var(--secao); }
+  .ficha__lista { display: grid; gap: 0.9rem; }
+  .ficha__item { display: grid; gap: 0.6rem; align-content: start; padding: 1.5rem; }
+  .ficha__item dt { font-family: var(--f-titulo); font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem); line-height: 0.95; }
+  .ficha__item dd { margin: 0; color: var(--texto-2); }
+  .ficha__item--destaque {
+    border-radius: var(--raio);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: linear-gradient(145deg, #3a9fe4, #1a5f9c);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 24px 48px -22px rgba(46, 143, 214, 0.8);
   }
-  .ficha__item dt {
-    font-family: var(--f-titulo);
-    font-size: clamp(2rem, 1.6rem + 1.6vw, 3rem);
-    line-height: 0.95;
-  }
-  .ficha__item dd { margin: 0; color: var(--texto-2); max-width: 44ch; }
+  .ficha__item--destaque dd { color: rgba(255, 255, 255, 0.92); }
 
   @media (min-width: 48rem) {
-    .ficha__item { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2rem; align-items: baseline; }
+    .ficha__lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ficha__lista--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (min-width: 64rem) {
-    .ficha__grade { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 5rem; }
-    .ficha__cabeca { position: sticky; top: calc(var(--altura-topo) + 2.5rem); }
+    .ficha__lista:not(.ficha__lista--3) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .ficha__item { padding: 1.75rem; }
   }
 </style>

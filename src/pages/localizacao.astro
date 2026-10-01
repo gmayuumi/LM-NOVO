@@ -74,11 +74,11 @@ const perguntas = [
     <!-- UNIDADES =========================================================== -->
     <section class="local" id="santo-amaro" aria-labelledby="sa-titulo">
       <div class="recipiente local__grade">
-        <div class="local__texto">
-          <p class="local__papel">Unidade matriz</p>
-          <h2 id="sa-titulo" data-titulo><span class="cromado" data-brilho>{sa.nome}</span></h2>
+        <div class="local__texto" data-revelar>
+          <p class="pilula"><span class="ponto-vivo"></span> Unidade matriz</p>
+          <h2 id="sa-titulo">{sa.nome}</h2>
           <p class="texto">Nossa oficina em Santo Amaro foi projetada para oferecer a melhor experiência. Contamos com equipamentos de última geração e uma sala de espera climatizada para você aguardar com conforto.</p>
-          <dl class="local__dados">
+          <dl class="local__dados vidro">
             <div>
               <dt>Endereço</dt>
               <dd><address>{sa.rua}<br />{sa.bairro}, {sa.cidade} - {sa.uf}<br />CEP {sa.cep}</address></dd>
@@ -99,9 +99,9 @@ const perguntas = [
             <li>Estacionamento gratuito e seguro</li>
             <li>Sala de espera climatizada, com Wi-Fi, TV e café</li>
           </ul>
-          <a class="botao botao--vidro" href={sa.rota} target="_blank" rel="noopener">Criar rota no mapa</a>
+          <a class="btn btn--primario" href={sa.rota} target="_blank" rel="noopener">Criar rota no mapa</a>
         </div>
-        <div class="mapa" data-varredura>
+        <div class="mapa" data-revelar>
           <iframe
             src={mapa(`${sa.rua}, ${sa.bairro}, ${sa.cidade} - ${sa.uf}`)}
             title={`Mapa da unidade ${sa.nome}`}
@@ -114,11 +114,11 @@ const perguntas = [
 
     <section class="local local--invertido" id="brooklin" aria-labelledby="br-titulo">
       <div class="recipiente local__grade">
-        <div class="local__texto">
-          <p class="local__papel">Unidade especializada em pintura</p>
-          <h2 id="br-titulo" data-titulo><span class="cromado" data-brilho>{br.nome}</span></h2>
+        <div class="local__texto" data-revelar>
+          <p class="pilula"><span class="ponto-vivo"></span> Unidade especializada em pintura</p>
+          <h2 id="br-titulo">{br.nome}</h2>
           <p class="texto">Nossa segunda unidade possui o melhor da tecnologia automotiva, abrigando nosso Sistema de Cabine Exclusiva para Pintura, desenhado para alcançar resultados absolutamente imaculados.</p>
-          <dl class="local__dados">
+          <dl class="local__dados vidro">
             <div>
               <dt>Endereço</dt>
               <!-- [CONFIRMAR CEP do Brooklin] -->
@@ -137,9 +137,9 @@ const perguntas = [
               </div>
             ))}
           </dl>
-          <a class="botao botao--vidro" href={br.rota} target="_blank" rel="noopener">Criar rota no mapa</a>
+          <a class="btn btn--primario" href={br.rota} target="_blank" rel="noopener">Criar rota no mapa</a>
         </div>
-        <div class="mapa" data-varredura>
+        <div class="mapa" data-revelar>
           <iframe
             src={mapa(`${br.rua}, ${br.bairro}, ${br.cidade} - ${br.uf}`)}
             title={`Mapa da unidade ${br.nome}`}
@@ -153,12 +153,14 @@ const perguntas = [
     <!-- ESTRUTURA ========================================================== -->
     <section class="estrutura" aria-labelledby="estrutura-titulo">
       <div class="recipiente">
-        <h2 id="estrutura-titulo" data-titulo><span class="cromado" data-brilho>Conheça nossa estrutura</span></h2>
+        <div class="sec-cabeca" data-revelar>
+          <h2 id="estrutura-titulo">Conheça nossa <span class="destaque-cor">estrutura</span></h2>
+        </div>
         <ul role="list" class="estrutura__mosaico">
           <!-- [CONFIRMAR se a cabine das fotos é a do Brooklin] -->
-          <li class="estrutura__item estrutura__item--largo">
+          <li class="estrutura__item estrutura__item--largo" data-revelar>
             <figure>
-              <div class="estrutura__foto" data-varredura data-acender>
+              <div class="estrutura__foto">
                 <img
                   src={img('cabine-yaris-ampla-720.webp')}
                   srcset={`${img('cabine-yaris-ampla-720.webp')} 720w, ${img('cabine-yaris-ampla-1280.webp')} 1280w`}
@@ -170,47 +172,46 @@ const perguntas = [
                   decoding="async"
                 />
               </div>
-              <figcaption class="pequeno">Cabine de pintura com estufa</figcaption>
+              <figcaption class="pilula">Cabine de pintura com estufa</figcaption>
             </figure>
           </li>
-          <li class="estrutura__item">
+          <li class="estrutura__item" data-revelar>
             <figure>
-              <div class="estrutura__foto" data-varredura>
+              <div class="estrutura__foto">
                 <img src={img('oficina-interior-483.webp')} width="483" height="365" alt="Visão geral da oficina, limpa e organizada, com carros sendo atendidos" loading="lazy" decoding="async" />
               </div>
-              <figcaption class="pequeno">Oficina</figcaption>
+              <figcaption class="pilula">Oficina</figcaption>
             </figure>
           </li>
-          <li class="estrutura__item">
+          <li class="estrutura__item" data-revelar>
             <figure>
-              <div class="estrutura__foto" data-varredura>
+              <div class="estrutura__foto">
                 <img src={img('estetica-glc-preto-456.webp')} width="456" height="364" alt="Mercedes GLC preta brilhando no estúdio de estética, sob o teto de LED" loading="lazy" decoding="async" />
               </div>
-              <figcaption class="pequeno">Estúdio de estética</figcaption>
+              <figcaption class="pilula">Estúdio de estética</figcaption>
             </figure>
           </li>
-          <li class="estrutura__item">
+          <li class="estrutura__item" data-revelar>
             <figure>
               <!-- [CONFIRMAR de qual unidade é esta fachada] -->
-              <div class="estrutura__foto" data-varredura>
+              <div class="estrutura__foto">
                 <img src={img('fachada-3-618.webp')} width="618" height="381" alt="Fachada da LM Estética Automotiva, com o logo e a oficina aberta para a rua" loading="lazy" decoding="async" />
               </div>
-              <figcaption class="pequeno">Fachada</figcaption>
+              <figcaption class="pilula">Fachada</figcaption>
             </figure>
           </li>
         </ul>
       </div>
     </section>
 
-    <Faq titulo="Dúvidas sobre a visita?" itens={perguntas} />
+    <Faq titulo="Dúvidas sobre" destaque="a visita?" itens={perguntas} />
 
     <CtaFinal
+      pilula="Resposta em menos de 2 minutos"
       titulo="Agende e seja atendido na hora"
       texto="Agendando pelo WhatsApp, você garante que um de nossos especialistas estará disponível para te atender, sem espera."
       botao="Agendar visita no WhatsApp"
       mensagem={msg.visita}
-      nota="Resposta em menos de 2 minutos no horário comercial."
-      fundo="unidade-santo-amaro-ambiente.webp"
     />
   </main>
 
@@ -222,78 +223,98 @@ const perguntas = [
   /* =================================================================
      UNIDADES
      ================================================================= */
-  .local { padding-block: var(--secao) 0; scroll-margin-top: var(--altura-topo); }
-  .local__grade { display: grid; gap: 2.5rem; }
+  .local { padding-top: var(--secao); scroll-margin-top: var(--altura-topo); }
+  .local__grade { display: grid; gap: 2rem; }
   .local__texto { display: grid; gap: 1.25rem; justify-items: start; align-content: start; }
-  .local__papel {
-    font-family: var(--f-apoio);
-    font-weight: 700;
-    color: var(--azul-led-claro);
-  }
-  .local__texto h2 { margin-top: -0.5rem; }
+  .local__texto .texto { color: var(--texto-2); }
 
-  .local__dados { display: grid; gap: 1rem; width: 100%; border-top: 1px solid var(--linha); padding-top: 1.25rem; }
+  .local__dados { display: grid; gap: 1rem; width: 100%; padding: 1.25rem; --raio: 18px; }
   .local__dados div { display: grid; gap: 0.125rem; }
-  .local__dados dt { font-family: var(--f-apoio); font-weight: 700; color: var(--texto-2); font-size: var(--t-pequeno); }
+  .local__dados dt { font-family: var(--f-apoio); font-weight: 700; color: var(--ciano); font-size: var(--t-pequeno); }
   .local__dados dd { margin: 0; }
   .local__dados address { font-style: normal; }
   .local__dados a { text-decoration: none; }
-  .local__dados a:hover { color: var(--azul-led-claro); text-decoration: underline; }
+  .local__dados a:hover { color: #8fdcff; text-decoration: underline; }
 
   .local__itens { display: grid; gap: 0.5rem; }
-  .local__itens li { position: relative; padding-left: 1.75rem; font-family: var(--f-apoio); font-size: 1.125rem; }
+  .local__itens li { position: relative; padding-left: 2.25rem; font-family: var(--f-apoio); font-size: 1.125rem; line-height: 1.6; }
   .local__itens li::before {
     content: '';
     position: absolute;
-    left: 0.125rem;
-    top: 0.3em;
-    width: 0.8rem;
-    height: 0.45rem;
-    border-left: 2px solid var(--azul-led);
-    border-bottom: 2px solid var(--azul-led);
+    left: 0;
+    top: 0.15em;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #43a8ec, #1f6fb2);
+  }
+  .local__itens li::after {
+    content: '';
+    position: absolute;
+    left: 0.48rem;
+    top: 0.55em;
+    width: 0.55rem;
+    height: 0.3rem;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
     transform: rotate(-45deg);
-    filter: drop-shadow(0 0 4px rgba(77, 181, 220, 0.9));
   }
 
-  /* os três benefícios da cabine, como leitura de painel */
-  .local__cabine { display: grid; gap: 0; width: 100%; border-top: 1px solid var(--linha); }
-  .local__cabine div { display: grid; gap: 0.25rem; padding-block: 1rem; border-bottom: 1px solid var(--linha); }
-  .local__cabine dt { font-family: var(--f-titulo); font-size: 1.875rem; line-height: 1; color: var(--branco); }
-  .local__cabine dd { margin: 0; color: var(--texto-2); }
+  /* os três benefícios da cabine, em caixinhas */
+  .local__cabine { display: grid; gap: 0.6rem; width: 100%; }
+  .local__cabine div {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(143, 212, 239, 0.22);
+    border-radius: 16px;
+    background: rgba(92, 200, 240, 0.06);
+  }
+  .local__cabine div:first-child { border-color: rgba(255, 255, 255, 0.25); background: linear-gradient(145deg, #3a9fe4, #1a5f9c); }
+  .local__cabine dt { font-family: var(--f-titulo); font-size: 1.75rem; line-height: 1; }
+  .local__cabine dd { margin: 0; color: var(--texto-2); font-size: 0.9375rem; }
+  .local__cabine div:first-child dd { color: rgba(255, 255, 255, 0.9); }
 
   .mapa {
     aspect-ratio: 4 / 3;
-    border-radius: 12px;
     overflow: hidden;
-    border: 1px solid rgba(220, 236, 248, 0.3);
-    background: var(--noite-2);
-    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.9), 0 0 60px -20px rgba(77, 181, 220, 0.35);
+    padding: 0.5rem;
+    border-radius: 28px;
+    border: 1px solid rgba(143, 212, 239, 0.3);
+    background: linear-gradient(135deg, rgba(92, 200, 240, 0.16), rgba(35, 120, 179, 0.06));
+    box-shadow: inset 0 1px 0 rgba(190, 232, 255, 0.3), 0 40px 100px -40px rgba(0, 0, 0, 0.8);
   }
   /* mapa claro do Google, escurecido para combinar com o site */
   .mapa iframe {
     width: 100%;
     height: 100%;
     border: 0;
+    border-radius: 20px;
     filter: invert(0.92) hue-rotate(180deg) saturate(0.7) brightness(0.95) contrast(0.95);
   }
-  /* a rolagem suave desliga cliques em iframes; o mapa precisa deles */
-  :global(.lenis.lenis-smooth) .mapa iframe { pointer-events: auto; }
 
   @media (min-width: 60rem) {
-    .local__grade { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 5rem; align-items: center; }
+    .local__grade { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 4rem; align-items: center; }
     .local--invertido .mapa { order: -1; }
     .local__dados { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1.5rem; }
+    .local__cabine { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .mapa { aspect-ratio: 5 / 4; }
   }
 
   /* =================================================================
-     ESTRUTURA
+     ESTRUTURA: mosaico de fotos com legenda em pílula
      ================================================================= */
-  .estrutura { padding-block: var(--secao) 0; }
-  .estrutura__mosaico { display: grid; gap: 1.25rem; margin-top: 3rem; }
-  .estrutura__item figure { margin: 0; display: grid; gap: 0.5rem; }
-  .estrutura__foto { aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; border: 1px solid var(--linha); }
+  .estrutura { padding-top: var(--secao); }
+  .estrutura__mosaico { display: grid; gap: 1rem; }
+  .estrutura__item figure { position: relative; margin: 0; }
+  .estrutura__foto { aspect-ratio: 4 / 3; border-radius: var(--raio); overflow: hidden; border: 1px solid rgba(143, 212, 239, 0.22); }
   .estrutura__foto img { width: 100%; height: 100%; object-fit: cover; }
+  .estrutura__item figcaption {
+    position: absolute;
+    left: 0.9rem;
+    bottom: 0.9rem;
+    background: rgba(6, 17, 32, 0.55);
+  }
 
   @media (min-width: 40rem) {
     .estrutura__mosaico { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -301,7 +322,7 @@ const perguntas = [
   }
   /* desktop: duas fileiras de larguras alternadas (7+5, 5+7), mesma altura */
   @media (min-width: 60rem) {
-    .estrutura__mosaico { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; }
+    .estrutura__mosaico { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.25rem; }
     .estrutura__item,
     .estrutura__item--largo { grid-column: span 5; }
     .estrutura__item:nth-child(4n + 1),

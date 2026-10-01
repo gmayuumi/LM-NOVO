@@ -9,6 +9,8 @@ import Comparador from '../components/Comparador.astro';
 import Orcamento from '../components/Orcamento.astro';
 import IconeWhats from '../components/IconeWhats.astro';
 import Textura from '../components/Textura.astro';
+import Avaliacoes, { type Avaliacao } from '../components/Avaliacoes.astro';
+import CtaFinal from '../components/CtaFinal.astro';
 import { SITE, UNIDADES, whats, MSG } from '../data/site';
 
 const img = (nome: string) => `/assets/img/${nome}`;
@@ -20,7 +22,7 @@ const servicos = [
   { nome: 'Estética e motos', apoio: 'Polimento, vitrificação e higienização', href: '/servicos#estetica', foto: 'estetica-moto-harley-720.webp', w: 720, h: 378, classe: 'card--largo' },
 ];
 
-const avaliacoes = [
+const avaliacoes: Avaliacao[] = [
   { nome: 'Maria O.', carro: 'Jeep Compass', texto: 'Levei para fazer martelinho de ouro e fiquei impressionada. Não dá pra ver onde estava o amassado. Recomendo de olhos fechados!' },
   { nome: 'João S.', carro: 'BMW 320i', texto: 'Serviço impecável. Meu carro saiu melhor do que quando tirei da concessionária. O atendimento é outro nível, muito atenciosos.' },
   { nome: 'Ana C.', carro: 'Hyundai Creta', texto: 'Fizeram a funilaria e pintura do meu para-choque. A cor ficou idêntica, serviço rápido e com um preço justo. Profissionais de verdade.' },
@@ -33,7 +35,6 @@ const avaliacoes = [
   descricao="Especialistas em martelinho de ouro na Zona Sul de SP: o amassado sai, a pintura original fica, em horas. Orçamento pelo WhatsApp com resposta em menos de 2 minutos. Santo Amaro e Brooklin."
   caminho="/"
   preloadImagem={img('hero-carro-retrato-700.webp')}
-  estilo="vidro"
 >
   <Cabecalho />
 
@@ -221,46 +222,17 @@ const avaliacoes = [
     </section>
 
     <!-- 7. AVALIAÇÕES ===================================================== -->
-    <section class="sec" aria-labelledby="avaliacoes-titulo">
-      <Textura tipo="carbono" onde="topo" />
-      <div class="recipiente">
-        <div class="sec-cabeca sec-cabeca--linha" data-revelar>
-          <div>
-            <p class="pilula"><span class="estrelas">★★★★★</span> Clientes</p>
-            <h2 id="avaliacoes-titulo">Quem já trouxe <span class="destaque-cor">o carro</span></h2>
-          </div>
-          <a class="btn btn--vidro btn--pequeno" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver no Google</a>
-        </div>
-        <div class="avals" tabindex="0" role="region" aria-label="Avaliações de clientes">
-          {avaliacoes.map((a, i) => (
-            <figure class="aval vidro" data-revelar style={`--atraso: ${i * 0.06}s`}>
-              <p class="estrelas" aria-label="5 estrelas">★★★★★</p>
-              <blockquote><p>{a.texto}</p></blockquote>
-              <figcaption class="aval__autor">
-                <span class="aval__avatar" aria-hidden="true">{a.nome[0]}</span>
-                <span><strong>{a.nome}</strong><span>{a.carro}</span></span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Avaliacoes itens={avaliacoes} />
 
     <!-- 8. CHAMADA FINAL ================================================== -->
-    <section class="sec cta" aria-labelledby="cta-titulo">
-      <div class="recipiente">
-        <div class="cta__painel" data-revelar>
-          <Textura tipo="hex" onde="direita" />
-          <p class="pilula"><span class="ponto-vivo ponto-vivo--verde"></span> Resposta em menos de 2 minutos</p>
-          <h2 id="cta-titulo">Mande a foto do amassado</h2>
-          <p class="cta__texto">Receba um pré-orçamento pelo WhatsApp, sem compromisso.</p>
-          <div class="h__acoes">
-            <a class="btn btn--whats" href={whats(MSG.foto)} target="_blank" rel="noopener" data-cta-principal><IconeWhats /> Enviar foto pelo WhatsApp</a>
-            <a class="btn btn--vidro" href="#orcamento">Montar orçamento</a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <CtaFinal
+      pilula="Resposta em menos de 2 minutos"
+      titulo="Mande a foto do amassado"
+      texto="Receba um pré-orçamento pelo WhatsApp, sem compromisso."
+      botao="Enviar foto pelo WhatsApp"
+      mensagem={MSG.foto}
+      cta2={{ rotulo: 'Montar orçamento', href: '#orcamento' }}
+    />
   </main>
 
   <Rodape />
@@ -344,8 +316,6 @@ const avaliacoes = [
      ================================================================= */
   .sec { position: relative; isolation: isolate; padding-block: var(--secao) 0; }
   .sec--piso { padding-bottom: 4rem; }
-  .sec-cabeca--linha { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; width: 100%; }
-  .sec-cabeca--linha > div { display: grid; gap: 1rem; justify-items: start; }
 
   /* caixas do martelinho */
   .bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
@@ -484,60 +454,5 @@ const avaliacoes = [
   @media (min-width: 60rem) {
     .unid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
     .unid__card { min-height: 36rem; }
-  }
-
-  /* avaliações */
-  .avals {
-    display: flex;
-    gap: 1rem;
-    margin-inline: calc(var(--gutter) * -1);
-    padding: 0.25rem var(--gutter) 1rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    scrollbar-width: none;
-  }
-  .avals::-webkit-scrollbar { display: none; }
-  .aval { flex: 0 0 min(82vw, 22rem); scroll-snap-align: start; margin: 0; display: grid; gap: 1rem; align-content: space-between; padding: 1.5rem; }
-  .aval blockquote p { font-size: 1rem; line-height: 1.55; }
-  .aval__autor { display: flex; align-items: center; gap: 0.75rem; font-family: var(--f-apoio); }
-  .aval__autor strong { display: block; }
-  .aval__autor span span { color: var(--texto-2); font-size: 0.875rem; }
-  .aval__avatar {
-    display: grid;
-    place-items: center;
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #43a8ec, #1f6fb2);
-    font-weight: 700;
-  }
-  @media (min-width: 64rem) {
-    .avals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding-inline: 0; overflow: visible; }
-    .aval { flex: none; }
-  }
-
-  /* chamada final */
-  .cta { padding-bottom: var(--secao); }
-  .cta__painel {
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    gap: 1.1rem;
-    justify-items: start;
-    overflow: hidden;
-    padding: 2.5rem 1.5rem;
-    border-radius: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background:
-      radial-gradient(70% 90% at 100% 0%, rgba(143, 220, 255, 0.55), transparent 60%),
-      linear-gradient(140deg, #2e8fd6 0%, #185a93 55%, #0c2c4c 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 40px 80px -40px rgba(46, 143, 214, 0.9);
-  }
-  .cta__painel h2 { font-size: clamp(2.75rem, 1.6rem + 5vw, 6rem); max-width: 12ch; }
-  .cta__texto { font-family: var(--f-apoio); font-size: var(--t-lead); color: rgba(255, 255, 255, 0.9); }
-  .cta__painel :global(.textura--hex path) { stroke: rgba(255, 255, 255, 0.24); }
-  @media (min-width: 60rem) {
-    .cta__painel { padding: 4rem; }
   }
 </style>

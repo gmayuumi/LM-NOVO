@@ -1,13 +1,13 @@
 ---
 import IconeWhats from './IconeWhats.astro';
-// Hero das páginas internas. Celular: foto em tela cheia com o texto por cima.
-// Desktop: texto à esquerda e a foto num "display" de vitrine à direita, com
-// uma cópia minúscula e desfocada enchendo a tela de luz ambiente.
-// Usa os mesmos ganchos de animação do hero da home (src/scripts/site.ts).
+// Topo das páginas internas, no mesmo visual da home.
+// Celular: foto em faixa alta no topo e o texto entrando por cima da borda dela.
+// Desktop: texto à esquerda e a foto num painel de vidro à direita, com uma
+// cópia minúscula e desfocada da foto enchendo o fundo de cor.
 interface Botao { rotulo: string; href: string; whats?: boolean }
 interface Props {
-  titulo: string[]; // uma linha por item
-  subtitulo?: string;
+  titulo: string[]; // uma linha por item; a última ganha a cor de destaque
+  subtitulo?: string; // vira a pílula acima do título
   texto: string;
   cta: Botao;
   cta2?: Botao;
@@ -20,11 +20,10 @@ const longo = titulo.length >= 4; // título de 4 linhas: letra menor para o bot
 const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {});
 ---
 
-<section class="hero-int" data-hero aria-labelledby="hero-titulo" style={`--razao: ${razao}`}>
+<section class="hero-int" aria-labelledby="hero-titulo" style={`--razao: ${razao}`}>
   <img class="hero-int__ambiente" src={`/assets/img/${foto.ambiente}`} alt="" aria-hidden="true" width="96" height="128" />
-  <div class="hero-int__vitrine" data-hero-vitrine>
+  <div class="hero-int__vitrine">
     <img
-      data-hero-midia
       src={foto.src}
       srcset={foto.srcset}
       sizes="(min-width: 60rem) 30rem, 100vw"
@@ -36,22 +35,21 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
     />
   </div>
 
-  <div class="recipiente hero-int__conteudo" data-hero-conteudo>
+  <div class="recipiente hero-int__conteudo" data-revelar>
+    {subtitulo && <p class="pilula hero-int__pilula"><span class="ponto-vivo"></span> {subtitulo}</p>}
     <h1 id="hero-titulo" class:list={['hero-int__titulo', { 'hero-int__titulo--longo': longo }]}>
-      {titulo.map((linha, i) => <span class="hero__linha"><span class="cromado" style={`--i: ${i}`}>{linha}</span></span>)}
+      {titulo.map((linha, i) => <span class:list={{ 'destaque-cor': i === titulo.length - 1 }}>{linha}</span>)}
     </h1>
-    {subtitulo && <p class="hero__subtitulo">{subtitulo}</p>}
-    <p class="lead hero__lead">{texto}</p>
-    <div class="hero__acoes">
-      <a class="botao" data-cta-principal href={cta.href} {...externo(cta)}>{cta.whats && <IconeWhats />} {cta.rotulo}</a>
-      {cta2 && <a class="botao botao--vidro" href={cta2.href} {...externo(cta2)}>{cta2.whats && <IconeWhats />} {cta2.rotulo}</a>}
+    <p class="hero-int__lead">{texto}</p>
+    <div class="hero-int__acoes">
+      <a class="btn btn--primario" data-cta-principal href={cta.href} {...externo(cta)}>{cta.whats && <IconeWhats />} {cta.rotulo}</a>
+      {cta2 && <a class="btn btn--vidro" href={cta2.href} {...externo(cta2)}>{cta2.whats && <IconeWhats />} {cta2.rotulo}</a>}
     </div>
-    {prova && <p class="pequeno hero__prova">{prova}</p>}
+    {prova && <p class="pequeno hero-int__prova">{prova}</p>}
   </div>
 </section>
 
 <style>
-  /* celular: a foto é uma faixa alta no topo e o título entra por cima da borda dela */
   .hero-int {
     position: relative;
     isolation: isolate;
@@ -62,7 +60,7 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
   .hero-int__vitrine {
     position: relative;
     z-index: -1;
-    height: max(24rem, 60svh);
+    height: max(24rem, 58svh);
     overflow: hidden;
   }
   .hero-int__vitrine img { width: 100%; height: 100%; object-fit: cover; }
@@ -71,33 +69,17 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to bottom, rgba(5, 8, 13, 0.7) 0%, rgba(5, 8, 13, 0) 22%),
-      linear-gradient(to top, var(--noite) 0%, rgba(5, 8, 13, 0.75) 22%, rgba(5, 8, 13, 0) 55%);
+      linear-gradient(to bottom, rgba(6, 17, 32, 0.7) 0%, rgba(6, 17, 32, 0) 22%),
+      linear-gradient(to top, var(--noite) 0%, rgba(6, 17, 32, 0.75) 24%, rgba(6, 17, 32, 0) 55%),
+      radial-gradient(90% 50% at 0% 100%, rgba(46, 143, 214, 0.35), transparent 70%);
   }
-  .hero-int__conteudo { position: relative; margin-top: -7rem; }
+  .hero-int__conteudo { position: relative; display: grid; gap: 1.1rem; justify-items: start; margin-top: -7rem; }
 
-  .hero-int__titulo { font-size: clamp(3.25rem, 1.4rem + 6.4vw, 7.5rem); line-height: 0.9; }
-  .hero-int__titulo--longo { font-size: clamp(3.25rem, 1.6rem + 4.8vw, 6rem); }
-  /* folga em cima para acentos (Ã, É): o cromado só pinta dentro da caixa do span */
-  .hero__linha { display: block; overflow: hidden; padding-bottom: 0.06em; margin-top: -0.16em; }
-  .hero__linha > span { display: inline-block; padding-top: 0.16em; }
-  .hero__subtitulo {
-    margin-top: 1rem;
-    font-family: var(--f-apoio);
-    font-weight: 700;
-    font-size: clamp(1.1875rem, 1.05rem + 0.6vw, 1.5rem);
-    color: var(--azul-led-claro);
-    max-width: 36ch;
-  }
-  .hero__lead { margin-top: 1rem; }
-  .hero__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
-  .hero__acoes .botao { flex: 1 1 100%; }
-  .hero__prova { margin-top: 0.875rem; }
-
-
-  @media (min-width: 40rem) {
-    .hero__acoes .botao { flex: 0 0 auto; }
-  }
+  .hero-int__titulo { font-size: clamp(3.25rem, 1.4rem + 6.4vw, 7rem); line-height: 0.92; }
+  .hero-int__titulo--longo { font-size: clamp(3rem, 1.6rem + 4.6vw, 5.75rem); }
+  .hero-int__titulo > span { display: block; }
+  .hero-int__lead { font-family: var(--f-apoio); font-size: var(--t-lead); line-height: 1.35; color: rgba(242, 245, 248, 0.88); max-width: 38ch; }
+  .hero-int__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
 
   @media (min-width: 60rem) {
     .hero-int {
@@ -117,16 +99,18 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
       max-width: none;
       height: 124%;
       object-fit: cover;
-      opacity: 0.89; /* o desfoque já vem na imagem */
+      opacity: 0.8; /* o desfoque já vem na imagem */
     }
     .hero-int::before {
       content: '';
       position: absolute;
       inset: 0;
       z-index: -2;
-      background: linear-gradient(90deg, rgba(5, 8, 13, 0.94) 0%, rgba(5, 8, 13, 0.6) 48%, rgba(5, 8, 13, 0.25) 100%);
+      background:
+        linear-gradient(90deg, rgba(6, 17, 32, 0.95) 0%, rgba(6, 17, 32, 0.62) 48%, rgba(6, 17, 32, 0.3) 100%),
+        radial-gradient(60% 70% at 0% 100%, rgba(46, 143, 214, 0.35), transparent 70%);
     }
-    /* centralizada na vertical sem transform (a animação usa o transform) */
+    /* a foto num painel de vidro, centralizado na vertical */
     .hero-int__vitrine {
       position: absolute;
       overflow: visible;
@@ -136,14 +120,15 @@ const externo = (b: Botao) => (b.whats || b.href.startsWith('http') ? { target: 
       height: calc(var(--midia-l) / var(--razao));
       margin-block: auto;
       z-index: 0;
+      padding: 0.6rem;
+      border-radius: 28px;
+      border: 1px solid rgba(143, 212, 239, 0.3);
+      background: linear-gradient(135deg, rgba(92, 200, 240, 0.16), rgba(35, 120, 179, 0.06));
+      box-shadow: inset 0 1px 0 rgba(190, 232, 255, 0.3), 0 40px 100px -30px rgba(0, 0, 0, 0.8), 0 0 80px -20px rgba(46, 143, 214, 0.6);
+      box-sizing: content-box;
     }
     .hero-int__vitrine::after { content: none; }
-    .hero-int__vitrine img {
-      border-radius: 12px;
-      border: 1px solid rgba(220, 236, 248, 0.4);
-      box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 70px -10px rgba(77, 181, 220, 0.45);
-      -webkit-box-reflect: below 14px linear-gradient(transparent 74%, rgba(255, 255, 255, 0.2));
-    }
-    .hero-int__conteudo { margin-top: 0; padding-right: calc(var(--midia-l) + 4rem); }
+    .hero-int__vitrine img { border-radius: 20px; }
+    .hero-int__conteudo { margin-top: 0; padding-right: calc(var(--midia-l) + 5rem); }
   }
 </style>

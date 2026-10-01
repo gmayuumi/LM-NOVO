@@ -26,7 +26,6 @@ interface Especialidade {
   nota?: string;
   foto: Foto;
   detalhe?: Foto & { legenda: string };
-  acender?: boolean; // luzes da cabine acendendo
 }
 
 // Textos do site antigo (docs/conteudo-site-atual.md, 3.3)
@@ -97,7 +96,6 @@ const especialidades: Especialidade[] = [
       alt: 'Porsche 911 branco com a pintura brilhando sob as luzes da oficina',
       legenda: 'Acabamento espelhado',
     },
-    acender: true,
   },
   {
     id: 'estetica',
@@ -158,8 +156,8 @@ const avaliacoes: Avaliacao[] = [
 
     <!-- ESPECIALIDADES ===================================================== -->
     <section class="especialidades" aria-labelledby="especialidades-titulo">
-      <div class="recipiente especialidades__cabeca">
-        <h2 id="especialidades-titulo" data-titulo><span class="cromado" data-brilho>Nossas especialidades</span></h2>
+      <div class="recipiente especialidades__cabeca" data-revelar>
+        <h2 id="especialidades-titulo">Nossas <span class="destaque-cor">especialidades</span></h2>
         <nav aria-label="Especialidades">
           <ul role="list" class="especialidades__atalhos">
             {especialidades.map((e) => <li><a href={`#${e.id}`}>{e.titulo}</a></li>)}
@@ -171,7 +169,7 @@ const avaliacoes: Avaliacao[] = [
         <article class:list={['especialidade', { 'especialidade--invertida': i % 2 === 1 }]} id={e.id} aria-labelledby={`${e.id}-titulo`}>
           <div class="recipiente especialidade__grade">
             <div class="especialidade__midia">
-              <div class="especialidade__foto" data-parallax data-acender={e.acender ? '' : undefined}>
+              <div class="especialidade__foto" data-revelar>
                 <img
                   src={e.foto.src}
                   srcset={e.foto.srcset}
@@ -185,34 +183,34 @@ const avaliacoes: Avaliacao[] = [
                 />
               </div>
               {e.detalhe && (
-                <figure class="especialidade__detalhe">
-                  <div data-varredura><img src={e.detalhe.src} width={e.detalhe.largura} height={e.detalhe.altura} alt={e.detalhe.alt} loading="lazy" decoding="async" /></div>
-                  <figcaption class="pequeno">{e.detalhe.legenda}</figcaption>
+                <figure class="especialidade__detalhe" data-revelar style="--atraso: 0.15s">
+                  <div><img src={e.detalhe.src} width={e.detalhe.largura} height={e.detalhe.altura} alt={e.detalhe.alt} loading="lazy" decoding="async" /></div>
+                  <figcaption class="pilula">{e.detalhe.legenda}</figcaption>
                 </figure>
               )}
               {e.id === 'estetica' && (
-                <figure class="especialidade__detalhe especialidade__detalhe--video">
-                  <div data-varredura><VideoLoop
+                <figure class="especialidade__detalhe especialidade__detalhe--video" data-revelar style="--atraso: 0.15s">
+                  <div><VideoLoop
                     src="/assets/video/estetica-moto-loop.mp4"
                     poster={img('estetica-moto-loop-poster.webp')}
                     largura={576}
                     altura={1024}
                     rotulo="Moto vermelha recebendo estética completa no estúdio da LM"
                   /></div>
-                  <figcaption class="pequeno">Também para motos</figcaption>
+                  <figcaption class="pilula">Também para motos</figcaption>
                 </figure>
               )}
             </div>
 
-            <div class="especialidade__texto">
-              <h3 id={`${e.id}-titulo`}><span class="cromado">{e.titulo}</span></h3>
+            <div class="especialidade__texto" data-revelar>
+              <h3 id={`${e.id}-titulo`}>{e.titulo}</h3>
               <p>{e.texto}</p>
               <ul role="list" class="especialidade__itens">
                 {e.itens.map((item) => <li>{item}</li>)}
               </ul>
               {e.nota && <p class="pequeno">{e.nota}</p>}
               <div class="especialidade__acoes">
-                <a class="botao" href={whats(e.cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {e.cta.rotulo}</a>
+                <a class="btn btn--whats" href={whats(e.cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {e.cta.rotulo}</a>
                 {e.link && <a class="link-destaque" href={e.link.href}>{e.link.rotulo}</a>}
                 {e.id === 'estetica' && (
                   <a class="link-whats" href={whats(MSG.moto)} target="_blank" rel="noopener"><IconeWhats /> Orçamento para moto</a>
@@ -226,17 +224,16 @@ const avaliacoes: Avaliacao[] = [
 
     <Orcamento />
 
-    <Especificacoes id="diferenciais" titulo="Por que escolher a LM Estética?" itens={diferenciais} />
+    <Especificacoes id="diferenciais" titulo="Por que escolher" destaque="a LM Estética?" itens={diferenciais} />
 
-    <Avaliacoes titulo="Quem já confiou, recomenda" itens={avaliacoes} />
+    <Avaliacoes titulo="Quem já confiou," destaque="recomenda" itens={avaliacoes} />
 
     <CtaFinal
+      pilula="Resposta rápida no horário comercial"
       titulo="Pronto para dar ao seu carro o tratamento que ele merece?"
       texto="Fale com nossa equipe de especialistas e agende uma avaliação completa para o seu veículo."
       botao="Agendar avaliação no WhatsApp"
       mensagem="Olá! Gostaria de agendar uma avaliação para o meu carro."
-      nota="Resposta rápida no horário comercial."
-      fundo="estetica-espuma-mercedes-ambiente.webp"
     />
   </main>
 
@@ -249,77 +246,98 @@ const avaliacoes: Avaliacao[] = [
      ESPECIALIDADES: blocos alternados, foto grande + detalhe sobreposto
      ================================================================= */
   .especialidades { padding-top: var(--secao); }
-  .especialidades__cabeca { display: grid; gap: 1.5rem; margin-bottom: 1rem; }
-  .especialidades__atalhos { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+  .especialidades__cabeca { display: grid; gap: 1.5rem; justify-items: start; }
+  /* atalhos como pílulas */
+  .especialidades__atalhos { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .especialidades__atalhos a {
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid rgba(143, 212, 239, 0.3);
+    border-radius: 999px;
+    background: rgba(92, 200, 240, 0.08);
     font-family: var(--f-apoio);
     font-weight: 700;
-    color: var(--texto-2);
+    font-size: 0.9375rem;
     text-decoration: none;
-    background: linear-gradient(var(--azul-led), var(--azul-led)) 0 calc(100% - 0.5rem) / 0 2px no-repeat;
-    transition: background-size 0.35s var(--curva), color 0.2s;
+    transition: background-color 0.2s, border-color 0.2s;
   }
-  .especialidades__atalhos a:hover { color: var(--branco); background-size: 100% 2px; }
+  .especialidades__atalhos a:hover { background: rgba(92, 200, 240, 0.2); border-color: rgba(143, 212, 239, 0.6); }
 
-  .especialidade { padding-block: clamp(4rem, 2.5rem + 5vw, 8rem); scroll-margin-top: var(--altura-topo); }
-  .especialidade + .especialidade { border-top: 1px solid var(--linha); }
+  .especialidade { padding-top: clamp(4rem, 2.5rem + 5vw, 7rem); scroll-margin-top: var(--altura-topo); }
   .especialidade__grade { display: grid; gap: 2.5rem; }
 
   .especialidade__midia { position: relative; padding-bottom: 3.5rem; }
   .especialidade__foto {
     aspect-ratio: 4 / 3;
-    border-radius: 12px;
-    border: 1px solid rgba(220, 236, 248, 0.3);
-    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    border-radius: var(--raio);
+    border: 1px solid rgba(143, 212, 239, 0.25);
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.8), 0 0 80px -30px rgba(46, 143, 214, 0.6);
   }
   .especialidade__foto img { width: 100%; height: 100%; object-fit: cover; }
-  /* a foto de detalhe fica por cima do canto, como uma segunda placa na vitrine */
+  /* a foto de detalhe fica por cima do canto, num quadro de vidro */
   .especialidade__detalhe {
     position: absolute;
     right: -0.5rem;
     bottom: 0;
     width: 44%;
     margin: 0;
+    padding: 0.4rem;
+    border-radius: 20px;
+    border: 1px solid rgba(143, 212, 239, 0.35);
+    background: rgba(10, 26, 46, 0.55);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6);
+    backdrop-filter: blur(14px) saturate(1.6);
+    box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.9);
   }
   .especialidade__detalhe img,
-  .especialidade__detalhe :global(video) {
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid rgba(220, 236, 248, 0.5);
-    box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.95), 0 0 40px -12px rgba(77, 181, 220, 0.5);
-  }
+  .especialidade__detalhe :global(video) { width: 100%; border-radius: 16px; }
   .especialidade__detalhe figcaption {
-    margin-top: 0.5rem;
-    color: var(--branco);
+    position: absolute;
+    left: 0.9rem;
+    bottom: 0.9rem;
+    padding: 0.3rem 0.75rem;
+    background: rgba(6, 17, 32, 0.6);
+    font-size: 0.8125rem;
   }
   .especialidade__detalhe--video { width: 34%; bottom: -1rem; }
+  .especialidade__detalhe--video figcaption { bottom: auto; top: 0.9rem; }
   .especialidade--invertida .especialidade__detalhe { right: auto; left: -0.5rem; }
 
   .especialidade__texto { display: grid; gap: 1.25rem; justify-items: start; align-content: center; }
   .especialidade__texto h3 { font-size: var(--t-h2); }
   .especialidade__texto > p:not(.pequeno) { color: var(--texto-2); max-width: 52ch; }
-  .especialidade__itens { display: grid; gap: 0.625rem; }
+  .especialidade__itens { display: grid; gap: 0.5rem; }
   .especialidade__itens li {
     position: relative;
-    padding-left: 1.75rem;
+    padding-left: 2.25rem;
     font-family: var(--f-apoio);
     font-size: 1.125rem;
+    line-height: 1.6;
   }
-  /* visto de LED */
+  /* visto num círculo azul */
   .especialidade__itens li::before {
     content: '';
     position: absolute;
-    left: 0.125rem;
-    top: 0.3em;
-    width: 0.8rem;
-    height: 0.45rem;
-    border-left: 2px solid var(--azul-led);
-    border-bottom: 2px solid var(--azul-led);
+    left: 0;
+    top: 0.15em;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #43a8ec, #1f6fb2);
+  }
+  .especialidade__itens li::after {
+    content: '';
+    position: absolute;
+    left: 0.48rem;
+    top: 0.55em;
+    width: 0.55rem;
+    height: 0.3rem;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
     transform: rotate(-45deg);
-    filter: drop-shadow(0 0 4px rgba(77, 181, 220, 0.9));
   }
   .especialidade__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.5rem; }
 

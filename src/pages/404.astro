@@ -15,13 +15,13 @@ import { whats, MSG, PAGINAS } from '../data/site';
   <Cabecalho />
   <main class="nao-achei">
     <div class="recipiente nao-achei__grade">
-      <h1><span class="cromado">Essa página saiu do lugar.</span></h1>
+      <h1>Essa página <span class="destaque-cor">saiu do lugar.</span></h1>
       <p class="lead">Diferente do amassado, ela não volta. Escolha para onde ir:</p>
       <ul role="list" class="nao-achei__links">
-        <li><a class="link-destaque" href="/">Início</a></li>
-        {PAGINAS.map((p) => <li><a class="link-destaque" href={p.href}>{p.rotulo}</a></li>)}
+        <li><a class="btn btn--vidro btn--pequeno" href="/">Início</a></li>
+        {PAGINAS.map((p) => <li><a class="btn btn--vidro btn--pequeno" href={p.href}>{p.rotulo}</a></li>)}
       </ul>
-      <a class="botao" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
+      <a class="btn btn--whats" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
     </div>
   </main>
   <Rodape />
@@ -31,6 +31,5 @@ import { whats, MSG, PAGINAS } from '../data/site';
   .nao-achei { padding-block: calc(var(--altura-topo) + 5rem) var(--secao); min-height: 80svh; display: grid; align-items: center; }
   .nao-achei__grade { display: grid; gap: 1.5rem; justify-items: start; }
   .nao-achei h1 { font-size: var(--t-hero); max-width: 12ch; }
-  .nao-achei__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
-  .nao-achei__links a { display: inline-flex; min-height: 2.75rem; align-items: center; }
+  .nao-achei__links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 </style>

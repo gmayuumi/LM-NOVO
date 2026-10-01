@@ -1,7 +1,6 @@
 /* ============================================================
    LM Estética Automotiva: tokens e base
-   Direção: vitrine de luxo à noite + acabamento metálico do logo
-   (azul-marinho do selo, cromado das letras LM, anel de luz azul).
+   O visual (fundo azul, vidro líquido, botões em pílula) fica em vidro.css.
    ============================================================ */
 
 @font-face {
@@ -37,8 +36,8 @@
 
 :root {
   /* cor */
-  --noite: #05080d;          /* fundo: showroom à noite */
-  --noite-2: #0a121c;        /* superfícies */
+  --noite: #061120;          /* fundo azul-marinho */
+  --noite-2: #0a1a2e;        /* superfícies */
   --marinho: #0f2133;        /* fundo do selo do logo */
   --azul-profundo: #123a5c;
   --azul: #2378b3;           /* azul do selo */
@@ -47,7 +46,6 @@
   --branco: #f2f5f8;
   --texto-2: #a9b6c3;        /* texto secundário (≈9:1 no fundo) */
   --linha: rgba(169, 196, 222, 0.16);
-  --cromo: linear-gradient(180deg, #ffffff 0%, #eef3f7 30%, #b3bec9 46%, #66737f 51%, #c9d3dc 66%, #ffffff 100%);
 
   /* tipo */
   --f-titulo: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
@@ -55,7 +53,7 @@
   --f-texto: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --t-hero: clamp(3.5rem, 1.4rem + 7.4vw, 8.75rem);
-  --t-h2: clamp(2.75rem, 1.6rem + 4.6vw, 6.25rem);
+  --t-h2: clamp(2.5rem, 1.6rem + 3.6vw, 4.75rem);
   --t-h3: clamp(1.875rem, 1.5rem + 1.4vw, 2.75rem);
   --t-lead: clamp(1.1875rem, 1.08rem + 0.5vw, 1.5rem);
   --t-texto: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
@@ -175,66 +173,6 @@ ol[role='list'] { list-style: none; padding: 0; }
   white-space: nowrap; border: 0;
 }
 
-/* ---------- títulos ---------- */
-/* Antes era um efeito cromado (prata); o cliente preferiu sem metálico.
-   A classe continua nos títulos, agora só em branco. */
-.cromado { color: var(--branco); }
-
-/* ---------- botões metálicos ---------- */
-
-.botao {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  min-height: 3.375rem;
-  padding: 0.85rem 1.6rem;
-  border: 1px solid rgba(214, 236, 250, 0.6);
-  border-radius: 6px;
-  background: linear-gradient(180deg, #56b4e4 0%, #2378b3 45%, #175a8d 55%, #2a86c4 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
-    0 12px 32px -10px rgba(35, 120, 179, 0.85);
-  color: #fff;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-  font-family: var(--f-apoio);
-  font-weight: 700;
-  font-size: 1.0625rem;
-  line-height: 1.1;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.25s var(--curva), box-shadow 0.25s;
-}
-/* reflexo que atravessa o botão */
-.botao::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  z-index: -1;
-  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
-  transform: translateX(-120%);
-  transition: transform 0.8s var(--curva);
-}
-.botao:hover {
-  transform: translateY(-1px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 16px 40px -10px rgba(77, 181, 220, 0.9);
-}
-.botao:hover::after { transform: translateX(120%); }
-.botao:active { transform: translateY(1px); }
-.botao svg { width: 1.25rem; height: 1.25rem; flex: none; }
-
-.botao--vidro {
-  background: rgba(8, 14, 22, 0.55);
-  border-color: rgba(214, 232, 246, 0.38);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  text-shadow: none;
-}
-.botao--vidro:hover { background: rgba(24, 38, 54, 0.7); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); }
-
 .link-destaque {
   font-family: var(--f-apoio);
   font-weight: 700;
@@ -285,91 +223,6 @@ ol[role='list'] { list-style: none; padding: 0; }
 .link-seta::after { content: '→'; transition: transform 0.25s var(--curva); }
 .link-seta:hover { text-decoration: underline; text-underline-offset: 0.3em; }
 .link-seta:hover::after { transform: translateX(4px); }
-
-/* ============================================================
-   Movimento: estados iniciais só existem com a classe .mov,
-   ligada pelo script de animação (nunca com reduced-motion).
-   ============================================================ */
-
-/* Entrada do hero em CSS: começa no primeiro quadro, sem esperar o
-   JavaScript das animações (que só carrega depois da página pronta).
-   --intro: atraso das linhas do título. --i: número da linha.
-   Preenchimento "backwards": ao terminar, a animação se solta do elemento
-   (o estado final é o próprio estilo dele). Com "both" ela ficaria ativa e
-   pesaria em cada quadro da rolagem. */
-@property --brilho {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 100%;
-}
-@keyframes hero-sobe { from { transform: translateY(110%); } }
-@keyframes hero-brilho { from { --brilho: 100%; } to { --brilho: 0%; } }
-/* opacidade inicial de 1% (invisível ao olho) e não 0: com 0 o navegador só conta
-   o texto como pintado no fim da animação, e o LCP da página atrasa ~2 s */
-@keyframes hero-aparece { from { opacity: 0.01; transform: translateY(24px); } }
-@keyframes hero-vitrine { from { opacity: 0.01; transform: scale(var(--escala-inicial, 1.08)); } }
-
-.mov .hero__linha > span {
-  animation:
-    hero-sobe 1.1s cubic-bezier(0.16, 1, 0.3, 1) backwards,
-    hero-brilho 1.5s cubic-bezier(0.65, 0, 0.35, 1) backwards;
-  animation-delay:
-    calc(var(--intro, 0.25s) + var(--i, 0) * 0.1s),
-    calc(var(--intro, 0.25s) + 0.45s + var(--i, 0) * 0.15s);
-}
-.mov .hero__subtitulo,
-.mov .hero__lead,
-.mov .hero__acoes,
-.mov .hero__prova {
-  animation: hero-aparece 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: calc(var(--intro, 0.25s) + 0.4s + var(--j, 0) * 0.08s);
-}
-.mov .hero__lead { --j: 1; }
-.mov .hero__acoes { --j: 2; }
-.mov .hero__prova { --j: 3; }
-.mov [data-hero-vitrine] { animation: hero-vitrine 1.5s cubic-bezier(0.22, 1, 0.36, 1) var(--intro-vitrine, 0s) backwards; }
-@media (min-width: 60rem) {
-  .mov [data-hero-vitrine] { --escala-inicial: 0.94; }
-}
-
-/* Varredura de luz: o conteúdo aparece atrás de uma barra de LED */
-[data-varredura] { position: relative; }
-.mov [data-varredura] {
-  --rev: 0%;
-  --luz: 1;
-  clip-path: inset(-0.3em calc(100% - var(--rev)) -0.3em -0.3em);
-}
-.mov [data-varredura]::after {
-  content: '';
-  position: absolute;
-  top: -0.3em;
-  bottom: -0.3em;
-  left: calc(var(--rev) - 2px);
-  width: 2px;
-  background: #fff;
-  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.9), 0 0 22px 4px rgba(77, 181, 220, 0.8);
-  opacity: var(--luz);
-  pointer-events: none;
-}
-
-/* Parallax: a imagem é maior que a moldura e desliza dentro dela */
-[data-parallax] { overflow: hidden; }
-.mov [data-parallax] > img { transform: scale(1.14); will-change: transform; }
-
-/* Régua de LED no topo mostrando o quanto já rolou */
-.progresso {
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 2px;
-  z-index: 80;
-  background: linear-gradient(90deg, var(--azul), var(--azul-led), #fff);
-  box-shadow: 0 0 12px rgba(77, 181, 220, 0.9);
-  transform-origin: 0 50%;
-  transform: scaleX(0);
-  pointer-events: none;
-  display: none;
-}
-.mov .progresso { display: block; }
 
 /* ============================================================
    Preloader: só na primeira página da visita e com animação ligada
@@ -452,12 +305,6 @@ ol[role='list'] { list-style: none; padding: 0; }
 @keyframes preloader-reflexo { to { transform: translateX(120%); } }
 @keyframes preloader-carrega { from { transform: scaleX(0); } to { transform: scaleX(0.9); } }
 @keyframes preloader-some { to { visibility: hidden; } }
-
-/* Lenis (rolagem suave): regras mínimas da biblioteca */
-html.lenis, html.lenis body { height: auto; }
-.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
-.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
 
 /* Menos movimento: sem transições (uma duração mínima em tudo criaria
    micro-transições de visibilidade herdada e atrasaria o foco) */

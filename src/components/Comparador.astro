@@ -1,7 +1,6 @@
 ---
 // Antes/depois com barra de luz de inspeção.
-// Arrastar, tocar ou usar as setas do teclado. No scroll, a animação
-// (src/scripts/site.ts) passa a barra da direita para a esquerda.
+// Arrastar, tocar ou usar as setas do teclado (src/scripts/site.ts).
 interface Props {
   antes: { src: string; alt: string };
   depois: { src: string; alt: string };
@@ -52,13 +51,15 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    background: rgba(5, 8, 13, 0.72);
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(143, 212, 239, 0.3);
+    border-radius: 999px;
+    background: rgba(6, 17, 32, 0.6);
     font-family: var(--f-apoio);
     font-weight: 700;
-    font-size: var(--t-pequeno);
-    letter-spacing: 0.02em;
+    font-size: 0.8125rem;
   }
+  .comparar__rotulo--depois { background: rgba(46, 143, 214, 0.7); border-color: rgba(255, 255, 255, 0.35); }
   .comparar__rotulo--depois { left: auto; right: 0.75rem; }
 
   /* Barra de LED: núcleo branco com brilho azul do logo */
@@ -83,10 +84,10 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     height: 3.75rem;
     transform: translate(-50%, -50%);
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    background: linear-gradient(180deg, #56b4e4 0%, #2378b3 45%, #175a8d 55%, #2a86c4 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: linear-gradient(135deg, #43a8ec, #1f6fb2);
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 0 3px rgba(5, 8, 13, 0.55), 0 0 28px rgba(77, 181, 220, 0.8);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px rgba(6, 17, 32, 0.45), 0 0 28px rgba(77, 181, 220, 0.8);
   }
   .comparar__pega svg { width: 1.25rem; height: 1.25rem; }
 
@@ -110,8 +111,9 @@ const { antes, depois, largura, altura, rotulo } = Astro.props;
     left: 50%;
     bottom: 0.875rem;
     transform: translateX(-50%);
-    padding: 0.3rem 0.75rem;
-    background: rgba(5, 8, 13, 0.72);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(6, 17, 32, 0.6);
     font-family: var(--f-apoio);
     font-size: var(--t-pequeno);
     white-space: nowrap;

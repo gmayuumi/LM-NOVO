@@ -22,7 +22,7 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
       </ul>
     </nav>
 
-    <a class="botao topo__cta" href={whats(cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {cta.rotulo}</a>
+    <a class="btn btn--primario btn--pequeno topo__cta" href={whats(cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {cta.rotulo}</a>
 
     <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-celular" data-menu-botao>
       <span class="menu-botao__icone" aria-hidden="true"><span></span><span></span></span>
@@ -34,14 +34,14 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
   <div id="menu-celular" class="menu" data-menu>
     <nav class="recipiente menu__corpo" aria-label="Menu">
       <ul role="list" class="menu__lista">
-        <li><a href="/" aria-current={atualSe('/')}><span class="cromado">Início</span></a></li>
-        {PAGINAS.map((p) => <li><a href={p.href} aria-current={atualSe(p.href)}><span class="cromado">{p.rotulo}</span></a></li>)}
+        <li><a href="/" aria-current={atualSe('/')}>Início</a></li>
+        {PAGINAS.map((p) => <li><a href={p.href} aria-current={atualSe(p.href)}>{p.rotulo}</a></li>)}
       </ul>
       <ul role="list" class="menu__secundario">
         <li><a href={CURSOS.href} aria-current={atualSe(CURSOS.href)}>{CURSOS.rotulo}</a></li>
         <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram {SITE.instagramUsuario}</a></li>
       </ul>
-      <a class="botao menu__cta" href={whats(cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {cta.rotuloLongo}</a>
+      <a class="btn btn--primario menu__cta" href={whats(cta.mensagem)} target="_blank" rel="noopener"><IconeWhats /> {cta.rotuloLongo}</a>
       <p class="pequeno menu__rodape">
         WhatsApp {SITE.telefoneExibicao}<br />
         {HORARIO.map((h) => `${h.dias}: ${h.texto}`).join('. ')}.
@@ -63,14 +63,15 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
     inset: 0 0 auto 0;
     height: var(--altura-topo);
     z-index: -1;
-    background: linear-gradient(to bottom, rgba(5, 8, 13, 0.75), rgba(5, 8, 13, 0));
+    background: linear-gradient(to bottom, rgba(6, 17, 32, 0.75), rgba(6, 17, 32, 0));
     transition: background-color 0.35s, border-color 0.35s;
     border-bottom: 1px solid transparent;
   }
-  /* fundo quase opaco em vez de vidro fosco: desfocar o que passa por baixo
-     a cada quadro da rolagem pesa, e no fundo escuro o visual quase não muda */
+  /* depois de rolar: vidro fosco azul */
   .topo[data-solido]::before {
-    background: rgba(6, 11, 18, 0.92);
+    background: rgba(6, 17, 32, 0.62);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6);
+    backdrop-filter: blur(18px) saturate(1.6);
     border-bottom-color: var(--linha);
   }
 
@@ -93,7 +94,6 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
   .marca__selo {
     width: 2.625rem;
     height: 2.625rem;
-    filter: drop-shadow(0 0 10px rgba(77, 181, 220, 0.35));
   }
   .marca__nome {
     font-family: var(--f-apoio);
@@ -116,10 +116,10 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
     gap: 0.5rem;
     min-height: 2.75rem;
     padding: 0.5rem 0.875rem;
-    background: rgba(8, 14, 22, 0.6);
+    background: rgba(92, 200, 240, 0.12);
     color: var(--branco);
-    border: 1px solid rgba(214, 232, 246, 0.3);
-    border-radius: 6px;
+    border: 1px solid rgba(143, 212, 239, 0.4);
+    border-radius: 999px;
     font-family: var(--f-apoio);
     font-weight: 700;
     font-size: 1rem;
@@ -141,7 +141,7 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
     background:
       radial-gradient(80% 50% at 90% 0%, rgba(35, 120, 179, 0.35), transparent 70%),
       radial-gradient(70% 40% at 0% 100%, rgba(18, 58, 92, 0.7), transparent 70%),
-      rgba(5, 8, 13, 0.97);
+      rgba(6, 17, 32, 0.97);
     opacity: 0;
     visibility: hidden;
     /* ao fechar, some depois do fade; ao abrir, fica visível na hora (o foco precisa disso) */
@@ -166,7 +166,7 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
   .menu[data-aberto] .menu__lista li:nth-child(2) a { transition-delay: 0.04s; }
   .menu[data-aberto] .menu__lista li:nth-child(3) a { transition-delay: 0.08s; }
   .menu[data-aberto] .menu__lista li:nth-child(4) a { transition-delay: 0.12s; }
-  .menu__lista a[aria-current='page'] .cromado { filter: drop-shadow(0 0 10px rgba(77, 181, 220, 0.8)); }
+  .menu__lista a[aria-current='page'] { color: #8fdcff; }
 
   .menu__secundario {
     display: grid;
@@ -219,6 +219,6 @@ const atualSe = (href: string) => (atual === href ? 'page' : undefined);
     .navegacao__lista a:hover::after,
     .navegacao__lista a[aria-current='page']::after { transform: scaleX(1); }
     .navegacao__discreto a { font-weight: 400; color: var(--texto-2); }
-    .topo__cta { display: inline-flex; min-height: 2.875rem; padding: 0.6rem 1.15rem; font-size: 1rem; }
+    .topo__cta { display: inline-flex; }
   }
 </style>

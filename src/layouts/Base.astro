@@ -11,10 +11,9 @@ interface Props {
   preloadImagem?: string;
   jsonLdExtra?: object[]; // entra no @graph junto com as duas unidades
   semIndice?: boolean; // 404: fora do Google e sem canonical
-  estilo?: 'vidro'; // visual novo (por enquanto só na home)
 }
 
-const { titulo, descricao, caminho = '/', imagem = '/assets/img/og-lm.jpg', preloadImagem, jsonLdExtra = [], semIndice = false, estilo } = Astro.props;
+const { titulo, descricao, caminho = '/', imagem = '/assets/img/og-lm.jpg', preloadImagem, jsonLdExtra = [], semIndice = false } = Astro.props;
 const canonical = new URL(caminho === '/' ? '/' : caminho, SITE.url).href;
 const imagemAbs = new URL(imagem, SITE.url).href;
 
@@ -67,7 +66,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="pt-BR" data-estilo={estilo}>
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -112,7 +111,7 @@ const jsonLd = {
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
     {semIndice ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
-    <meta name="theme-color" content="#0b0d10" />
+    <meta name="theme-color" content="#061120" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
@@ -147,7 +146,6 @@ const jsonLd = {
         <span class="preloader__slogan">A arte de restaurar a perfeição</span>
       </div>
     </div>
-    <div class="progresso" aria-hidden="true"></div>
     <slot />
     <script>
       import '../scripts/site';

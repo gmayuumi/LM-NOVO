@@ -7,7 +7,7 @@ const { mensagem = MSG.geral, rotulo = 'Pedir orçamento no WhatsApp' } = Astro.
 
 <!-- Fixa só no celular. O body reserva o espaço para não cobrir conteúdo. -->
 <div class="barra-whats" data-barra-whats>
-  <a class="botao" href={whats(mensagem)} target="_blank" rel="noopener">
+  <a class="btn btn--whats" href={whats(mensagem)} target="_blank" rel="noopener">
     <IconeWhats /> {rotulo}
   </a>
 </div>
@@ -18,12 +18,13 @@ const { mensagem = MSG.geral, rotulo = 'Pedir orçamento no WhatsApp' } = Astro.
     inset: auto 0 0 0;
     z-index: 50;
     padding: 0.625rem var(--gutter) calc(0.625rem + env(safe-area-inset-bottom));
-    /* fundo quase opaco em vez de vidro fosco: desfocar o que passa por trás pesa no celular */
-    background: rgba(6, 11, 18, 0.95);
+    background: rgba(6, 17, 32, 0.7);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+    backdrop-filter: blur(16px) saturate(1.6);
     border-top: 1px solid var(--linha);
     transition: transform 0.3s var(--curva), visibility 0.3s;
   }
-  .barra-whats .botao { width: 100%; }
+  .barra-whats .btn { width: 100%; }
   .barra-whats[data-oculta] { transform: translateY(110%); visibility: hidden; }
 
   :global(body) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
