@@ -484,7 +484,12 @@ function iniciarRevelar() {
       }),
     { rootMargin: '0px 0px -8% 0px' },
   );
-  alvos.forEach((el) => io.observe(el));
+  const comecar = () => alvos.forEach((el) => io.observe(el));
+  // Com o preloader na tela, espera ele sair para o topo aparecer junto com a luz
+  const html = document.documentElement;
+  if (html.classList.contains('carregando') && !html.classList.contains('saindo')) {
+    document.addEventListener('lm:pronto', comecar, { once: true });
+  } else comecar();
 }
 
 const estiloVidro = document.documentElement.dataset.estilo === 'vidro';

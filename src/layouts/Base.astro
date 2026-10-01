@@ -80,6 +80,26 @@ const jsonLd = {
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
           d.classList.add('mov');
           setTimeout(function () { if (!window.__lmMov) d.classList.remove('mov'); }, 3500);
+
+          // Preloader: só na primeira página da visita. Sai quando a página
+          // carrega (mínimo 1,1 s, máximo 2,6 s) e avisa o site com "lm:pronto".
+          var visto = '1';
+          try { visto = sessionStorage.getItem('lm-pre'); sessionStorage.setItem('lm-pre', '1'); } catch (e) {}
+          if (!visto) {
+            d.classList.add('carregando');
+            var t0 = Date.now(), feito = 0;
+            var sair = function () {
+              if (feito) return;
+              feito = 1;
+              setTimeout(function () {
+                d.classList.add('saindo');
+                document.dispatchEvent(new Event('lm:pronto'));
+                setTimeout(function () { d.classList.remove('carregando', 'saindo'); }, 1000);
+              }, Math.max(0, 1100 - (Date.now() - t0)));
+            };
+            addEventListener('load', sair);
+            setTimeout(sair, 2600);
+          }
         }
       })();
     </script>
@@ -120,6 +140,13 @@ const jsonLd = {
   </head>
   <body>
     <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${SITE.gtm}`} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+    <div class="preloader" aria-hidden="true">
+      <div class="preloader__miolo">
+        <span class="preloader__logo"><img src="/assets/img/logo-lm-192.webp" width="192" height="191" alt="" /></span>
+        <span class="preloader__barra"><span></span></span>
+        <span class="preloader__slogan">A arte de restaurar a perfeição</span>
+      </div>
+    </div>
     <div class="progresso" aria-hidden="true"></div>
     <slot />
     <script>

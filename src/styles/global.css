@@ -371,6 +371,88 @@ ol[role='list'] { list-style: none; padding: 0; }
 }
 .mov .progresso { display: block; }
 
+/* ============================================================
+   Preloader: só na primeira página da visita e com animação ligada
+   (sem JS ou com menos movimento, nunca aparece). Ao sair, a tela
+   sobe como um portão e a barra de LED da borda varre a página.
+   ============================================================ */
+.preloader { display: none; }
+.carregando .preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(50% 40% at 50% 46%, rgba(46, 143, 214, 0.3), transparent 70%),
+    #061120;
+  transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1);
+  /* se algo falhar, some sozinho */
+  animation: preloader-some 0.01s 5s forwards;
+}
+.carregando .preloader::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.9), 0 0 40px 10px rgba(92, 200, 240, 0.75);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.saindo .preloader { transform: translateY(-100%); }
+.saindo .preloader::after { opacity: 1; }
+.preloader__miolo { display: grid; justify-items: center; gap: 1.4rem; transition: opacity 0.4s, transform 0.6s var(--curva); }
+.saindo .preloader__miolo { opacity: 0; transform: translateY(-2rem); }
+.preloader__logo {
+  position: relative;
+  overflow: hidden;
+  width: clamp(6rem, 5rem + 3vw, 8.5rem);
+  height: clamp(6rem, 5rem + 3vw, 8.5rem);
+  border-radius: 50%;
+  background: #0f2133;
+  box-shadow: 0 0 0 1px rgba(143, 212, 239, 0.35), 0 0 50px -6px rgba(92, 200, 240, 0.6);
+  animation: preloader-entra 0.8s var(--curva) backwards;
+}
+.preloader__logo img { width: 100%; height: 100%; }
+/* reflexo de luz passando pelo logo */
+.preloader__logo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.5) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: preloader-reflexo 1.6s 0.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.preloader__barra {
+  position: relative;
+  width: 9rem;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(143, 212, 239, 0.18);
+}
+.preloader__barra span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #2e8fd6, #8fdcff);
+  box-shadow: 0 0 10px rgba(92, 200, 240, 0.9);
+  transform-origin: 0 50%;
+  animation: preloader-carrega 1.8s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+}
+.preloader__slogan {
+  font-family: var(--f-titulo);
+  font-size: 1.125rem;
+  letter-spacing: 0.14em;
+  color: var(--texto-2);
+}
+@keyframes preloader-entra { from { opacity: 0; transform: scale(0.85); } }
+@keyframes preloader-reflexo { to { transform: translateX(120%); } }
+@keyframes preloader-carrega { from { transform: scaleX(0); } to { transform: scaleX(0.9); } }
+@keyframes preloader-some { to { visibility: hidden; } }
+
 /* Lenis (rolagem suave): regras mínimas da biblioteca */
 html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
