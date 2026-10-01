@@ -1,64 +1,29 @@
 ---
+// Home: foto de fundo, vidro líquido, cor da marca e caixas.
+// Sem seção que trava a tela na rolagem.
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import Rodape from '../components/Rodape.astro';
 import BarraWhats from '../components/BarraWhats.astro';
-import AntesDepois from '../components/AntesDepois.astro';
-import IconeWhats from '../components/IconeWhats.astro';
-import TetoHex from '../components/TetoHex.astro';
-import Processo from '../components/Processo.astro';
-import Avaliacoes, { type Avaliacao } from '../components/Avaliacoes.astro';
-import CtaFinal from '../components/CtaFinal.astro';
+import Comparador from '../components/Comparador.astro';
 import Orcamento from '../components/Orcamento.astro';
+import IconeWhats from '../components/IconeWhats.astro';
+import Textura from '../components/Textura.astro';
 import { SITE, UNIDADES, whats, MSG } from '../data/site';
 
 const img = (nome: string) => `/assets/img/${nome}`;
 
-// Martelinho em 3 passos: quadros reais do vídeo do reparo (Nissan Kicks)
-const passos = [
-  {
-    titulo: 'O amassado',
-    texto: 'A barra de luz reflete na lataria. Onde as faixas entortam, está o amassado.',
-    foto: 'passo-amassado',
-    alt: 'Tampa traseira preta de um Nissan Kicks com o reflexo dourado da barra de luz todo entortado pelo amassado',
-  },
-  {
-    titulo: 'O reparo',
-    texto: 'Por dentro da lataria, com hastes e ventosas, o metal volta ao formato original. Sem massa, lixa, solvente ou tinta.',
-    foto: 'passo-reparo',
-    alt: 'Mão do técnico puxando o amassado com a ferramenta de martelinho de ouro',
-  },
-  {
-    titulo: 'O resultado',
-    texto: 'Pintura e verniz de fábrica intactos. Pequenos amassados saem em menos de 1 hora.',
-    foto: 'passo-resultado',
-    alt: 'A mesma tampa traseira lisa, com o reflexo reto e a pintura original brilhando',
-  },
-];
-
-// Vitrine de serviços. Textos do site antigo; motos confirmadas pelo cliente (vídeo da Ducati).
 const servicos = [
-  { titulo: 'Funilaria especializada', texto: 'Para danos maiores: peças plásticas e metálicas, solda MIG/MAG, spotter e alinhamento técnico da carroceria.', cta: 'Orçamento de funilaria', msg: MSG.funilaria, foto: 'funilaria-yaris-traseira', alt: 'Traseira de um Toyota Yaris prata com o para-choque removido para funilaria', pos: '30% 50%' },
-  { titulo: 'Pintura premium', texto: 'Cabine com estufa e colorimetria computadorizada. Retoque ou pintura completa, com acabamento de concessionária.', cta: 'Orçamento de pintura', msg: MSG.pintura, foto: 'pintura-picape-preta', alt: 'Picape preta com a pintura espelhada refletindo as luzes da oficina', pos: '62% 50%' },
-  { titulo: 'Polimento e vitrificação', texto: 'Polimento técnico, correção de pintura e revestimento cerâmico: brilho intenso e proteção contra as agressões do dia a dia.', cta: 'Orçamento de polimento', msg: MSG.polimento, foto: 'pintura-porsche-branco', alt: 'Porsche 911 branco com a pintura brilhando sob as luzes da oficina', pos: '35% 50%' },
-  { titulo: 'Higienização interna', texto: 'Limpeza profunda por dentro: extração de sujeira, hidratação do couro e oxi-sanitização.', cta: 'Orçamento de higienização', msg: MSG.higienizacao, foto: 'estetica-interior-porsche', alt: 'Interior de couro vermelho de um Porsche depois da higienização', pos: '45% 50%' },
-  { titulo: 'Estética completa', texto: 'Do polimento técnico à vitrificação, cuidamos de cada detalhe para um visual impecável.', cta: 'Orçamento de estética', msg: MSG.estetica, foto: 'estetica-espuma-defender', alt: 'Land Rover Defender coberto de espuma durante a estética completa', pos: '50% 45%' },
-  { titulo: 'Motos', texto: 'Estética completa também para motos.', cta: 'Orçamento para moto', msg: MSG.moto, foto: 'estetica-moto-harley', alt: 'Harley-Davidson preta brilhando no estúdio da LM', pos: '40% 60%' },
+  { nome: 'Martelinho de ouro', apoio: 'O amassado sai, a pintura original fica', href: '/martelinho', foto: 'martelinho-tecnico-464.webp', w: 464, h: 580, classe: 'card--grande' },
+  { nome: 'Funilaria', apoio: 'Para danos maiores', href: '/servicos#funilaria', foto: 'funilaria-yaris-traseira-720.webp', w: 720, h: 405 },
+  { nome: 'Pintura', apoio: 'Cabine com estufa no Brooklin', href: '/servicos#pintura', foto: 'cabine-yaris-ampla-720.webp', w: 720, h: 405 },
+  { nome: 'Estética e motos', apoio: 'Polimento, vitrificação e higienização', href: '/servicos#estetica', foto: 'estetica-moto-harley-720.webp', w: 720, h: 378, classe: 'card--largo' },
 ];
-const larguras: Record<string, number[]> = {
-  'funilaria-yaris-traseira': [720, 1280],
-  'pintura-picape-preta': [720, 1280],
-  'pintura-porsche-branco': [720, 1280],
-  'estetica-interior-porsche': [720, 1280],
-  'estetica-espuma-defender': [600, 1200],
-  'estetica-moto-harley': [720, 1280],
-};
-const srcset = (nome: string) => larguras[nome].map((w) => `${img(`${nome}-${w}.webp`)} ${w}w`).join(', ');
 
-// Avaliações do site antigo. Quando houver avaliações do Google, preencher `link` com o perfil de quem avaliou.
-const avaliacoes: Avaliacao[] = [
+const avaliacoes = [
   { nome: 'Maria O.', carro: 'Jeep Compass', texto: 'Levei para fazer martelinho de ouro e fiquei impressionada. Não dá pra ver onde estava o amassado. Recomendo de olhos fechados!' },
   { nome: 'João S.', carro: 'BMW 320i', texto: 'Serviço impecável. Meu carro saiu melhor do que quando tirei da concessionária. O atendimento é outro nível, muito atenciosos.' },
+  { nome: 'Ana C.', carro: 'Hyundai Creta', texto: 'Fizeram a funilaria e pintura do meu para-choque. A cor ficou idêntica, serviço rápido e com um preço justo. Profissionais de verdade.' },
   { nome: 'Carlos P.', carro: 'Honda Civic', texto: 'A vitrificação que fizeram ficou sensacional. O brilho é incrível e a facilidade pra limpar agora é outra. Valeu cada centavo.' },
 ];
 ---
@@ -67,607 +32,435 @@ const avaliacoes: Avaliacao[] = [
   titulo="Especialistas em martelinho de ouro em Santo Amaro e Brooklin | LM Estética Automotiva"
   descricao="Especialistas em martelinho de ouro na Zona Sul de SP: o amassado sai, a pintura original fica, em horas. Orçamento pelo WhatsApp com resposta em menos de 2 minutos. Santo Amaro e Brooklin."
   caminho="/"
-  preloadImagem="/assets/img/hero-poster-464.webp"
+  preloadImagem={img('hero-carro-retrato-700.webp')}
+  estilo="vidro"
 >
-  <Cabecalho atual="/" />
+  <Cabecalho />
 
   <main>
-    <!-- HERO: as luzes da oficina acendem ================================= -->
-    <section class="hero" data-hero aria-labelledby="hero-titulo">
-      <div class="hero__ambiente" aria-hidden="true">
-        <video data-hero-ambiente muted playsinline loop preload="none" poster={img('passo-amassado-ambiente.webp')} tabindex="-1">
-          <source data-src="/assets/video/hero-ambiente.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <TetoHex class="hero__teto" />
-      <div class="hero__vitrine" data-hero-vitrine>
-        <video
-          class="hero__video"
-          data-hero-video
-          muted
-          playsinline
-          loop
-          preload="none"
-          width="464"
-          height="832"
-          poster={img('hero-poster-464.webp')}
-          aria-hidden="true"
-          tabindex="-1"
-        >
-          <source src="/assets/video/hero.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <button class="hero__pausa" type="button" data-hero-pausa hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="icone-pausa"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="currentColor" /></svg>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="icone-tocar"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
-        <span class="visualmente-oculto" data-rotulo>Pausar vídeo</span>
-      </button>
+    <!-- 1. TOPO ========================================================== -->
+    <section class="h" aria-labelledby="hero-titulo">
+      <picture>
+        <source media="(min-width: 48rem)" srcset={`${img('hero-carro-960.webp')} 960w, ${img('hero-carro-1600.webp')} 1600w`} sizes="100vw" />
+        <img class="h__foto" src={img('hero-carro-retrato-700.webp')} width="700" height="1191" alt="Picape preta com a pintura espelhada no estúdio da LM" fetchpriority="high" />
+      </picture>
+      <!-- [FOTO provisória: trocar por uma foto profissional do carro-destaque] -->
 
-      <div class="recipiente hero__conteudo" data-hero-conteudo>
-        <h1 id="hero-titulo" class="hero__titulo">
-          <span class="hero__selo">Especialistas em martelinho de ouro</span>
-          <span class="hero__linha"><span class="cromado" style="--i: 0">O amassado sai.</span></span>
-          <span class="hero__linha"><span class="cromado" style="--i: 1">A pintura</span></span>
-          <span class="hero__linha"><span class="cromado" style="--i: 2">original fica.</span></span>
-        </h1>
-        <p class="lead hero__lead">Em Santo Amaro e no Brooklin, Zona Sul de SP. Reparo em horas, não em dias.</p>
-        <div class="hero__acoes">
-          <a class="botao" data-cta-principal href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento no WhatsApp</a>
-          <a class="botao botao--vidro" href="#antes-e-depois">Ver o antes e depois</a>
-        </div>
-        <p class="pequeno hero__prova">+1.000 clientes atendidos em SP</p>
-      </div>
-      <a class="hero__rolar" href="#martelinho" aria-label="Rolar até o martelinho de ouro"><span aria-hidden="true"></span></a>
-    </section>
-
-    <!-- CREDENCIAIS: por que são especialistas (dados do site antigo) ====== -->
-    <section class="credenciais" aria-label="Por que a LM">
-      <ul role="list" class="recipiente credenciais__lista" data-varredura>
-        <li><span class="credenciais__numero cromado">+1.000</span><span>clientes atendidos em SP</span></li>
-        <li><span class="credenciais__numero cromado">&lt; 2 min</span><span>para responder no WhatsApp, no horário comercial</span></li>
-        <li><span class="credenciais__numero cromado">100%</span><span>da pintura original mantida no martelinho</span></li>
-        <li><span class="credenciais__numero cromado">2</span><span>unidades na Zona Sul, uma só para pintura</span></li>
-      </ul>
-    </section>
-
-    <!-- MARTELINHO: o amassado some em 3 passos ========================== -->
-    <Processo
-      id="martelinho"
-      titulo="Pintura de fábrica vale mais"
-      lead="Carro repintado perde valor na revenda. O martelinho de ouro tira o amassado sem repintar."
-      passos={passos}
-    >
-      <div class="recipiente processo__fechamento">
-        <p class="lead">Até 60% mais barato que funilaria e pintura tradicionais, para o mesmo tipo de dano. E com garantia em todos os serviços.</p>
-        <div class="processo__links">
-          <a class="botao" href={whats(MSG.martelinho)} target="_blank" rel="noopener"><IconeWhats /> Pedir orçamento de martelinho</a>
-          <a class="link-destaque" href="/martelinho#resolve">Que amassado sai com martelinho?</a>
-        </div>
-      </div>
-    </Processo>
-
-    <AntesDepois />
-
-    <Orcamento />
-
-    <!-- VITRINE DE SERVIÇOS ============================================== -->
-    <section class="vitrine" id="servicos" aria-labelledby="vitrine-titulo">
-      <div class="vitrine__palco" data-vitrine>
-        <div class="recipiente vitrine__cabeca">
-          <h2 id="vitrine-titulo" data-titulo><span class="cromado" data-brilho>Além do martelinho</span></h2>
-          <p class="lead">Funilaria, pintura em cabine com estufa e estética completa, com o mesmo cuidado.</p>
-        </div>
-        <div class="vitrine__trilho" data-trilho>
-          <ul role="list" class="vitrine__lista" data-lista>
-            {servicos.map((s) => (
-              <li class="cartao">
-                <img
-                  src={img(`${s.foto}-${larguras[s.foto][0]}.webp`)}
-                  srcset={srcset(s.foto)}
-                  sizes="(min-width: 60rem) 30rem, 82vw"
-                  width={larguras[s.foto][0]}
-                  alt={s.alt}
-                  loading="lazy"
-                  decoding="async"
-                  style={`object-position: ${s.pos}`}
-                />
-                <div class="cartao__texto">
-                  <h3><span class="cromado">{s.titulo}</span></h3>
-                  <p>{s.texto}</p>
-                  <a class="link-whats" href={whats(s.msg)} target="_blank" rel="noopener"><IconeWhats /> {s.cta}</a>
-                </div>
-              </li>
-            ))}
-            <li class="cartao cartao--todos">
-              <a href="/servicos" class="cartao__todos">
-                <span class="cromado">Ver todos os serviços</span>
-                <span class="pequeno">Detalhes de cada serviço e como agendar</span>
-              </a>
-            </li>
+      <div class="recipiente h__grade">
+        <div class="h__texto" data-revelar>
+          <p class="pilula"><span class="ponto-vivo"></span> Especialistas em martelinho de ouro</p>
+          <h1 id="hero-titulo" class="h__titulo"><span>O amassado sai.</span> <span class="destaque-cor">A pintura</span> <span class="destaque-cor">original fica.</span></h1>
+          <p class="h__lead">Martelinho de ouro, funilaria, pintura e estética em Santo Amaro e no Brooklin. Reparo em horas, não em dias.</p>
+          <div class="h__acoes">
+            <a class="btn btn--primario" href="#orcamento" data-cta-principal>Fazer orçamento</a>
+            <a class="btn btn--vidro" href={whats(MSG.geral)} target="_blank" rel="noopener"><IconeWhats /> Falar no WhatsApp</a>
+          </div>
+          <ul role="list" class="h__provas">
+            <li class="pilula">+1.000 clientes em SP</li>
+            <li class="pilula">Resposta em menos de 2 min</li>
+            <li class="pilula">Garantia em todos os serviços</li>
           </ul>
         </div>
-        <div class="recipiente vitrine__rodape" aria-hidden="true">
-          <div class="vitrine__progresso"><span data-vitrine-progresso></span></div>
-          <p class="pequeno vitrine__dica">Deslize para ver os serviços</p>
+
+        <div class="h__cartoes">
+          <figure class="h__cartao vidro" data-revelar style="--atraso: 0.15s">
+            <p class="estrelas" aria-label="5 estrelas">★★★★★</p>
+            <blockquote><p>"Não dá pra ver onde estava o amassado."</p></blockquote>
+            <figcaption>Maria O. · Jeep Compass</figcaption>
+          </figure>
+          <div class="h__cartao h__status vidro" data-revelar style="--atraso: 0.3s" data-funcionamento>
+            <p class="h__status-linha"><span class="ponto-vivo" data-funcionamento-ponto></span> <strong data-funcionamento-texto>Seg a sex, 8h às 18h</strong></p>
+            <p class="pequeno" data-funcionamento-detalhe>Sábado, 8h às 16h · Santo Amaro e Brooklin</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- DUAS UNIDADES ===================================================== -->
-    <section class="unidades" id="unidades" aria-labelledby="unidades-titulo">
-      <div class="recipiente unidades__cabeca">
-        <h2 id="unidades-titulo" data-titulo><span class="cromado" data-brilho>Duas unidades na Zona Sul</span></h2>
-        <p class="lead">A matriz fica em Santo Amaro. No Brooklin fica a cabine exclusiva de pintura.</p>
+    <!-- 2. POR QUE MARTELINHO: caixas =================================== -->
+    <section class="sec" aria-labelledby="bento-titulo">
+      <Textura tipo="hex" onde="direita" />
+      <div class="recipiente">
+        <div class="sec-cabeca" data-revelar>
+          <p class="pilula">Martelinho de ouro</p>
+          <h2 id="bento-titulo">A pintura de fábrica <span class="destaque-cor">vale mais</span></h2>
+          <p class="lead">Carro repintado perde valor na revenda. O martelinho tira o amassado sem repintar.</p>
+        </div>
+
+        <div class="bento">
+          <article class="bento__ad vidro" data-revelar>
+            <div class="bento__comparador">
+              <Comparador
+                antes={{ src: img('kicks-antes-414.webp'), alt: 'Antes: tampa traseira do Nissan Kicks com amassado; o reflexo da barra de luz aparece entortado' }}
+                depois={{ src: img('kicks-depois-414.webp'), alt: 'Depois: a mesma tampa lisa, com o reflexo reto e a pintura original' }}
+                largura={414}
+                altura={518}
+                rotulo="Comparar antes e depois do Nissan Kicks"
+              />
+            </div>
+            <div class="bento__ad-texto">
+              <p class="pilula">Antes e depois</p>
+              <h3>Arraste a barra de luz</h3>
+              <p>Mesmo carro, mesma luz. Só o amassado saiu, a pintura continua a original de fábrica.</p>
+              <a class="btn btn--vidro btn--pequeno" href="/martelinho">Como funciona</a>
+            </div>
+          </article>
+
+          <article class="bento__item bento__destaque" data-revelar style="--atraso: 0.05s">
+            <span class="bento__icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+            <span class="bento__numero">100%</span>
+            <p>da pintura e do verniz de fábrica mantidos.</p>
+          </article>
+          <article class="bento__item vidro" data-revelar style="--atraso: 0.1s">
+            <span class="bento__icone" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></span>
+            <span class="bento__numero">Horas</span>
+            <p>não dias. Pequenos danos saem em menos de 1 hora.</p>
+          </article>
+          <article class="bento__item vidro" data-revelar style="--atraso: 0.15s">
+            <span class="bento__icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12.5V5a1 1 0 011-1h7.5L20 11.5 12.5 19 4 12.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /><circle cx="8.5" cy="8.5" r="1.4" fill="currentColor" /></svg></span>
+            <span class="bento__numero">60%</span>
+            <p>até 60% mais barato que funilaria e pintura.</p>
+          </article>
+          <article class="bento__item vidro" data-revelar style="--atraso: 0.2s">
+            <span class="bento__icone" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M8.5 14l-1.5 7 5-2.5 5 2.5-1.5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg></span>
+            <span class="bento__numero">Garantia</span>
+            <p>em todos os serviços.</p>
+          </article>
+        </div>
       </div>
-
-      <div class="unidades__painel">
-        <article class="unidade" aria-labelledby="ua-sa">
-          <!-- [CONFIRMAR se esta fachada é a de Santo Amaro] -->
-          <div class="unidade__foto" data-parallax>
-            <img
-              src={img('unidade-santo-amaro-480.webp')}
-              srcset={`${img('unidade-santo-amaro-480.webp')} 480w, ${img('unidade-santo-amaro-960.webp')} 960w`}
-              sizes="(min-width: 60rem) 50vw, 100vw"
-              width="480"
-              height="600"
-              alt="Fachada da LM Estética Automotiva, com a placa de martelinho de ouro e a oficina iluminada ao fundo"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <div class="unidade__texto">
-            <p class="unidade__papel">{UNIDADES.santoAmaro.papel}</p>
-            <h3 id="ua-sa"><span class="cromado">{UNIDADES.santoAmaro.nome}</span></h3>
-            <address>{UNIDADES.santoAmaro.rua}<br />Santo Amaro, São Paulo, CEP {UNIDADES.santoAmaro.cep}</address>
-            <ul role="list" class="unidade__itens">
-              <li>Estacionamento gratuito</li>
-              <li>Sala de espera climatizada, com Wi-Fi, TV e café</li>
-            </ul>
-            <a class="botao botao--vidro" href={UNIDADES.santoAmaro.rota} target="_blank" rel="noopener">Abrir rota no Google Maps</a>
-          </div>
-        </article>
-
-        <article class="unidade unidade--brooklin" aria-labelledby="ua-br">
-          <!-- [CONFIRMAR se a cabine das fotos é a do Brooklin] -->
-          <div class="unidade__foto" data-parallax data-acender>
-            <img
-              src={img('cabine-yaris-retrato-600.webp')}
-              srcset={`${img('cabine-yaris-retrato-600.webp')} 600w, ${img('cabine-yaris-retrato-960.webp')} 960w`}
-              sizes="(min-width: 60rem) 50vw, 100vw"
-              width="600"
-              height="800"
-              alt="Cabine de pintura com paredes de vidro, luzes de LED e um Toyota Yaris prata dentro"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <div class="unidade__texto">
-            <p class="unidade__papel">{UNIDADES.brooklin.papel}</p>
-            <h3 id="ua-br"><span class="cromado">{UNIDADES.brooklin.nome}</span></h3>
-            <p class="unidade__descricao">Cabine fechada com estufa: ambiente sem poeira, secagem na temperatura certa e cor fiel ao padrão de fábrica.</p>
-            <address>{UNIDADES.brooklin.rua}<br />Brooklin, São Paulo</address>
-            <a class="botao botao--vidro" href={UNIDADES.brooklin.rota} target="_blank" rel="noopener">Abrir rota no Google Maps</a>
-          </div>
-        </article>
-      </div>
-
-      <p class="recipiente pequeno unidades__horario">Segunda a sexta, das 8h às 18h. Sábado, das 8h às 16h.</p>
     </section>
 
-    <Avaliacoes itens={avaliacoes} />
+    <!-- 3. ORÇAMENTO ====================================================== -->
+    <Orcamento />
 
-    <CtaFinal
-      titulo="Mande a foto do amassado"
-      texto="Receba um pré-orçamento pelo WhatsApp, sem compromisso."
-      botao="Enviar foto pelo WhatsApp"
-      mensagem={MSG.foto}
-      nota="Resposta em menos de 2 minutos no horário comercial."
-    />
+    <!-- 4. SERVIÇOS ======================================================= -->
+    <section class="sec sec--piso" aria-labelledby="servicos-titulo">
+      <Textura tipo="piso" onde="base" />
+      <div class="recipiente">
+        <div class="sec-cabeca" data-revelar>
+          <p class="pilula">Serviços</p>
+          <h2 id="servicos-titulo">Do reparo <span class="destaque-cor">à perfeição</span></h2>
+        </div>
+        <div class="cards">
+          {servicos.map((s, i) => (
+            <a class:list={['card', s.classe]} href={s.href} data-revelar style={`--atraso: ${i * 0.06}s`}>
+              <img src={img(s.foto)} width={s.w} height={s.h} alt="" loading="lazy" decoding="async" />
+              <span class="card__info vidro">
+                <span class="card__texto"><strong>{s.nome}</strong><span>{s.apoio}</span></span>
+                <span class="card__seta" aria-hidden="true">→</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. UNIDADES ======================================================= -->
+    <section class="sec" aria-labelledby="unidades-titulo">
+      <Textura tipo="hex" onde="esquerda" />
+      <div class="recipiente">
+        <div class="sec-cabeca" data-revelar>
+          <p class="pilula">Zona Sul de SP</p>
+          <h2 id="unidades-titulo">Duas unidades, <span class="destaque-cor">perto de você</span></h2>
+        </div>
+        <div class="unid">
+          <article class="unid__card" data-revelar>
+            <!-- [CONFIRMAR se esta fachada é a de Santo Amaro] -->
+            <img src={img('unidade-santo-amaro-480.webp')} srcset={`${img('unidade-santo-amaro-480.webp')} 480w, ${img('unidade-santo-amaro-960.webp')} 960w`} sizes="(min-width: 60rem) 45vw, 100vw" width="480" height="600" alt="Fachada da LM Estética Automotiva em Santo Amaro" loading="lazy" decoding="async" />
+            <div class="unid__info vidro">
+              <p class="pilula">Matriz</p>
+              <h3>{UNIDADES.santoAmaro.nome}</h3>
+              <p>{UNIDADES.santoAmaro.rua}. Estacionamento gratuito e sala de espera com café.</p>
+              <a class="btn btn--vidro btn--pequeno" href={UNIDADES.santoAmaro.rota} target="_blank" rel="noopener">Como chegar</a>
+            </div>
+          </article>
+          <article class="unid__card" data-revelar style="--atraso: 0.1s">
+            <!-- [CONFIRMAR se a cabine das fotos é a do Brooklin] -->
+            <img src={img('cabine-yaris-retrato-600.webp')} srcset={`${img('cabine-yaris-retrato-600.webp')} 600w, ${img('cabine-yaris-retrato-960.webp')} 960w`} sizes="(min-width: 60rem) 45vw, 100vw" width="600" height="800" alt="Cabine de pintura com estufa no Brooklin" loading="lazy" decoding="async" />
+            <div class="unid__info vidro">
+              <p class="pilula">Cabine de pintura com estufa</p>
+              <h3>{UNIDADES.brooklin.nome}</h3>
+              <p>{UNIDADES.brooklin.rua}. Ambiente sem poeira e cor fiel ao original.</p>
+              <a class="btn btn--vidro btn--pequeno" href={UNIDADES.brooklin.rota} target="_blank" rel="noopener">Como chegar</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. AVALIAÇÕES ===================================================== -->
+    <section class="sec" aria-labelledby="avaliacoes-titulo">
+      <Textura tipo="carbono" onde="topo" />
+      <div class="recipiente">
+        <div class="sec-cabeca sec-cabeca--linha" data-revelar>
+          <div>
+            <p class="pilula"><span class="estrelas">★★★★★</span> Clientes</p>
+            <h2 id="avaliacoes-titulo">Quem já trouxe <span class="destaque-cor">o carro</span></h2>
+          </div>
+          <a class="btn btn--vidro btn--pequeno" href={SITE.avaliacoesGoogle} target="_blank" rel="noopener">Ver no Google</a>
+        </div>
+        <div class="avals" tabindex="0" role="region" aria-label="Avaliações de clientes">
+          {avaliacoes.map((a, i) => (
+            <figure class="aval vidro" data-revelar style={`--atraso: ${i * 0.06}s`}>
+              <p class="estrelas" aria-label="5 estrelas">★★★★★</p>
+              <blockquote><p>{a.texto}</p></blockquote>
+              <figcaption class="aval__autor">
+                <span class="aval__avatar" aria-hidden="true">{a.nome[0]}</span>
+                <span><strong>{a.nome}</strong><span>{a.carro}</span></span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CHAMADA FINAL ================================================== -->
+    <section class="sec cta" aria-labelledby="cta-titulo">
+      <div class="recipiente">
+        <div class="cta__painel" data-revelar>
+          <Textura tipo="hex" onde="direita" />
+          <p class="pilula"><span class="ponto-vivo ponto-vivo--verde"></span> Resposta em menos de 2 minutos</p>
+          <h2 id="cta-titulo">Mande a foto do amassado</h2>
+          <p class="cta__texto">Receba um pré-orçamento pelo WhatsApp, sem compromisso.</p>
+          <div class="h__acoes">
+            <a class="btn btn--whats" href={whats(MSG.foto)} target="_blank" rel="noopener" data-cta-principal><IconeWhats /> Enviar foto pelo WhatsApp</a>
+            <a class="btn btn--vidro" href="#orcamento">Montar orçamento</a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <Rodape />
   <BarraWhats />
 </Base>
 
+<script>
+  // "Aberto agora": horário de São Paulo (seg a sex 8h–18h, sáb 8h–16h)
+  const caixa = document.querySelector<HTMLElement>('[data-funcionamento]');
+  if (caixa) {
+    const agora = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const dia = agora.getDay();
+    const min = agora.getHours() * 60 + agora.getMinutes();
+    const fecha = dia >= 1 && dia <= 5 ? 18 : dia === 6 ? 16 : 0;
+    const aberto = fecha > 0 && min >= 8 * 60 && min < fecha * 60;
+    let texto: string;
+    if (aberto) texto = `Aberto agora · até ${fecha}h`;
+    else if (fecha > 0 && min < 8 * 60) texto = 'Fechado · abre hoje às 8h';
+    else if (dia === 5) texto = 'Fechado · abre sábado às 8h';
+    else if (dia === 6 || dia === 0) texto = 'Fechado · abre segunda às 8h';
+    else texto = 'Fechado · abre amanhã às 8h';
+    caixa.querySelector('[data-funcionamento-texto]')!.textContent = texto;
+    caixa.querySelector('[data-funcionamento-ponto]')!.className = `ponto-vivo ${aberto ? 'ponto-vivo--verde' : 'ponto-vivo--cinza'}`;
+    caixa.querySelector('[data-funcionamento-detalhe]')!.textContent = 'Seg a sex 8h–18h · Sáb 8h–16h';
+  }
+</script>
+
 <style>
   /* =================================================================
-     HERO
+     TOPO
      ================================================================= */
-  .hero {
+  .h {
     position: relative;
     isolation: isolate;
     display: grid;
     align-items: end;
     min-height: 100svh;
-    padding-block: calc(var(--altura-topo) + 2rem) 2.5rem;
+    padding: calc(var(--altura-topo) + 2rem) 0 2.5rem;
     overflow: hidden;
   }
-  .hero__ambiente { display: none; }
-  .hero__vitrine {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-  }
-  .hero__video { width: 100%; height: 100%; object-fit: cover; }
-  .hero__vitrine::after {
+  .h__foto { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 60% 45%; }
+  .h::before {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(to top, rgba(5, 8, 13, 0.98) 0%, rgba(5, 8, 13, 0.82) 34%, rgba(5, 8, 13, 0.15) 64%, rgba(5, 8, 13, 0.6) 100%);
-  }
-  .hero :global(.hero__teto) {
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 44svh;
     z-index: -1;
-    opacity: 0.6;
-    mix-blend-mode: screen;
-    will-change: transform, opacity; /* o teto (com brilho) é desenhado uma vez e só se move */
+    background:
+      linear-gradient(to top, rgba(6, 17, 32, 0.98) 0%, rgba(6, 17, 32, 0.8) 38%, rgba(6, 17, 32, 0.1) 68%, rgba(6, 17, 32, 0.6) 100%),
+      radial-gradient(90% 60% at 0% 100%, rgba(46, 143, 214, 0.4), transparent 70%);
   }
-
-  .hero__titulo { font-size: var(--t-hero); line-height: 0.9; }
-  .hero__linha { display: block; overflow: hidden; padding-bottom: 0.06em; }
-  .hero__linha > span { display: inline-block; }
-  .hero__lead { margin-top: 1.25rem; }
-  /* selo de especialista: plaqueta escura com borda de luz, legível sobre o teto de LED */
-  .hero__selo {
-    display: flex;
-    width: fit-content;
-    align-items: center;
-    gap: 0.625rem;
-    margin-bottom: 1.125rem;
-    padding: 0.4rem 0.85rem 0.4rem 0.7rem;
-    border: 1px solid rgba(143, 212, 239, 0.65);
-    border-radius: 4px;
-    background: rgba(5, 8, 13, 0.82);
-    box-shadow: 0 0 22px -6px rgba(77, 181, 220, 0.85), inset 0 0 12px -6px rgba(77, 181, 220, 0.9);
-    font-family: var(--f-apoio);
-    font-weight: 700;
-    font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.1875rem);
-    line-height: 1.2;
-    letter-spacing: 0.01em;
-    color: var(--branco);
-  }
-  .hero__selo::before {
-    content: '';
-    flex: none;
-    width: 1.125rem;
-    height: 2px;
-    background: #fff;
-    box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.8), 0 0 14px 3px rgba(77, 181, 220, 0.8);
-  }
-  :global(.mov) .hero__selo { animation: hero-aparece 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s backwards; }
-
-  /* =================================================================
-     CREDENCIAIS
-     ================================================================= */
-  .credenciais { padding-block: 2.5rem 0; }
-  .credenciais__lista {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-block: 1px solid var(--linha);
-  }
-  .credenciais__lista li { display: grid; gap: 0.25rem; align-content: start; padding: 1.25rem 1rem 1.25rem 0; }
-  .credenciais__lista li:nth-child(even) { padding-left: 1rem; border-left: 1px solid var(--linha); }
-  .credenciais__lista li:nth-child(n + 3) { border-top: 1px solid var(--linha); }
-  .credenciais__numero { font-family: var(--f-titulo); font-size: clamp(2.5rem, 1.8rem + 2.6vw, 4.25rem); line-height: 0.95; }
-  .credenciais__lista li > span:last-child { font-family: var(--f-apoio); color: var(--texto-2); line-height: 1.3; max-width: 22ch; }
-  .processo__links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
+  .h__grade { display: grid; gap: 2rem; }
+  .h__texto { display: grid; gap: 1.1rem; justify-items: start; }
+  .h__titulo { font-size: clamp(3.25rem, 1.4rem + 6.6vw, 7.25rem); line-height: 0.92; }
+  .h__titulo > span { display: block; }
+  .h__lead { font-family: var(--f-apoio); font-size: var(--t-lead); line-height: 1.35; color: rgba(242, 245, 248, 0.88); max-width: 34ch; }
+  .h__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
+  .h__provas { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .h__provas .pilula { font-weight: 400; font-size: 0.8125rem; }
+  .h__cartoes { display: none; }
 
   @media (min-width: 60rem) {
-    .credenciais { padding-top: 0; }
-    .credenciais__lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .credenciais__lista li { padding: 1.75rem 1.5rem; border-left: 1px solid var(--linha); }
-    .credenciais__lista li:first-child { padding-left: 0; border-left: 0; }
-    .credenciais__lista li:nth-child(n + 3) { border-top: 0; }
+    .h { align-items: center; padding-block: calc(var(--altura-topo) + 3rem) 4rem; }
+    .h__foto { object-position: 50% 55%; }
+    .h::before {
+      background:
+        linear-gradient(90deg, rgba(6, 17, 32, 0.95) 0%, rgba(6, 17, 32, 0.72) 42%, rgba(6, 17, 32, 0.12) 78%),
+        linear-gradient(to top, rgba(6, 17, 32, 0.9) 0%, rgba(6, 17, 32, 0) 35%),
+        radial-gradient(70% 70% at 0% 100%, rgba(46, 143, 214, 0.35), transparent 70%);
+    }
+    .h__grade { grid-template-columns: minmax(0, 1fr) 20rem; align-items: end; gap: 4rem; }
+    .h__texto { max-width: 44rem; }
+    .h__cartoes { display: grid; gap: 1rem; }
+    .h__cartao { margin: 0; padding: 1.25rem 1.4rem; display: grid; gap: 0.6rem; }
+    .h__cartao blockquote p { font-family: var(--f-titulo); font-size: 1.75rem; line-height: 1; }
+    .h__cartao figcaption { font-family: var(--f-apoio); font-size: 0.875rem; color: rgba(242, 245, 248, 0.75); }
+    .h__status-linha { display: flex; align-items: center; gap: 0.6rem; font-family: var(--f-apoio); }
   }
-  .hero__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
-  .hero__acoes .botao { flex: 1 1 100%; }
-  .hero__prova { margin-top: 0.875rem; }
 
-  .hero__pausa {
-    position: absolute;
-    top: calc(var(--altura-topo) + 0.75rem);
-    right: var(--gutter);
-    z-index: 2;
+  /* =================================================================
+     SEÇÕES
+     ================================================================= */
+  .sec { position: relative; isolation: isolate; padding-block: var(--secao) 0; }
+  .sec--piso { padding-bottom: 4rem; }
+  .sec-cabeca--linha { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; width: 100%; }
+  .sec-cabeca--linha > div { display: grid; gap: 1rem; justify-items: start; }
+
+  /* caixas do martelinho */
+  .bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+  .bento__ad { grid-column: 1 / -1; display: grid; gap: 1.25rem; padding: 0.75rem 0.75rem 1.5rem; }
+  .bento__comparador :global(.comparar__quadro) { border-radius: 16px; }
+  .bento__ad-texto { display: grid; gap: 0.75rem; justify-items: start; padding-inline: 0.75rem; }
+  .bento__ad-texto h3 { font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem); }
+  .bento__ad-texto p:not(.pilula) { color: var(--texto-2); }
+  .bento__item { display: grid; gap: 0.4rem; align-content: start; padding: 1.1rem; }
+  .bento__icone {
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 1px solid rgba(242, 245, 248, 0.35);
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.4rem;
+    border-radius: 12px;
+    background: rgba(92, 200, 240, 0.16);
+    color: #8fdcff;
+  }
+  .bento__icone svg { width: 1.35rem; height: 1.35rem; }
+  .bento__numero { font-family: var(--f-titulo); font-size: clamp(2.25rem, 1.7rem + 2.2vw, 3.75rem); line-height: 0.95; }
+  .bento__item p { color: var(--texto-2); font-size: 0.9375rem; line-height: 1.4; }
+  .bento__destaque {
+    border-radius: var(--raio);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: linear-gradient(150deg, #43a8ec 0%, #1f6fb2 55%, #123f6a 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 24px 48px -22px rgba(46, 143, 214, 0.9);
+  }
+  .bento__destaque p { color: rgba(255, 255, 255, 0.92); }
+  .bento__destaque .bento__icone { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+  @media (min-width: 48rem) {
+    .bento__ad { grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); align-items: center; padding: 0.9rem 1.5rem 0.9rem 0.9rem; }
+  }
+  @media (min-width: 64rem) {
+    .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+    .bento__ad { grid-column: 1 / 3; grid-row: 1 / 3; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); }
+    .bento__item { padding: 1.5rem; }
+  }
+
+  /* cards de serviço */
+  .cards { display: grid; gap: 1rem; }
+  .card {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: end;
+    min-height: 17rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--raio);
+    text-decoration: none;
+  }
+  .card img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--curva); }
+  .card::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(6, 17, 32, 0.7), rgba(6, 17, 32, 0) 55%); }
+  .card:hover img { transform: scale(1.06); }
+  .card__info { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0.75rem; padding: 0.9rem 0.9rem 0.9rem 1.2rem; --raio: 16px; }
+  .card__texto { display: grid; gap: 0.2rem; }
+  .card__texto strong { font-family: var(--f-titulo); font-weight: 400; font-size: 1.9rem; line-height: 1; }
+  .card__texto span { font-family: var(--f-apoio); font-size: 0.875rem; color: rgba(242, 245, 248, 0.82); }
+  .card__seta {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.6rem;
+    height: 2.6rem;
     border-radius: 50%;
-    background: rgba(5, 8, 13, 0.65);
-    color: var(--branco);
-    cursor: pointer;
+    background: #fff;
+    color: var(--fundo);
+    font-size: 1.2rem;
+    transition: transform 0.3s var(--curva), background-color 0.3s;
   }
-  .hero__pausa svg { width: 1.125rem; height: 1.125rem; }
-  .hero__pausa .icone-tocar { display: none; }
-  .hero__pausa[data-pausado] .icone-pausa { display: none; }
-  .hero__pausa[data-pausado] .icone-tocar { display: block; }
-
-  .hero__rolar { display: none; }
-
-  /* entrada (keyframes em global.css): primeiro o teto acende, depois a vitrine e o título */
-  .hero { --intro: 0.6s; --intro-vitrine: 0.35s; }
-
-  @media (min-width: 40rem) {
-    .hero__acoes .botao { flex: 0 0 auto; }
+  .card:hover .card__seta { transform: rotate(-45deg); background: #8fdcff; }
+  @media (min-width: 48rem) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card--grande { grid-row: span 2; min-height: 30rem; }
+  }
+  @media (min-width: 64rem) {
+    .cards { grid-template-columns: 1.15fr 1fr 1fr; grid-template-rows: 19rem 19rem; }
+    .card--grande { grid-row: 1 / 3; }
+    .card--largo { grid-column: 2 / 4; }
   }
 
+  /* unidades */
+  .unid { display: grid; gap: 1rem; }
+  .unid__card { position: relative; isolation: isolate; display: grid; align-items: end; min-height: 30rem; overflow: hidden; border-radius: var(--raio); border: 1px solid rgba(255, 255, 255, 0.14); }
+  .unid__card img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+  .unid__card::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(6, 17, 32, 0.75), rgba(6, 17, 32, 0) 60%); }
+  .unid__info { display: grid; gap: 0.6rem; justify-items: start; margin: 0.75rem; padding: 1.25rem; --raio: 18px; }
+  .unid__info h3 { font-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem); }
+  .unid__info p:not(.pilula) { color: rgba(242, 245, 248, 0.85); font-size: 0.9375rem; }
   @media (min-width: 60rem) {
-    .hero {
-      align-items: center;
-      padding-block: var(--altura-topo) 0;
-    }
-    /* luz ambiente: o próprio vídeo, minúsculo e desfocado, enchendo a tela */
-    .hero__ambiente {
-      display: block;
-      position: absolute;
-      inset: -12%;
-      z-index: -3;
-      opacity: 0.75;
-    }
-    .hero__ambiente video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* o vídeo já vem desfocado */
-    }
-    .hero__ambiente::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(5, 8, 13, 0.92) 0%, rgba(5, 8, 13, 0.55) 45%, rgba(5, 8, 13, 0.2) 100%);
-    }
-    .hero :global(.hero__teto) { height: 58vh; opacity: 0.95; }
-
-    /* o vídeo vira um "display" de vitrine, com reflexo no chão */
-    .hero__vitrine {
-      inset: auto;
-      top: calc(var(--altura-topo) + 3.5vh);
-      right: max(var(--gutter), calc((100vw - var(--largura)) / 2));
-      height: calc(100svh - var(--altura-topo) - 16vh);
-      aspect-ratio: 464 / 832;
-      z-index: 0;
-    }
-    .hero__vitrine::after { content: none; }
-    .hero__video {
-      border-radius: 12px;
-      border: 1px solid rgba(220, 236, 248, 0.4);
-      box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.9), 0 0 70px -10px rgba(77, 181, 220, 0.45);
-    }
-    /* reflexo no chão: a imagem inicial do vídeo espelhada e parada
-       (refletir o vídeo tocando redesenhava o reflexo a cada quadro) */
-    .hero__vitrine::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: calc(100% + 14px);
-      height: 28%;
-      border-radius: 12px;
-      background: url('/assets/img/hero-poster-464.webp') center bottom / 100% auto no-repeat;
-      transform: scaleY(-1);
-      opacity: 0.22;
-      -webkit-mask-image: linear-gradient(to top, #000, transparent);
-      mask-image: linear-gradient(to top, #000, transparent);
-    }
-    .hero__conteudo { padding-block: 4rem; }
-    .hero__titulo,
-    .hero__lead { max-width: calc(100% - 25rem); }
-    .hero__pausa { top: auto; bottom: 2rem; right: calc(max(var(--gutter), calc((100vw - var(--largura)) / 2)) + 1rem); }
-
-    .hero__rolar {
-      position: absolute;
-      left: 50%;
-      bottom: 1.5rem;
-      display: block;
-      width: 1.5rem;
-      height: 2.75rem;
-      transform: translateX(-50%);
-      border: 1px solid rgba(220, 236, 248, 0.45);
-      border-radius: 999px;
-    }
-    .hero__rolar span {
-      position: absolute;
-      left: 50%;
-      top: 0.45rem;
-      width: 3px;
-      height: 0.6rem;
-      margin-left: -1.5px;
-      border-radius: 3px;
-      background: var(--azul-led);
-      box-shadow: 0 0 8px var(--azul-led);
-      animation: rolar 2.2s var(--curva) infinite;
-    }
-  }
-  @keyframes rolar {
-    0% { transform: translateY(0); opacity: 0; }
-    25% { opacity: 1; }
-    80% { transform: translateY(1.1rem); opacity: 0; }
-    100% { opacity: 0; }
+    .unid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+    .unid__card { min-height: 36rem; }
   }
 
-  /* =================================================================
-     VITRINE DE SERVIÇOS
-     ================================================================= */
-  .vitrine__palco { padding-top: var(--secao); }
-  .vitrine__cabeca { display: grid; gap: 1.25rem; margin-bottom: 2.5rem; }
-  .vitrine__trilho {
+  /* avaliações */
+  .avals {
+    display: flex;
+    gap: 1rem;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 0.25rem var(--gutter) 1rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--gutter);
-    overscroll-behavior-x: contain;
     scrollbar-width: none;
-    padding-inline: var(--gutter);
   }
-  .vitrine__trilho::-webkit-scrollbar { display: none; }
-  .vitrine__lista { display: flex; gap: 1rem; width: max-content; padding-bottom: 0.5rem; }
-
-  .cartao {
-    position: relative;
-    isolation: isolate;
-    flex: none;
-    width: min(82vw, 24rem);
-    height: min(66svh, 34rem);
-    overflow: hidden;
-    border-radius: 12px;
-    border: 1px solid var(--linha);
-    background: var(--noite-2);
-    scroll-snap-align: start;
-  }
-  .cartao > img {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 1.2s var(--curva);
-  }
-  .cartao::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(to top, rgba(5, 8, 13, 0.97) 0%, rgba(5, 8, 13, 0.7) 38%, rgba(5, 8, 13, 0) 68%);
-  }
-  .cartao__texto {
-    position: absolute;
-    left: 1.25rem;
-    right: 1.25rem;
-    bottom: 1rem;
+  .avals::-webkit-scrollbar { display: none; }
+  .aval { flex: 0 0 min(82vw, 22rem); scroll-snap-align: start; margin: 0; display: grid; gap: 1rem; align-content: space-between; padding: 1.5rem; }
+  .aval blockquote p { font-size: 1rem; line-height: 1.55; }
+  .aval__autor { display: flex; align-items: center; gap: 0.75rem; font-family: var(--f-apoio); }
+  .aval__autor strong { display: block; }
+  .aval__autor span span { color: var(--texto-2); font-size: 0.875rem; }
+  .aval__avatar {
     display: grid;
-    gap: 0.5rem;
-    justify-items: start;
-  }
-  .cartao__texto h3 { font-size: clamp(2.125rem, 1.7rem + 1.4vw, 3rem); }
-  .cartao__texto p { font-size: 0.9375rem; line-height: 1.5; color: rgba(242, 245, 248, 0.86); }
-
-  .cartao--todos {
-    background:
-      radial-gradient(90% 70% at 80% 10%, rgba(35, 120, 179, 0.5), transparent 70%),
-      linear-gradient(160deg, var(--azul-profundo), var(--noite-2));
-  }
-  .cartao--todos::after { content: none; }
-  .cartao__todos {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    align-content: end;
-    gap: 0.75rem;
-    padding: 1.5rem;
-    text-decoration: none;
-  }
-  .cartao__todos .cromado { font-family: var(--f-titulo); font-size: clamp(2.75rem, 2rem + 2vw, 4rem); line-height: 0.95; }
-
-  .vitrine__rodape { display: flex; align-items: center; gap: 1rem; padding-top: 1.25rem; }
-  .vitrine__progresso { display: none; }
-
-  @media (hover: hover) {
-    .cartao:hover > img { transform: scale(1.05); }
-  }
-
-  @media (min-width: 60rem) {
-    .cartao { width: clamp(22rem, 30vw, 30rem); height: min(62svh, 40rem); }
-    .cartao__texto { left: 1.75rem; right: 1.75rem; bottom: 1.5rem; }
-    .vitrine__trilho {
-      padding-inline: max(var(--gutter), calc((100vw - var(--largura)) / 2));
-      scroll-padding-inline: max(var(--gutter), calc((100vw - var(--largura)) / 2));
-    }
-
-    /* com animação: a seção fica parada e a vitrine desliza para o lado */
-    :global(.mov) .vitrine__palco {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto 1fr auto;
-      height: 100svh;
-      padding-block: calc(var(--altura-topo) + 2.5rem) 2rem;
-    }
-    :global(.mov) .vitrine__cabeca { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: end; margin-bottom: 2rem; }
-    :global(.mov) .vitrine__trilho { overflow: visible; align-self: center; min-width: 0; }
-    :global(.mov) .cartao > img { width: 116%; left: -8%; transition: none; }
-    :global(.mov) .vitrine__progresso {
-      display: block;
-      flex: 1;
-      height: 2px;
-      overflow: hidden;
-      background: rgba(242, 245, 248, 0.14);
-    }
-    :global(.mov) .vitrine__progresso span {
-      display: block;
-      height: 100%;
-      background: linear-gradient(90deg, var(--azul), var(--azul-led));
-      box-shadow: 0 0 10px var(--azul-led);
-      transform: scaleX(0);
-      transform-origin: 0 50%;
-    }
-    :global(.mov) .vitrine__dica { display: none; }
-  }
-
-  /* =================================================================
-     UNIDADES
-     ================================================================= */
-  .unidades { padding-top: var(--secao); }
-  .unidades__cabeca { display: grid; gap: 1.25rem; margin-bottom: 2.5rem; }
-  .unidades__painel { display: grid; gap: 2px; }
-  .unidade {
-    position: relative;
-    isolation: isolate;
-    display: flex;
-    align-items: flex-end;
-    min-height: 86svh;
-    overflow: hidden;
-  }
-  .unidade__foto { position: absolute; inset: 0; z-index: -2; }
-  .unidade__foto img { width: 100%; height: 100%; object-fit: cover; }
-  .unidade::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(to top, rgba(5, 8, 13, 0.97) 0%, rgba(5, 8, 13, 0.75) 35%, rgba(5, 8, 13, 0.05) 70%);
-  }
-  .unidade__texto {
-    display: grid;
-    gap: 0.75rem;
-    justify-items: start;
-    width: 100%;
-    max-width: 34rem;
-    padding: 2rem var(--gutter);
-  }
-  .unidade__papel {
-    font-family: var(--f-apoio);
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #43a8ec, #1f6fb2);
     font-weight: 700;
-    color: var(--azul-led-claro);
-    letter-spacing: 0.02em;
   }
-  .unidade h3 { font-size: clamp(3rem, 2rem + 4vw, 5.5rem); }
-  .unidade__descricao { color: rgba(242, 245, 248, 0.88); max-width: 40ch; }
-  .unidade address { font-style: normal; font-family: var(--f-apoio); font-size: 1.125rem; line-height: 1.4; }
-  .unidade__itens { display: grid; gap: 0.25rem; color: rgba(242, 245, 248, 0.86); }
-  .unidade__itens li { position: relative; padding-left: 1.125rem; }
-  .unidade__itens li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.8em;
-    width: 0.625rem;
-    height: 2px;
-    background: var(--azul-led);
-    box-shadow: 0 0 6px var(--azul-led);
+  @media (min-width: 64rem) {
+    .avals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding-inline: 0; overflow: visible; }
+    .aval { flex: none; }
   }
-  .unidade .botao { margin-top: 0.5rem; }
-  .unidades__horario { padding-block: 1.5rem var(--secao); }
 
+  /* chamada final */
+  .cta { padding-bottom: var(--secao); }
+  .cta__painel {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    gap: 1.1rem;
+    justify-items: start;
+    overflow: hidden;
+    padding: 2.5rem 1.5rem;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background:
+      radial-gradient(70% 90% at 100% 0%, rgba(143, 220, 255, 0.55), transparent 60%),
+      linear-gradient(140deg, #2e8fd6 0%, #185a93 55%, #0c2c4c 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 40px 80px -40px rgba(46, 143, 214, 0.9);
+  }
+  .cta__painel h2 { font-size: clamp(2.75rem, 1.6rem + 5vw, 6rem); max-width: 12ch; }
+  .cta__texto { font-family: var(--f-apoio); font-size: var(--t-lead); color: rgba(255, 255, 255, 0.9); }
+  .cta__painel :global(.textura--hex path) { stroke: rgba(255, 255, 255, 0.24); }
   @media (min-width: 60rem) {
-    .unidades__cabeca { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: end; gap: 4rem; margin-bottom: 3.5rem; }
-    .unidades__painel { display: flex; height: 92svh; }
-    .unidade { flex: 1 1 0; min-height: 0; transition: flex-grow 0.9s var(--curva); }
-    .unidade__texto { padding: 3rem max(var(--gutter), 3rem); }
+    .cta__painel { padding: 4rem; }
   }
-  @media (min-width: 60rem) and (hover: hover) {
-    .unidade:hover { flex-grow: 1.4; }
-  }
-
-  </style>
+</style>

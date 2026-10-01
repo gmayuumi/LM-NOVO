@@ -272,30 +272,6 @@ ol[role='list'] { list-style: none; padding: 0; }
   background: repeating-linear-gradient(135deg, transparent 0 12px, rgba(169, 182, 195, 0.05) 12px 24px);
 }
 
-/* ============================================================
-   Estilo limpo (proposta): tipografia e foto fazem o trabalho.
-   Sem cromado, sem brilhos, botões chapados, link com seta.
-   ============================================================ */
-[data-estilo='limpo'] body::before,
-[data-estilo='limpo'] body::after { display: none; }
-[data-estilo='limpo'] .cromado {
-  background-image: none;
-  color: var(--branco);
-  filter: none;
-}
-[data-estilo='limpo'] .botao {
-  background: var(--azul);
-  border-color: var(--azul);
-  border-radius: 2px;
-  box-shadow: none;
-  text-shadow: none;
-}
-[data-estilo='limpo'] .botao::after { display: none; }
-[data-estilo='limpo'] .botao:hover { background: #2a86c4; box-shadow: none; transform: none; }
-[data-estilo='limpo'] .botao--vidro { background: transparent; border-color: rgba(242, 245, 248, 0.45); }
-[data-estilo='limpo'] .botao--vidro:hover { background: rgba(255, 255, 255, 0.08); }
-[data-estilo='limpo'] .marca__selo { filter: none; }
-
 .link-seta {
   display: inline-flex;
   align-items: center;
